@@ -1,0 +1,35 @@
+.root {
+  background: var(--global-color-secondary);
+  border-radius: 0.25rem;
+  max-width: 100%;
+  position: relative;
+}
+
+.link {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 20;
+}
+
+.cover {
+  padding-top: 150%;
+  width: 100%;
+  display: block;
+  position: relative;
+  border-radius: 0.25rem 0.25rem 0 0;
+  img {
+    border-radius: 0.25rem 0.25rem 0 0;
+  }
+}
+
+.meta {
+  padding: 1rem;
+  line-height: 1.6;
+}
+
+.title {
+  font-weight: bold;
+}

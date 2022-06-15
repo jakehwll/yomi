@@ -1,0 +1,7 @@
+.root {
+  width: calc(100vw - var(--global-sidebar-width));
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}

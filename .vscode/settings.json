@@ -1,0 +1,26 @@
+{
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true
+  },
+  "editor.formatOnSave": true,
+  "editor.insertSpaces": true,
+  "editor.fontSize": 12,
+  "git.ignoreLimitWarning": true,
+  "git.alwaysSignOff": true,
+  "eslint.enable": true,
+  "eslint.validate": [
+    "javascript",
+    "javascriptreact",
+    "typescript",
+    "typescriptreact",
+    "php"
+  ],
+  "files.eol": "\n",
+  "[javascriptreact][javascript][typescriptreact][typescript]": {
+    "editor.tabSize": 2
+  },
+  "[scss]": {
+    "editor.tabSize": 2
+  }
+}

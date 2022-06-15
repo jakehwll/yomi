@@ -1,0 +1,37 @@
+import { GridItem, GridWrapper } from 'components/grid'
+import Content from 'components/layout/Content'
+import Footer from 'components/layout/Footer'
+import Sidebar from 'components/layout/Sidebar'
+import Search from 'components/Search'
+import type { NextPage } from 'next'
+import styles from 'styles/pages/Layout.module.scss'
+
+const Home: NextPage = () => {
+  return (
+    <div className={styles.root}>
+      <Sidebar />
+      <Content>
+        <div>
+          <Search />
+          <GridWrapper>
+            <GridItem />
+            <GridItem />
+            <GridItem />
+            <GridItem />
+            <GridItem />
+            <GridItem />
+            <GridItem />
+            <GridItem />
+            <GridItem />
+            <GridItem />
+            <GridItem />
+            <GridItem />
+          </GridWrapper>
+        </div>
+        <Footer />
+      </Content>
+    </div>
+  )
+}
+
+export default Home
