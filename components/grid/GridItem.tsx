@@ -3,12 +3,12 @@ import Link from 'next/link'
 import styles from 'styles/grid/GridItem.module.scss'
 
 const Item = ({
-  title,
-  author,
+  headline,
+  subline,
   link,
 }: {
-  title: string
-  author: string
+  headline: string
+  subline?: string
   link: string
 }) => {
   return (
@@ -20,8 +20,8 @@ const Item = ({
         <Image src="/thumbnail.jpg" layout="fill" />
       </div>
       <div className={styles.meta}>
-        <div className={styles.title}>{title}</div>
-        <div className={styles.author}>{author}</div>
+        <div className={styles.headline}>{headline}</div>
+        <div className={styles.subline}>{subline}</div>
       </div>
     </div>
   )
