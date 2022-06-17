@@ -15,7 +15,9 @@ model Series {
   updated_at DateTime? @updatedAt
   created_at DateTime? @default(now())
   title      String
+  folder     String
   books      Book[]
+  thumbnail  String?
 }
 
 model Book {
@@ -26,5 +28,6 @@ model Book {
   file       String
   Series     Series?   @relation(fields: [seriesId], references: [id])
   seriesId   String?
+  thumbnail  String?
   pages Int?
 }

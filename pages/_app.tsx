@@ -6,8 +6,8 @@ export const config = {
   unstable_runtimeJS: false,
 }
 
-function MyApp({ Component, pageProps }: AppProps) {
+function Yomi({ Component, pageProps }: AppProps) {
   return <Component {...pageProps} />
 }
 
-export default MyApp
+export default Yomi

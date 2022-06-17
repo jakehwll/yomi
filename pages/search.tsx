@@ -3,7 +3,7 @@ import Footer from 'components/layout/Footer'
 import Sidebar from 'components/layout/Sidebar'
 import SearchInput from 'components/Search'
 import type { NextPage } from 'next'
-import styles from 'styles/pages/Layout.module.scss'
+import styles from 'styles/layout/Layout.module.scss'
 
 const Search: NextPage = () => {
   return (

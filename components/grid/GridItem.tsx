@@ -1,12 +1,14 @@
-import Image from 'next/image'
+import cc from 'classcat'
 import Link from 'next/link'
 import styles from 'styles/grid/GridItem.module.scss'
 
-const Item = ({
+const GridItem = ({
+  image,
   headline,
   subline,
   link,
 }: {
+  image: string
   headline: string
   subline?: string
   link: string
@@ -17,7 +19,8 @@ const Item = ({
         <a className={styles.link}></a>
       </Link>
       <div className={styles.cover}>
-        <Image src="/thumbnail.jpg" layout="fill" />
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src={image} />
       </div>
       <div className={styles.meta}>
         <div className={styles.headline}>{headline}</div>
@@ -27,4 +30,21 @@ const Item = ({
   )
 }
 
-export default Item
+const GridItemGhost = () => {
+  return (
+    <div className={cc([styles.root, styles.ghost])}>
+      <div className={styles.cover}></div>
+      <div className={styles.meta}>
+        <div className={cc([styles.headline, styles.headline__ghost])}>
+          &nbsp;
+        </div>
+        <div className={cc([styles.subline, styles.subline__ghost])}>
+          &nbsp;
+        </div>
+      </div>
+    </div>
+  )
+}
+
+export default GridItem
+export { GridItemGhost }

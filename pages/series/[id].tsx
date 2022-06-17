@@ -8,16 +8,23 @@ const fetcher = (url: string) => fetch(url).then((r) => r.json())
 
 const BookGrid = ({ seriesId }: { seriesId: string }) => {
   const { data, error } = useSWR(`/api/book/${seriesId}`, fetcher)
-  if (data)
-    return (
-      <GridWrapper>
-        {data.data &&
-          data.data.map((v: Book) => (
-            <GridItem key={v.id} headline={v.title} link={`/book/${v.id}`} />
-          ))}
-        {!data.data && <span>no books.</span>}
-      </GridWrapper>
-    )
+  if (data) {
+    if (!data.data) return <h1>No volumes.</h1>
+    if (data.data)
+      return (
+        <GridWrapper>
+          {data.data &&
+            data.data.map((v: Book) => (
+              <GridItem
+                image={''}
+                key={v.id}
+                headline={v.title}
+                link={`/book/${v.id}`}
+              />
+            ))}
+        </GridWrapper>
+      )
+  }
   if (!data) return <span>loading...</span>
   if (error) return <span>Something went wrong.</span>
   return <span>...</span>
