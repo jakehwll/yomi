@@ -49,8 +49,9 @@ const Reader = () => {
 
   useEffect(() => {
     if (id === undefined) return setRender([])
-    // only render the front-cover.
+    // TODO only render the front-cover.
     if (index === 0) return setRender([`/api/book/${id}/page/0`])
+    if (index === 1) return setRender([`/api/book/${id}/page/1`])
     // TODO only render the back-cover.
     if (index === -1) return setRender([`/api/book/${id}/page/${-1}`])
     // loop all pages for our pageAmount range and render them
