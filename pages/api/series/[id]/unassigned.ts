@@ -13,7 +13,7 @@ const getFiles = async (location: string) => {
     })
 }
 
-export default async function get(req: NextApiRequest, res: NextApiResponse) {
+async function get(req: NextApiRequest, res: NextApiResponse) {
   const { id } = req.query
   const series = await getSeries(id as string)
 
@@ -26,4 +26,12 @@ export default async function get(req: NextApiRequest, res: NextApiResponse) {
   res.status(200).json({
     data: directoriesList,
   })
+}
+
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
+  if (req.method === 'GET') get(req, res)
+  else res.status(404)
 }

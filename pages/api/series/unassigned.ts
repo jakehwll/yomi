@@ -13,7 +13,7 @@ const getDirectories = async (location: string) => {
     })
 }
 
-export default async function get(req: NextApiRequest, res: NextApiResponse) {
+async function get(req: NextApiRequest, res: NextApiResponse) {
   const directoriesList = await getDirectories('/data')
   const seriesDirectoriesList = await (
     await getAllSeries()
@@ -26,4 +26,12 @@ export default async function get(req: NextApiRequest, res: NextApiResponse) {
       return !seriesDirectoriesList.includes(v)
     }),
   })
+}
+
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
+  if (req.method === 'GET') get(req, res)
+  else res.status(404)
 }

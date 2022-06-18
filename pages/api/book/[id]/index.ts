@@ -1,10 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import prisma from 'util/prisma'
 
-export default async function getBooks(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
+async function get(req: NextApiRequest, res: NextApiResponse) {
   const { id } = req.query
   const data = await prisma.book.findMany({
     where: {
@@ -19,4 +16,12 @@ export default async function getBooks(
     total: data.length,
     data: data,
   })
+}
+
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
+  if (req.method === 'GET') get(req, res)
+  else res.status(404)
 }

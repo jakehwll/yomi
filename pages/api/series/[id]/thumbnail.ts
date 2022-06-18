@@ -3,10 +3,7 @@ import { NextApiRequest, NextApiResponse } from 'next'
 import path from 'path'
 import prisma from 'util/prisma'
 
-export default async function getThumbnail(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
+async function get(req: NextApiRequest, res: NextApiResponse) {
   const { id } = req.query
   const data: any = await prisma.series.findFirst({
     where: {
@@ -36,4 +33,12 @@ export default async function getThumbnail(
         .status(500)
         .send({ error: { message: 'Unknown error.', value: error } })
   }
+}
+
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
+  if (req.method === 'GET') get(req, res)
+  else res.status(404)
 }

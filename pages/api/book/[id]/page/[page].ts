@@ -9,10 +9,7 @@ const getFiles = async (location: string) => {
   })
 }
 
-export default async function getImage(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
+async function get(req: NextApiRequest, res: NextApiResponse) {
   const { id, page } = req.query
   const book = await getBook(id.toString())
 
@@ -29,10 +26,12 @@ export default async function getImage(
 
   res.setHeader('Content-Type', 'image/jpg')
   res.status(200).send(imageBuffer)
+}
 
-  // res.send({
-  //   id: id,
-  //   book: book,
-  //   files: files,
-  // })
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
+  if (req.method === 'GET') get(req, res)
+  else res.status(404)
 }
