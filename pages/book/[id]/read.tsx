@@ -4,6 +4,7 @@ import styles from 'styles/Reader.module.scss'
 
 const Reader = () => {
   const router = useRouter()
+  const { id } = router.query
 
   // constants
   const [index, setIndex] = useState(0)
@@ -12,56 +13,32 @@ const Reader = () => {
   const [keyDown, setKeydown] = useState('')
 
   // controls
-  const [invertControl, setInvertControl] = useState(false)
-
-  const _pages = [
-    '/book/page1.jpg',
-    '/book/page2.jpg',
-    '/book/page3.jpg',
-    '/book/page4.jpg',
-    '/book/page5.jpg',
-    '/book/page6.jpg',
-  ]
+  const [invert, setInvert] = useState(false)
 
   const _prev = () => {
-    if (index <= 0) return
     setIndex(index - 1)
   }
-
   const _next = () => {
-    if (index >= Math.ceil(_pages.length / pageAmount) - 1) return
     setIndex(index + 1)
   }
 
   useEffect(() => {
-    setRender(_pages.slice(index * pageAmount, index * pageAmount + pageAmount))
+    setRender([`/api/book/${id}/page/${index}`])
   }, [index])
-
-  useEffect(() => {
-    if (!keyDown) return
-    if (keyDown === 'ArrowLeft') invertControl ? _next() : _prev()
-    if (keyDown === 'ArrowRight') invertControl ? _prev() : _next()
-    setKeydown('')
-  }, [keyDown])
-
-  useEffect(
-    () => window.addEventListener('keydown', (event) => setKeydown(event.key)),
-    []
-  )
 
   return (
     <div className={styles.root}>
       <header className={styles.header}>
         <div className={styles.back}>
-          <button type="button" onClick={() => router.push('/book/test')}>
+          <button type="button" onClick={() => router.push(`/book/${id}`)}>
             &larr;
           </button>
         </div>
         <div className={styles.title}>Book Title</div>
         <div className={styles.tools}>
-          <div>Fullscreen</div>
-          <div>Settings</div>
-          <div>Download</div>
+          {/* <div>Fullscreen</div> */}
+          {/* <div>Settings</div> */}
+          {/* <div>Download</div> */}
         </div>
       </header>
       <section>
@@ -76,7 +53,15 @@ const Reader = () => {
           })}
         </div>
       </section>
-      <footer className={styles.footer}>{index}</footer>
+      <footer className={styles.footer}>
+        {index}
+        <button type="button" onClick={_prev}>
+          -
+        </button>
+        <button type="button" onClick={_next}>
+          +
+        </button>
+      </footer>
     </div>
   )
 }
