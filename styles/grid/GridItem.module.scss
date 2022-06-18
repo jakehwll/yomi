@@ -2,6 +2,7 @@
   background: var(--global-color-secondary);
   border-radius: 0.25rem;
   position: relative;
+  // min-width: 16rem;
 }
 
 .link {
@@ -34,11 +35,9 @@
   line-height: 1.6;
 }
 
-.title {
-  font-weight: bold;
-}
-
 .headline {
+  display: block;
+  width: 16rem;
   font-weight: bold;
   &__ghost {
     max-width: 12rem;

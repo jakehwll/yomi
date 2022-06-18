@@ -12,22 +12,21 @@ generator client {
 
 model Series {
   id         String    @id @unique @default(cuid())
-  updated_at DateTime? @updatedAt
-  created_at DateTime? @default(now())
   title      String
   folder     String
-  books      Book[]
   thumbnail  String?
+  updated_at DateTime? @updatedAt
+  created_at DateTime? @default(now())
+  books      Book[]
 }
 
 model Book {
   id         String    @id @unique @default(cuid())
+  title      String
+  folder     String
+  thumbnail  String?
   updated_at DateTime? @updatedAt
   created_at DateTime? @default(now())
-  title      String
-  file       String
-  Series     Series?   @relation(fields: [seriesId], references: [id])
   seriesId   String?
-  thumbnail  String?
-  pages Int?
+  Series     Series?   @relation(fields: [seriesId], references: [id])
 }

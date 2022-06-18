@@ -1,0 +1,45 @@
+.root {
+  display: flex;
+  align-items: center;
+  padding: 2rem;
+  margin-bottom: -3rem;
+  padding-bottom: 6rem;
+  position: relative;
+  h1 {
+    margin-bottom: 1rem;
+  }
+}
+
+.background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: calc(100% - 8rem);
+  opacity: 0.2;
+  border-radius: 0.25rem;
+  img {
+    object-fit: cover;
+    border-radius: 0.25rem;
+  }
+}
+
+.image {
+  width: 100%;
+  max-width: 12rem;
+  margin-right: 2rem;
+  border-radius: 0.25rem 0.25rem 0 0;
+  .wrapper {
+    position: relative;
+    padding-top: 150%;
+  }
+  img {
+    border-radius: 0.25rem 0.25rem 0 0;
+  }
+}
+
+.content {
+  position: relative;
+  z-index: 20;
+  margin-bottom: 2rem;
+}

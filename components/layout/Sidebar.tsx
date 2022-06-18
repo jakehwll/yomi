@@ -18,7 +18,7 @@ const Sidebar = () => {
   return (
     <nav className={styles.root}>
       <Link href="/" passHref>
-        <a className={styles.brand}>yomi</a>
+        <a className={styles.brand}>読み</a>
       </Link>
       <ul className={styles.navigation}>
         {_navigation.map((v: { id: string; href: string; title: string }) => (

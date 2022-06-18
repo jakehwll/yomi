@@ -14,11 +14,9 @@ export default async function getBooks(
     },
   })
 
-  if (!data || data.length === 0) res.status(404).json({ error: 'not found' })
-  else
-    res.status(200).json({
-      id: id,
-      total: data.length,
-      data: data,
-    })
+  res.status(200).json({
+    id: id,
+    total: data.length,
+    data: data,
+  })
 }

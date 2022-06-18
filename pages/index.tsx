@@ -3,9 +3,8 @@ import GridItem, { GridItemGhost } from 'components/grid/GridItem'
 import Layout from 'components/Layout'
 import type { NextPage } from 'next'
 import useSWR from 'swr'
+import fetcher from 'util/swr'
 import { SeriesResponse } from './api/series'
-
-const fetcher = (url: string) => fetch(url).then((r) => r.json())
 
 const SeriesGrid = () => {
   const { data, error } = useSWR('/api/series', fetcher)
@@ -46,7 +45,7 @@ const SeriesGrid = () => {
 
 const Home: NextPage = () => {
   return (
-    <Layout padding={false}>
+    <Layout>
       <SeriesGrid />
     </Layout>
   )
