@@ -1,13 +1,8 @@
-import { readdirSync, readFileSync } from 'fs'
+import { readFileSync } from 'fs'
 import { NextApiRequest, NextApiResponse } from 'next'
 import path from 'path'
 import { getBook } from 'util/book'
-
-const getFiles = async (location: string) => {
-  return readdirSync(path.join(process.cwd(), location), {}).map((v: any) => {
-    return `${location}/${v}`
-  })
-}
+import { getDirectoryFiles } from 'util/fs'
 
 async function get(req: NextApiRequest, res: NextApiResponse) {
   const { id, page } = req.query
@@ -18,7 +13,7 @@ async function get(req: NextApiRequest, res: NextApiResponse) {
     return
   }
 
-  const files = await getFiles(book.folder)
+  const files = await getDirectoryFiles(book.folder)
 
   const fileURI = files[parseInt((page as string) ?? '')]
   const filePath = path.join(process.cwd(), fileURI)

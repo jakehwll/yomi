@@ -11,7 +11,7 @@ async function post(req: NextApiRequest, res: NextApiResponse) {
   })
 }
 
-export default async function getBooks(
+export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {

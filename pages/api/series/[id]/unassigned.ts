@@ -1,17 +1,6 @@
-import { readdirSync } from 'fs'
 import { NextApiRequest, NextApiResponse } from 'next'
-import path from 'path'
+import { getDirectoryFolders } from 'util/fs'
 import { getSeries } from 'util/series'
-
-const getFiles = async (location: string) => {
-  return readdirSync(path.join(process.cwd(), location), {
-    withFileTypes: true,
-  })
-    .filter((dirent) => dirent.isDirectory())
-    .map((v: any) => {
-      return `${location}/${v.name}`
-    })
-}
 
 async function get(req: NextApiRequest, res: NextApiResponse) {
   const { id } = req.query
@@ -22,7 +11,7 @@ async function get(req: NextApiRequest, res: NextApiResponse) {
     return
   }
 
-  const directoriesList = await getFiles((series as any).folder)
+  const directoriesList = await getDirectoryFolders((series as any).folder)
   res.status(200).json({
     data: directoriesList,
   })
