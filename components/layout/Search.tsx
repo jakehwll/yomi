@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router'
 import { useEffect, useRef, useState } from 'react'
-import styles from 'styles/Search.module.scss'
+import styles from 'styles/layout/Search.module.scss'
 
 const SearchInput = () => {
   const router = useRouter()

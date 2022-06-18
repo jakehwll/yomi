@@ -1,5 +1,5 @@
 import { Series } from '@prisma/client'
-import Layout from 'components/Layout'
+import Layout from 'components/layout'
 import type { NextPage } from 'next'
 import { FormEvent, useState } from 'react'
 import useSWR from 'swr'

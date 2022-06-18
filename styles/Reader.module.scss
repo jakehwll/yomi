@@ -64,10 +64,6 @@
 .tools {
   display: flex;
   align-items: center;
-
-  > * {
-    padding: 0rem 1rem;
-  }
 }
 
 .canvas {
@@ -85,4 +81,9 @@
       max-width: 50vw;
     }
   }
+}
+
+.timeline {
+  flex: 1 auto;
+  padding: 0rem 1rem;
 }

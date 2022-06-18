@@ -1,7 +1,19 @@
 import cc from 'classcat'
+import Button, { ButtonGroup } from 'components/Button'
+import Slider from 'components/input/Slider'
 import { range } from 'lodash'
 import { useRouter } from 'next/router'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
+import {
+  ArrowLeft,
+  ArrowRight,
+  CornerLeftDown,
+  CornerRightDown,
+  Maximize,
+  Minimize,
+  Settings,
+} from 'react-feather'
+import { useFullscreen, useToggle } from 'react-use'
 import styles from 'styles/Reader.module.scss'
 
 const Pages = ({ render }: { render: Array<string> }) => {
@@ -25,11 +37,20 @@ const Reader = () => {
   const router = useRouter()
   const { id } = router.query
 
+  // ref
+  const ref = useRef(null)
+
   // constants
   const [index, setIndex] = useState(0)
   const [pageAmount, setPageAmount] = useState(2)
   const [controls, setControls] = useState(true)
   const [render, setRender] = useState<Array<string>>([])
+
+  // hooks
+  const [fullscreen, toggleFullscreen] = useToggle(false)
+  const isFullscreen = useFullscreen(ref, fullscreen, {
+    onClose: () => toggleFullscreen(false),
+  })
 
   // controls
   const [invert, setInvert] = useState(true)
@@ -66,7 +87,12 @@ const Reader = () => {
 
   useEffect(() => {
     const keyHandler = (event: KeyboardEvent) => {
-      console.log(event.key)
+      // TODO.
+      // home - Return to index 0.
+      // end - Return to index last.
+      // f - fullscreen.
+      // s - settings.
+      // / - open keybind menu
       if (event.key === 'ArrowRight')
         setIndex((pageNum) => (invert ? _prev(pageNum) : _next(pageNum)))
       if (event.key === 'ArrowLeft')
@@ -79,32 +105,47 @@ const Reader = () => {
   }, [])
 
   return (
-    <div className={styles.root}>
+    <div className={styles.root} ref={ref}>
       <header className={cc([styles.header, { [styles.hidden]: !controls }])}>
         <div className={styles.back}>
-          <button type="button" onClick={() => router.push(`/book/${id}`)}>
-            &larr;
-          </button>
+          <Button onClick={() => router.push(`/book/${id}`)}>
+            <ArrowLeft />
+          </Button>
         </div>
         <div className={styles.title}>Book Title</div>
         <div className={styles.tools}>
-          <button
-            onClick={() => {
-              !document.fullscreenElement
-                ? document.documentElement.requestFullscreen()
-                : document.exitFullscreen()
-            }}
-          >
-            Fullscreen
-          </button>
-          {/* <div>Settings</div> */}
-          {/* <div>Download</div> */}
+          <ButtonGroup>
+            <Button onClick={toggleFullscreen}>
+              {!isFullscreen ? <Maximize /> : <Minimize />}
+            </Button>
+            <Button>
+              <Settings />
+            </Button>
+          </ButtonGroup>
+          {/* TODO Download Page */}
         </div>
       </header>
       <Pages render={render} />
       <footer className={cc([styles.footer, { [styles.hidden]: !controls }])}>
-        <div>{index}</div>
-        <div>{controls.toString()}</div>
+        <ButtonGroup>
+          <Button>
+            <CornerLeftDown />
+          </Button>
+          <Button>
+            <ArrowLeft />
+          </Button>
+        </ButtonGroup>
+        <div className={styles.timeline}>
+          <Slider />
+        </div>
+        <ButtonGroup>
+          <Button>
+            <CornerRightDown />
+          </Button>
+          <Button>
+            <ArrowRight />
+          </Button>
+        </ButtonGroup>
       </footer>
     </div>
   )

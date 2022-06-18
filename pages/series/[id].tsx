@@ -1,7 +1,7 @@
 import { Book } from '@prisma/client'
 import { GridItem, GridWrapper } from 'components/grid'
 import SeriesHeader from 'components/headings/SeriesHeader'
-import Layout from 'components/Layout'
+import Layout from 'components/layout'
 import { useRouter } from 'next/router'
 import useSWR from 'swr'
 import fetcher from 'util/swr'

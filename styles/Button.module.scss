@@ -1,0 +1,19 @@
+.root {
+  border-radius: 0.25rem;
+  padding: 0.5rem 0.5rem;
+  cursor: pointer;
+  display: block;
+}
+
+.group {
+  display: flex;
+  .root {
+    border-radius: 0rem;
+    &:first-of-type {
+      border-radius: 0.25rem 0rem 0rem 0.25rem;
+    }
+    &:last-of-type {
+      border-radius: 0rem 0.25rem 0.25rem 0rem;
+    }
+  }
+}

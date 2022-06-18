@@ -1,6 +1,6 @@
 import { GridWrapper } from 'components/grid'
 import GridItem, { GridItemGhost } from 'components/grid/GridItem'
-import Layout from 'components/Layout'
+import Layout from 'components/layout'
 import type { NextPage } from 'next'
 import useSWR from 'swr'
 import fetcher from 'util/swr'

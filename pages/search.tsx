@@ -1,7 +1,7 @@
 import Content from 'components/layout/Content'
 import Footer from 'components/layout/Footer'
+import SearchInput from 'components/layout/Search'
 import Sidebar from 'components/layout/Sidebar'
-import SearchInput from 'components/Search'
 import type { NextPage } from 'next'
 import styles from 'styles/layout/Layout.module.scss'
 

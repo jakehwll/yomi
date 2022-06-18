@@ -1,9 +1,9 @@
 import cc from 'classcat'
 import styles from 'styles/layout/Layout.module.scss'
-import Content from './layout/Content'
-import Footer from './layout/Footer'
-import Sidebar from './layout/Sidebar'
+import Content from './Content'
+import Footer from './Footer'
 import Search from './Search'
+import Sidebar from './Sidebar'
 
 const Layout = ({
   children,
