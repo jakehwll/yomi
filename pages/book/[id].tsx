@@ -9,14 +9,20 @@ import {
   ArrowRight,
   CornerLeftDown,
   CornerRightDown,
-  Maximize,
-  Minimize,
+  Maximize2,
+  Minimize2,
   Settings,
 } from 'react-feather'
 import { useFullscreen, useToggle } from 'react-use'
 import styles from 'styles/Reader.module.scss'
+import useSWR from 'swr'
+import fetcher from 'util/swr'
 
 const Pages = ({ render }: { render: Array<string> }) => {
+  const router = useRouter()
+  const { id } = router.query
+  const { data, error, mutate } = useSWR(`/api/book/${id}`, fetcher)
+
   return (
     <section>
       <div className={styles.canvas}>
@@ -36,6 +42,7 @@ const Pages = ({ render }: { render: Array<string> }) => {
 const Reader = () => {
   const router = useRouter()
   const { id } = router.query
+  const { data, error } = useSWR(`/api/book/${id}`, fetcher)
 
   // ref
   const ref = useRef(null)
@@ -104,51 +111,59 @@ const Reader = () => {
     return () => document.removeEventListener('keydown', keyHandler)
   }, [])
 
-  return (
-    <div className={styles.root} ref={ref}>
-      <header className={cc([styles.header, { [styles.hidden]: !controls }])}>
-        <div className={styles.back}>
-          <Button onClick={() => router.push(`/book/${id}`)}>
-            <ArrowLeft />
-          </Button>
-        </div>
-        <div className={styles.title}>Book Title</div>
-        <div className={styles.tools}>
+  if (data)
+    return (
+      <div className={styles.root} ref={ref}>
+        <header className={cc([styles.header, { [styles.hidden]: !controls }])}>
+          <div className={styles.back}>
+            {data && (
+              <Button
+                onClick={() => router.push(`/series/${data.data.Series.id}`)}
+              >
+                <ArrowLeft />
+              </Button>
+            )}
+          </div>
+          <div className={styles.title}>
+            {data.data && `${data.data.Series.title} - ${data.data.title}`}
+          </div>
+          <div className={styles.tools}>
+            <ButtonGroup>
+              <Button onClick={toggleFullscreen}>
+                {!isFullscreen ? <Maximize2 /> : <Minimize2 />}
+              </Button>
+              <Button>
+                <Settings />
+              </Button>
+            </ButtonGroup>
+            {/* TODO Download Page */}
+          </div>
+        </header>
+        <Pages render={render} />
+        <footer className={cc([styles.footer, { [styles.hidden]: !controls }])}>
           <ButtonGroup>
-            <Button onClick={toggleFullscreen}>
-              {!isFullscreen ? <Maximize /> : <Minimize />}
+            <Button onClick={() => setIndex(0)}>
+              <CornerLeftDown />
             </Button>
-            <Button>
-              <Settings />
+            <Button onClick={() => setIndex((index) => _prev(index))}>
+              <ArrowLeft />
             </Button>
           </ButtonGroup>
-          {/* TODO Download Page */}
-        </div>
-      </header>
-      <Pages render={render} />
-      <footer className={cc([styles.footer, { [styles.hidden]: !controls }])}>
-        <ButtonGroup>
-          <Button>
-            <CornerLeftDown />
-          </Button>
-          <Button>
-            <ArrowLeft />
-          </Button>
-        </ButtonGroup>
-        <div className={styles.timeline}>
-          <Slider />
-        </div>
-        <ButtonGroup>
-          <Button>
-            <CornerRightDown />
-          </Button>
-          <Button>
-            <ArrowRight />
-          </Button>
-        </ButtonGroup>
-      </footer>
-    </div>
-  )
+          <div className={styles.timeline}>
+            <Slider />
+          </div>
+          <ButtonGroup>
+            <Button onClick={() => setIndex((index) => _next(index))}>
+              <ArrowRight />
+            </Button>
+            <Button>
+              <CornerRightDown />
+            </Button>
+          </ButtonGroup>
+        </footer>
+      </div>
+    )
+  else return <></>
 }
 
 export default Reader

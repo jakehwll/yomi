@@ -3,6 +3,9 @@
   padding: 0.5rem 0.5rem;
   cursor: pointer;
   display: block;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
 }
 
 .group {

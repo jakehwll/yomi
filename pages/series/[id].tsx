@@ -6,31 +6,23 @@ import { useRouter } from 'next/router'
 import useSWR from 'swr'
 import fetcher from 'util/swr'
 
-const BookGrid = ({ seriesId }: { seriesId: string }) => {
-  const { data, error } = useSWR(`/api/book/${seriesId}`, fetcher)
-
-  if (data)
-    return (
-      <>
-        {data.data && (
-          <GridWrapper>
-            {data.data &&
-              data.data.map((v: Book) => (
-                <GridItem
-                  image={''}
-                  key={v.id}
-                  headline={v.title}
-                  link={`/book/${v.id}`}
-                />
-              ))}
-            {data.data.length === 0 && <h1>no volumes.</h1>}
-          </GridWrapper>
-        )}
-      </>
-    )
-  else if (error) {
-    return <span>Something went wrong.</span>
-  } else return <>Loading...</>
+const BookGrid = ({ books }: { books: Array<Book> }) => {
+  return (
+    <>
+      <GridWrapper>
+        {books &&
+          books.map((v: Book) => (
+            <GridItem
+              image={''}
+              key={v.id}
+              headline={v.title}
+              link={`/book/${v.id}`}
+            />
+          ))}
+        {!books && <h1>no volumes.</h1>}
+      </GridWrapper>
+    </>
+  )
 }
 
 export const Series = () => {
@@ -46,7 +38,7 @@ export const Series = () => {
           image={`/api/series/${id}/thumbnail`}
           volumes={0}
         />
-        <BookGrid seriesId={id?.toString() ?? ''} />
+        <BookGrid books={data.data.books} />
       </Layout>
     )
   else return <Layout>Loading...</Layout>

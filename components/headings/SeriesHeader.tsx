@@ -1,5 +1,16 @@
+import Button from 'components/Button'
+import Dialog from 'components/Dialog'
 import Image from 'next/image'
+import { Edit3 } from 'react-feather'
 import styles from 'styles/headings/SeriesHeader.module.scss'
+
+const SeriesSettings = () => {
+  return (
+    <>
+      <div>Hello werld!</div>
+    </>
+  )
+}
 
 const SeriesHeader = ({
   title,
@@ -13,6 +24,13 @@ const SeriesHeader = ({
   return (
     <>
       <header className={styles.root}>
+        <div className={styles.edit}>
+          <Dialog title="Edit Series" content={SeriesSettings}>
+            <Button>
+              <Edit3 />
+            </Button>
+          </Dialog>
+        </div>
         <div className={styles.background}>
           <Image src={image} layout="fill" alt="" />
         </div>

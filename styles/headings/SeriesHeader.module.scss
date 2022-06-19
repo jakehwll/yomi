@@ -2,8 +2,8 @@
   display: flex;
   align-items: center;
   padding: 2rem;
-  margin-bottom: -3rem;
-  padding-bottom: 6rem;
+  margin-bottom: 0rem;
+  padding-bottom: 4rem;
   position: relative;
   h1 {
     margin-bottom: 1rem;
@@ -15,7 +15,7 @@
   top: 0;
   left: 0;
   width: 100%;
-  height: calc(100% - 8rem);
+  height: calc(100% - 6rem);
   opacity: 0.2;
   border-radius: 0.25rem;
   background: rgba(white, 0.2);
@@ -44,4 +44,11 @@
   position: relative;
   z-index: 20;
   margin-bottom: 2rem;
+}
+
+.edit {
+  z-index: 20;
+  position: absolute;
+  top: 2rem;
+  right: 2rem;
 }

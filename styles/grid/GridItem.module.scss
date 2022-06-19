@@ -54,6 +54,10 @@
 .headline,
 .subline {
   margin: 0.1rem 0;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  max-width: 100%;
   &__ghost {
     border-radius: 0.2rem;
     background: rgba(white, 0.1);

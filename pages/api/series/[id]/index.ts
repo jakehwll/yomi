@@ -15,6 +15,9 @@ async function get(req: NextApiRequest, res: NextApiResponse) {
         equals: req.query.id as string,
       },
     },
+    include: {
+      books: true,
+    },
   })
 
   res.status(200).json({

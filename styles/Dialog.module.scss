@@ -1,0 +1,51 @@
+@keyframes overlay {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes content {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -48%) scale(0.96);
+  }
+  100% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+.overlay {
+  background: rgba(black, 0.5);
+  position: fixed;
+  inset: 0;
+  animation: overlay 150ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.content {
+  background: white;
+  color: black;
+  border-radius: 0.25rem;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 90vw;
+  max-width: 450px;
+  max-height: 85vh;
+  animation: content 150ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  padding: 1rem;
+}
+
+.close {
+  position: absolute;
+  width: 2rem;
+  height: 2rem;
+  top: 1rem;
+  right: 1rem;
+  cursor: pointer;
+  border-radius: 100%;
+}

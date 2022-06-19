@@ -35,7 +35,9 @@ const UnassignedSeries = () => {
               defaultValue={'undefined'}
               onChange={(event) => setFolder(event.target.value)}
             >
-              <option value={'undefined'} disabled></option>
+              <option value={'undefined'} disabled>
+                Select Folder
+              </option>
               {data.data.map((v: any) => {
                 return (
                   <option key={v} value={v}>
@@ -47,7 +49,7 @@ const UnassignedSeries = () => {
           </div>
           <div>
             <input
-              placeholder="title"
+              placeholder="Series Title"
               value={title}
               onChange={(event) => setTitle(event.target.value)}
             />
@@ -105,7 +107,9 @@ const UnassignedVolumes = () => {
               defaultValue={'undefined'}
               onChange={(event) => setSeries(event.target.value)}
             >
-              <option value={'undefined'} disabled></option>
+              <option value={'undefined'} disabled>
+                Select Series
+              </option>
               {seriesData.data.map((v: Series) => {
                 return (
                   <option key={v.id} value={v.id}>
@@ -120,7 +124,9 @@ const UnassignedVolumes = () => {
               defaultValue={'undefined'}
               onChange={(event) => setVolume(event.target.value)}
             >
-              <option value={'undefined'} disabled></option>
+              <option value={'undefined'} disabled>
+                Select Folder
+              </option>
               {volumesData &&
                 volumesData.data.map((v: String) => {
                   return (
@@ -134,7 +140,7 @@ const UnassignedVolumes = () => {
           <div>
             <input
               type="text"
-              placeholder="title"
+              placeholder="Series Title"
               value={volumeTitle}
               onChange={(event) => setVolumeTitle(event.target.value)}
             />
