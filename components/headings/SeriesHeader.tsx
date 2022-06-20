@@ -1,5 +1,6 @@
 import Button from 'components/Button'
 import Dialog from 'components/Dialog'
+import Text from 'components/input/Text'
 import Image from 'next/image'
 import { Edit3 } from 'react-feather'
 import styles from 'styles/headings/SeriesHeader.module.scss'
@@ -7,7 +8,14 @@ import styles from 'styles/headings/SeriesHeader.module.scss'
 const SeriesSettings = () => {
   return (
     <>
-      <div>Hello werld!</div>
+      <Text
+        label={'Title'}
+        id={'title'}
+        name={'title'}
+        value={''}
+        onChange={() => {}}
+      />
+      <Button style={'success'}>Save</Button>
     </>
   )
 }
@@ -25,8 +33,8 @@ const SeriesHeader = ({
     <>
       <header className={styles.root}>
         <div className={styles.edit}>
-          <Dialog title="Edit Series" content={SeriesSettings}>
-            <Button>
+          <Dialog title="Edit Series" content={<SeriesSettings />}>
+            <Button opaque={true} style={'secondary'}>
               <Edit3 />
             </Button>
           </Dialog>

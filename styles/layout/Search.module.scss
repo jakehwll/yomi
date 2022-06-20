@@ -2,7 +2,7 @@
   position: relative;
   height: var(--global-header-height);
   border-bottom: 1px solid var(--global-color-secondary);
-  .input {
+  input.input {
     position: absolute;
     top: 0;
     left: 0;
@@ -12,10 +12,16 @@
     background: transparent;
     outline: none;
     padding: 0.5rem 2rem;
-    font: inherit;
+    color: white;
+    border-radius: 0px;
+    border-color: var(--global-color-secondary);
+    box-shadow: none;
     &::placeholder {
       font: inherit;
       color: white;
+    }
+    &:focus {
+      outline-color: transparent;
     }
   }
 }

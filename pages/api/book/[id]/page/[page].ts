@@ -15,13 +15,20 @@ async function get(req: NextApiRequest, res: NextApiResponse) {
   }
   const parsePageNumber = (input: string) => {
     // remove p from the start of string
-    const rawNumber = input.substring(1, input.length)
+    const rawNumber = input.replaceAll('p', '')
     return parseInt(rawNumber)
   }
   const files = await (
     await getDirectoryFiles(book.folder)
   ).map((pageString) => {
-    const pageMatches = pageString.value.match(/p\d+/g)
+    // ^p(\d+)(?:-p?(\d+))?$
+    const pageMatchesRaw = pageString.value.match(/p\d+-?p?\d+/)
+    const pageMatches = pageMatchesRaw[0]
+      .match(/^p(\d+)(?:-p?(\d+))?$/)
+      .slice(1)
+      .filter((x: string) => {
+        return x !== undefined
+      })
     if (!pageMatches) return
     if (pageMatches.length === 1) {
       return [{ pageNum: parsePageNumber(pageMatches[0]), value: pageString }]

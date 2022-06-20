@@ -1,11 +1,36 @@
+@import 'variables';
+
 .root {
   border-radius: 0.25rem;
-  padding: 0.5rem 0.5rem;
+  padding: 0.75rem 1rem;
+
   cursor: pointer;
+
   display: block;
+
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
+
+  font-weight: 600;
+
+  background: var(--component-color);
+
+  &.opaque {
+    background: rgba(var(--component-color-rgb), 0.1);
+    color: var(--component-color);
+  }
+
+  &.transparent {
+    background: transparent;
+  }
+
+  @each $color, $value in $site-colors {
+    &.#{$color} {
+      --component-color: var(--global-color-#{$color});
+      --component-color-rgb: var(--global-color-#{$color}-rgb);
+    }
+  }
 }
 
 .group {

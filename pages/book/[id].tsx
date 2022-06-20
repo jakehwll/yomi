@@ -1,5 +1,7 @@
 import cc from 'classcat'
 import Button, { ButtonGroup } from 'components/Button'
+import Dialog from 'components/Dialog'
+import Checkbox from 'components/input/Checkbox'
 import Slider from 'components/input/Slider'
 import { range } from 'lodash'
 import { useRouter } from 'next/router'
@@ -39,6 +41,37 @@ const Pages = ({ render }: { render: Array<string> }) => {
   )
 }
 
+const ReaderSettings = ({
+  invertControls,
+  setInvertControls,
+  invertPages,
+  setInvertPages,
+}: {
+  invertControls: boolean
+  setInvertControls(val: boolean): void
+  invertPages: boolean
+  setInvertPages(val: boolean): void
+}) => {
+  return (
+    <div>
+      <Checkbox
+        label="Invert Controls"
+        name={'invert-controls'}
+        id={'invert-controls'}
+        value={invertControls}
+        onChange={() => setInvertControls(!invertControls)}
+      />
+      <Checkbox
+        label="Invert Pages"
+        name={'invert-pages'}
+        id={'invert-pages'}
+        value={invertPages}
+        onChange={() => setInvertPages(!invertPages)}
+      />
+    </div>
+  )
+}
+
 const Reader = () => {
   const router = useRouter()
   const { id } = router.query
@@ -60,7 +93,15 @@ const Reader = () => {
   })
 
   // controls
-  const [invert, setInvert] = useState(true)
+  const [invertControls, setInvertControls] = useState(true)
+  const [invertPages, setInvertPages] = useState(true)
+
+  const readerSettingProps = {
+    invertControls,
+    setInvertControls,
+    invertPages,
+    setInvertPages,
+  }
 
   const _prev = (pageNum: number) => {
     // dont allow to page out of bounds.
@@ -87,29 +128,41 @@ const Reader = () => {
       (v: number) => `/api/book/${id}/page/${v}`
     )
     // reverse if inverted layout (manga).
-    if (invert) pages = pages.reverse()
+    if (invertPages) pages = pages.reverse()
     // update the renderer.
     setRender(pages)
-  }, [id, index])
+  }, [id, index, invertPages])
+
+  // TODO.
+  // home - Return to index 0.
+  // end - Return to index last.
+  // f - fullscreen.
+  // s - settings.
+  // / - open keybind menu
 
   useEffect(() => {
     const keyHandler = (event: KeyboardEvent) => {
-      // TODO.
-      // home - Return to index 0.
-      // end - Return to index last.
-      // f - fullscreen.
-      // s - settings.
-      // / - open keybind menu
-      if (event.key === 'ArrowRight')
-        setIndex((pageNum) => (invert ? _prev(pageNum) : _next(pageNum)))
-      if (event.key === 'ArrowLeft')
-        setIndex((pageNum) => (invert ? _next(pageNum) : _prev(pageNum)))
       if (event.key === ' ') setControls((controls) => !controls)
       if (event.key === 'm') setControls((controls) => !controls)
     }
     document.addEventListener('keydown', keyHandler)
     return () => document.removeEventListener('keydown', keyHandler)
   }, [])
+
+  useEffect(() => {
+    const keyHandler = (event: KeyboardEvent) => {
+      if (event.key === 'ArrowRight')
+        setIndex((pageNum) =>
+          invertControls ? _prev(pageNum) : _next(pageNum)
+        )
+      if (event.key === 'ArrowLeft')
+        setIndex((pageNum) =>
+          invertControls ? _next(pageNum) : _prev(pageNum)
+        )
+    }
+    document.addEventListener('keydown', keyHandler)
+    return () => document.removeEventListener('keydown', keyHandler)
+  }, [invertControls])
 
   if (data)
     return (
@@ -132,9 +185,14 @@ const Reader = () => {
               <Button onClick={toggleFullscreen}>
                 {!isFullscreen ? <Maximize2 /> : <Minimize2 />}
               </Button>
-              <Button>
-                <Settings />
-              </Button>
+              <Dialog
+                title={'Reader Settings'}
+                content={<ReaderSettings {...readerSettingProps} />}
+              >
+                <Button>
+                  <Settings />
+                </Button>
+              </Dialog>
             </ButtonGroup>
             {/* TODO Download Page */}
           </div>

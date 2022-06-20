@@ -1,3 +1,5 @@
+@import 'variables';
+
 *,
 ::after,
 ::before {
@@ -52,19 +54,55 @@ p {
 body,
 html {
   font-family: 'Inter', sans-serif;
-  background: var(--global-background);
+  background: var(--global-color-background);
   min-height: 100vh;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-weight: 600;
+}
+
+@function toRGB($color) {
+  @return red($color) + ', ' + green($color) + ', ' + blue($color);
 }
 
 :root {
   color-scheme: dark;
-}
 
-:root {
-  --global-background: #1f2023;
-  --global-color-secondary: #27282b;
+  @each $color, $value in $site-colors {
+    --global-color-#{$color}: #{$value};
+    --global-color-#{$color}-rgb: #{toRGB($value)};
+  }
 
   --global-sidebar-width: 16rem;
 
   --global-header-height: 4rem;
+}
+
+label {
+  font-size: 0.95rem;
+}
+
+input:not([type='checkbox']):not([type='radio']) {
+  border-radius: 0.25rem;
+  padding: 0.5rem;
+
+  border: 1px solid #dfe1e4;
+  background: white;
+  color: black;
+
+  font-weight: 400;
+  font-size: 0.95rem;
+
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.05);
+
+  &:focus {
+    border-color: var(--global-color-primary);
+    outline: 1px solid var(--global-color-primary);
+  }
 }
