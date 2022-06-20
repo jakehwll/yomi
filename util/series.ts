@@ -17,7 +17,27 @@ const getSeries = async (seriesId: string) => {
         equals: seriesId,
       },
     },
+    include: {
+      books: true,
+    },
   })
 }
 
-export { getAllSeries, getSeries }
+const updateSeries = async (seriesId: string, data: object) => {
+  return await prisma.series.update({
+    where: {
+      id: seriesId,
+    },
+    data: data,
+  })
+}
+
+const deleteSeries = async (seriesId: string) => {
+  return await prisma.series.delete({
+    where: {
+      id: seriesId,
+    },
+  })
+}
+
+export { getAllSeries, getSeries, deleteSeries, updateSeries }

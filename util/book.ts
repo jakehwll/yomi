@@ -7,7 +7,23 @@ const getBook = async (bookId: string) => {
         equals: bookId,
       },
     },
+    include: {
+      Series: true,
+    },
   })
 }
 
-export { getBook }
+const createBook = async (data: object) => {
+  return await prisma.book.create(data)
+}
+
+const updateBook = async (bookId: string, data: object) => {
+  return await prisma.book.update({
+    where: {
+      id: bookId,
+    },
+    data: data,
+  })
+}
+
+export { getBook, updateBook, createBook }

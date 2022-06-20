@@ -1,22 +1,18 @@
-import fs from 'fs'
+import { readFileSync } from 'fs'
 import { NextApiRequest, NextApiResponse } from 'next'
 import path from 'path'
-import { getSeries } from 'util/series'
+import { getBook } from 'util/book'
 
 async function get(req: NextApiRequest, res: NextApiResponse) {
   const { id } = req.query
-  const data: any = await getSeries(id as string)
-
+  const data: any = getBook(id as string)
   const fileURI = `${data.folder}${data.thumbnail}`
   const filePath = path.join(process.cwd(), fileURI)
-
   try {
-    const imageBuffer = fs.readFileSync(filePath)
+    const imageBuffer = readFileSync(filePath)
     res.setHeader('Content-Type', 'image/jpg')
     res.status(200).send(imageBuffer)
-  } catch (error: any) {
-    res.status(500).send({ error: { message: 'Unknown error.', value: error } })
-  }
+  } catch {}
 }
 
 export default async function handler(

@@ -1,13 +1,12 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import prisma from 'util/prisma'
+import { createBook } from 'util/book'
 
 async function post(req: NextApiRequest, res: NextApiResponse) {
   if (!req.body) return
-  const _ = await prisma.book.create({
-    data: JSON.parse(req.body),
-  })
+  const data = JSON.parse(req.body)
+  const response = createBook(data)
   res.status(200).json({
-    response: _,
+    data: response,
   })
 }
 

@@ -1,6 +1,7 @@
 import { Series } from '@prisma/client'
 import { NextApiRequest, NextApiResponse } from 'next'
 import prisma from 'util/prisma'
+import { getAllSeries } from 'util/series'
 
 export interface SeriesResponse extends Series {
   _count: {
@@ -9,27 +10,19 @@ export interface SeriesResponse extends Series {
 }
 
 async function get(req: NextApiRequest, res: NextApiResponse) {
-  const data = await prisma.series.findMany({
-    include: {
-      _count: {
-        select: { books: true },
-      },
-    },
+  const response = await getAllSeries()
+  res.status(200).json({
+    data: response,
   })
-  if (!data || data.length === 0) res.status(404).json({ error: 'not found' })
-  else
-    res.status(200).json({
-      data: data,
-    })
 }
 
 async function post(req: NextApiRequest, res: NextApiResponse) {
   if (!req.body) return
-  const _ = await prisma.series.create({
+  const response = await prisma.series.create({
     data: JSON.parse(req.body),
   })
   res.status(200).json({
-    response: _,
+    data: response,
   })
 }
 

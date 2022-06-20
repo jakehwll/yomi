@@ -11,9 +11,10 @@ async function get(req: NextApiRequest, res: NextApiResponse) {
     return
   }
 
-  const directoriesList = await getDirectoryFolders((series as any).folder)
+  const response = await getDirectoryFolders((series as any).folder)
+
   res.status(200).json({
-    data: directoriesList,
+    data: response,
   })
 }
 
