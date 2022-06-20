@@ -1,7 +1,7 @@
 .root {
   position: relative;
   height: var(--global-header-height);
-  border-bottom: 1px solid var(--global-color-secondary);
+  margin-left: -1px;
   input.input {
     position: absolute;
     top: 0;
