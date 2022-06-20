@@ -208,7 +208,10 @@ const Reader = () => {
             </Button>
           </ButtonGroup>
           <div className={styles.timeline}>
-            <Slider />
+            <Slider
+              value={index + 1}
+              onValueChange={(number) => setIndex(number[0])}
+            />
           </div>
           <ButtonGroup>
             <Button onClick={() => setIndex((index) => _next(index))}>

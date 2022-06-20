@@ -6,19 +6,24 @@ const Button = ({
   onClick,
   style,
   opaque,
+  wide,
+  type,
 }: {
   children?: React.ReactNode
   onClick?: React.MouseEventHandler<HTMLButtonElement>
   style?: 'primary' | 'secondary' | 'success' | 'danger'
   opaque?: boolean
+  wide?: boolean
+  type?: 'button' | 'submit' | 'reset'
 }) => {
   return (
     <button
-      type="button"
+      type={type ?? 'button'}
       className={cc([
         styles.root,
         {
-          [styles.opaque]: !opaque,
+          [styles.opaque]: opaque,
+          [styles.wide]: wide,
           [`${styles[style ? style : 'transparent']}`]: style,
         },
       ])}

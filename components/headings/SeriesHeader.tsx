@@ -1,8 +1,8 @@
-import Button from 'components/Button'
+import Button, { ButtonGroup } from 'components/Button'
 import Dialog from 'components/Dialog'
 import Text from 'components/input/Text'
 import Image from 'next/image'
-import { Edit3 } from 'react-feather'
+import { Edit3, MoreVertical } from 'react-feather'
 import styles from 'styles/headings/SeriesHeader.module.scss'
 
 const SeriesSettings = () => {
@@ -33,11 +33,16 @@ const SeriesHeader = ({
     <>
       <header className={styles.root}>
         <div className={styles.edit}>
-          <Dialog title="Edit Series" content={<SeriesSettings />}>
-            <Button opaque={true} style={'secondary'}>
-              <Edit3 />
+          <ButtonGroup>
+            <Dialog title="Edit Series" content={<SeriesSettings />}>
+              <Button opaque={true} style={'secondary'}>
+                <Edit3 />
+              </Button>
+            </Dialog>
+            <Button>
+              <MoreVertical />
             </Button>
-          </Dialog>
+          </ButtonGroup>
         </div>
         <div className={styles.background}>
           <Image src={image} layout="fill" alt="" />

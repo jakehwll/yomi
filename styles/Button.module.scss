@@ -21,6 +21,10 @@
     color: var(--component-color);
   }
 
+  &.wide {
+    width: 100%;
+  }
+
   &.transparent {
     background: transparent;
   }

@@ -1,4 +1,5 @@
 import { Series } from '@prisma/client'
+import Button from 'components/Button'
 import Layout from 'components/layout'
 import type { NextPage } from 'next'
 import { FormEvent, useState } from 'react'
@@ -54,7 +55,9 @@ const UnassignedSeries = () => {
               onChange={(event) => setTitle(event.target.value)}
             />
           </div>
-          <button type="submit">Submit</button>
+          <Button style={'primary'} type="submit">
+            Submit
+          </Button>
         </form>
       </>
     )
@@ -146,7 +149,9 @@ const UnassignedVolumes = () => {
             />
           </div>
           <div>
-            <button type="submit">Submit</button>
+            <Button style={'primary'} type="submit">
+              Submit
+            </Button>
           </div>
         </form>
       </>

@@ -13,10 +13,6 @@ const getBook = async (bookId: string) => {
   })
 }
 
-const createBook = async (data: object) => {
-  return await prisma.book.create(data)
-}
-
 const updateBook = async (bookId: string, data: object) => {
   return await prisma.book.update({
     where: {
@@ -26,4 +22,4 @@ const updateBook = async (bookId: string, data: object) => {
   })
 }
 
-export { getBook, updateBook, createBook }
+export { getBook, updateBook }

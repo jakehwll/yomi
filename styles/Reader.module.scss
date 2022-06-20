@@ -2,34 +2,40 @@
   background: black;
   height: 100vh;
   overflow: hidden;
+  position: relative;
 }
 
 .header,
 .footer {
+  position: absolute;
+  left: 0;
+  right: 0;
+
   z-index: 100;
 
   width: 100%;
-}
 
-.header {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
+  padding: 0rem 0.5rem;
+
+  transition: 1s ease transform;
 
   display: flex;
   align-items: center;
   justify-content: space-between;
 
-  padding: 0rem 1rem;
+  &.hidden {
+    transition: 1s ease transform;
+  }
+}
+
+.header {
+  top: 0;
 
   height: var(--global-header-height);
   background: linear-gradient(rgba(black, 0.8), rgba(black, 0));
-  transition: 1s ease transform;
 
   &.hidden {
     transform: translateY(-100%);
-    transition: 1s ease transform;
   }
 
   .title {
@@ -38,23 +44,13 @@
 }
 
 .footer {
-  position: absolute;
   bottom: 0;
-  left: 0;
-  right: 0;
-
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-
-  padding: 0rem 1rem;
 
   height: var(--global-header-height);
   background: linear-gradient(rgba(black, 0), rgba(black, 0.8));
 
   &.hidden {
     transform: translateY(100%);
-    transition: 1s ease transform;
   }
 }
 

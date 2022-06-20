@@ -1,3 +1,4 @@
+import { Label } from '@radix-ui/react-label'
 import { ChangeEventHandler } from 'react'
 import styles from 'styles/input/Text.module.scss'
 
@@ -8,7 +9,7 @@ const Text = ({
   value,
   onChange,
 }: {
-  label: string
+  label?: string
   id: string
   name: string
   value: string
@@ -16,11 +17,19 @@ const Text = ({
 }) => {
   return (
     <div className={styles.root}>
-      <div className={styles.label}>
-        <label htmlFor={name}>{label}</label>
-      </div>
+      {label && (
+        <div className={styles.label}>
+          <Label htmlFor={name}>{label}</Label>
+        </div>
+      )}
       <div className={styles.input}>
-        <input type="text" name={name} id={id} />
+        <input
+          type="text"
+          name={name}
+          id={id}
+          value={value}
+          onChange={onChange}
+        />
       </div>
     </div>
   )

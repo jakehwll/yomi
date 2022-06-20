@@ -1,3 +1,4 @@
+import { Label } from '@radix-ui/react-label'
 import { ChangeEventHandler } from 'react'
 import styles from 'styles/input/Checkbox.module.scss'
 
@@ -25,9 +26,9 @@ const Checkbox = ({
           onChange={onChange}
         />
       </div>
-      <label className={styles.label} htmlFor={name}>
+      <Label className={styles.label} htmlFor={name}>
         {label}
-      </label>
+      </Label>
     </div>
   )
 }
