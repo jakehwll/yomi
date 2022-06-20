@@ -1,20 +1,22 @@
 import cc from 'classcat'
+import { Loader } from 'react-feather'
 import styles from 'styles/Button.module.scss'
 
 const Button = ({
   children,
   onClick,
-  style,
-  opaque,
+  style = 'transparent',
   wide,
   type,
+  loading,
 }: {
   children?: React.ReactNode
   onClick?: React.MouseEventHandler<HTMLButtonElement>
-  style?: 'primary' | 'secondary' | 'success' | 'danger'
+  style?: 'primary' | 'secondary' | 'success' | 'danger' | 'transparent'
   opaque?: boolean
   wide?: boolean
   type?: 'button' | 'submit' | 'reset'
+  loading?: boolean
 }) => {
   return (
     <button
@@ -22,13 +24,14 @@ const Button = ({
       className={cc([
         styles.root,
         {
-          [`${styles[style ? style : 'transparent']}`]: style,
-          [styles.opaque]: opaque,
+          [`${styles[style]}`]: style,
           [styles.wide]: wide,
+          [styles.loading]: loading,
         },
       ])}
       onClick={onClick}
     >
+      {loading && <Loader />}
       {children}
     </button>
   )

@@ -7,6 +7,7 @@
   cursor: pointer;
 
   display: block;
+  position: relative;
 
   white-space: nowrap;
   text-overflow: ellipsis;
@@ -28,6 +29,25 @@
 
   &.transparent {
     background: transparent;
+    box-shadow: none;
+  }
+
+  &.loading {
+    color: transparent;
+    svg {
+      color: white;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+
+      animation-name: spin;
+      animation-duration: 1.5s;
+      animation-iteration-count: infinite;
+      animation-timing-function: linear;
+
+      transform-origin: center;
+    }
   }
 
   @each $color, $value in $site-colors {
@@ -35,6 +55,15 @@
       --component-color: var(--global-color-#{$color});
       --component-color-rgb: var(--global-color-#{$color}-rgb);
     }
+  }
+}
+
+@keyframes spin {
+  0% {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+  100% {
+    transform: translate(-50%, -50%) rotate(360deg);
   }
 }
 

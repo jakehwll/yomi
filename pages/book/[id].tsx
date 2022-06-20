@@ -93,8 +93,8 @@ const Reader = () => {
   })
 
   // controls
-  const [invertControls, setInvertControls] = useState(true)
-  const [invertPages, setInvertPages] = useState(true)
+  const [invertControls, setInvertControls] = useState(false)
+  const [invertPages, setInvertPages] = useState(false)
 
   const readerSettingProps = {
     invertControls,

@@ -38,7 +38,7 @@ const SeriesHeader = ({
                 />
               }
             >
-              <Button style={'secondary'} onClick={() => setSettingsOpen(true)}>
+              <Button onClick={() => setSettingsOpen(true)}>
                 <Edit3 />
               </Button>
             </Dialog>

@@ -21,7 +21,7 @@ const Sidebar = () => {
   return (
     <nav className={styles.root}>
       <Link href="/" passHref>
-        <a className={styles.brand}>読み</a>
+        <a className={styles.brand}>yomi</a>
       </Link>
       <ul className={styles.navigation}>
         {_navigation.map(

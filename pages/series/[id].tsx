@@ -36,7 +36,7 @@ export const Series = () => {
         <SeriesHeader
           title={data.data.title}
           image={`/api/series/${id}/thumbnail`}
-          volumes={0}
+          volumes={data.data.books.length}
           id={id as string}
           mutate={mutate}
         />

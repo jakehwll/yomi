@@ -58,8 +58,8 @@ const SeriesSettings = ({
             setTitle((event.target as HTMLInputElement).value)
           }
         />
-        <Button style={'success'} wide={true} type="submit">
-          {loading ? 'Saving...' : 'Save'}
+        <Button style={'success'} wide={true} loading={loading} type="submit">
+          Save
         </Button>
       </form>
     </>

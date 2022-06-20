@@ -19,7 +19,6 @@ async function get(req: NextApiRequest, res: NextApiResponse) {
 async function update(req: NextApiRequest, res: NextApiResponse) {
   const { id } = req.query
   const data = req.body
-  console.log(data)
   const response = await updateSeries(id as string, data)
   res.status(200).json({
     data: response,

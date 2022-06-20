@@ -13,6 +13,7 @@ const UnassignedSeries = () => {
   const [folder, setFolder] = useState('')
 
   const handleSubmit = (event: FormEvent) => {
+    if (!title || !folder) return
     event.preventDefault()
     fetch('/api/series', {
       method: 'POST',
@@ -82,11 +83,7 @@ const UnassignedVolumes = () => {
 
   const handleSubmit = (event: FormEvent) => {
     event.preventDefault()
-    console.log({
-      title: volumeTitle,
-      folder: volume,
-      seriesId: series,
-    })
+    if (!volumeTitle || !volume || !series) return
     fetch('/api/book', {
       method: 'POST',
       body: JSON.stringify({
