@@ -21,8 +21,8 @@ const Dialog = ({
   title: string
   children: React.ReactNode
   content: React.ReactNode
-  open?: boolean
   setter?(val: boolean): void
+  open?: boolean
   onOpenChange?(open: boolean): void
 }) => {
   return (

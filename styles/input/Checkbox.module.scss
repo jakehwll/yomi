@@ -16,10 +16,11 @@
 
   input[type='checkbox'] {
     appearance: none;
-    width: 1.625rem;
-    height: 1.625rem;
+    width: 1.5rem;
+    height: 1.5rem;
     border-radius: 0.25rem;
     border: 1px solid rgba(black, 0.1);
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.05);
     &:checked {
       background: blue;
     }

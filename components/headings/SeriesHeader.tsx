@@ -1,10 +1,29 @@
 import Button, { ButtonGroup } from 'components/Button'
 import Dialog from 'components/Dialog'
+import { Dropdown, DropdownItem } from 'components/Dropdown'
 import SeriesSettings from 'components/settings/Series'
 import Image from 'next/image'
 import { useState } from 'react'
 import { Edit3, MoreVertical } from 'react-feather'
 import styles from 'styles/headings/SeriesHeader.module.scss'
+
+const MoreDropdown = () => {
+  return (
+    <>
+      <DropdownItem>
+        <Button
+          style={'danger'}
+          wide={true}
+          onClick={() => {
+            console.log('beep.')
+          }}
+        >
+          Delete
+        </Button>
+      </DropdownItem>
+    </>
+  )
+}
 
 const SeriesHeader = ({
   id,
@@ -20,6 +39,7 @@ const SeriesHeader = ({
   mutate(): void
 }) => {
   const [settings, setSettingsOpen] = useState(false)
+  const [moreDropdown, setMoreDropdown] = useState(false)
 
   return (
     <>
@@ -42,9 +62,15 @@ const SeriesHeader = ({
                 <Edit3 />
               </Button>
             </Dialog>
-            <Button>
-              <MoreVertical />
-            </Button>
+            <Dropdown
+              open={moreDropdown}
+              onOpenChange={(open) => setMoreDropdown(open)}
+              content={<MoreDropdown />}
+            >
+              <Button onClick={() => setMoreDropdown(!moreDropdown)}>
+                <MoreVertical />
+              </Button>
+            </Dropdown>
           </ButtonGroup>
         </div>
         <div className={styles.background}>
