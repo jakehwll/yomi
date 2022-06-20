@@ -22,9 +22,9 @@ const Button = ({
       className={cc([
         styles.root,
         {
+          [`${styles[style ? style : 'transparent']}`]: style,
           [styles.opaque]: opaque,
           [styles.wide]: wide,
-          [`${styles[style ? style : 'transparent']}`]: style,
         },
       ])}
       onClick={onClick}

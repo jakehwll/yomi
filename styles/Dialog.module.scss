@@ -56,4 +56,9 @@
   border-radius: 100%;
   color: black;
   background: transparent;
+  transition: 0.25s ease all;
+  &:hover {
+    background: rgba(black, 0.1);
+    transition: 0.25s ease all;
+  }
 }

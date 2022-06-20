@@ -15,13 +15,18 @@ const Dialog = ({
   title,
   children,
   content,
+  open,
+  onOpenChange,
 }: {
   title: string
   children: React.ReactNode
   content: React.ReactNode
+  open?: boolean
+  setter?(val: boolean): void
+  onOpenChange?(open: boolean): void
 }) => {
   return (
-    <Root>
+    <Root open={open} onOpenChange={onOpenChange}>
       <Trigger asChild className={styles.trigger}>
         {children}
       </Trigger>

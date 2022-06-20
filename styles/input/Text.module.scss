@@ -1,19 +1,19 @@
 .root {
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  align-items: flex-start;
   margin: 1rem 0;
 }
 
 .label {
   width: 6rem;
   display: block;
-  margin-right: 1rem;
-  text-align: right;
+  margin-bottom: 0.5rem;
   font-weight: 600;
 }
 
 .input {
-  width: calc(100% - 7rem);
+  width: 100%;
   input {
     width: 100%;
   }

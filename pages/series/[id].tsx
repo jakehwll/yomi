@@ -28,7 +28,7 @@ const BookGrid = ({ books }: { books: Array<Book> }) => {
 export const Series = () => {
   const router = useRouter()
   const { id } = router.query
-  const { data, error } = useSWR(`/api/series/${id}`, fetcher)
+  const { data, error, mutate } = useSWR(`/api/series/${id}`, fetcher)
 
   if (data && data.data)
     return (
@@ -37,6 +37,8 @@ export const Series = () => {
           title={data.data.title}
           image={`/api/series/${id}/thumbnail`}
           volumes={0}
+          id={id as string}
+          mutate={mutate}
         />
         <BookGrid books={data.data.books} />
       </Layout>

@@ -15,6 +15,7 @@
   font-weight: 600;
 
   background: var(--component-color);
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.05);
 
   &.opaque {
     background: rgba(var(--component-color-rgb), 0.1);

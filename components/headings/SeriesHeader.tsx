@@ -1,41 +1,44 @@
 import Button, { ButtonGroup } from 'components/Button'
 import Dialog from 'components/Dialog'
-import Text from 'components/input/Text'
+import SeriesSettings from 'components/settings/Series'
 import Image from 'next/image'
+import { useState } from 'react'
 import { Edit3, MoreVertical } from 'react-feather'
 import styles from 'styles/headings/SeriesHeader.module.scss'
 
-const SeriesSettings = () => {
-  return (
-    <>
-      <Text
-        label={'Title'}
-        id={'title'}
-        name={'title'}
-        value={''}
-        onChange={() => {}}
-      />
-      <Button style={'success'}>Save</Button>
-    </>
-  )
-}
-
 const SeriesHeader = ({
+  id,
   title,
   image,
   volumes,
+  mutate,
 }: {
+  id: string
   title: string
   image: string
   volumes: number
+  mutate(): void
 }) => {
+  const [settings, setSettingsOpen] = useState(false)
+
   return (
     <>
       <header className={styles.root}>
         <div className={styles.edit}>
           <ButtonGroup>
-            <Dialog title="Edit Series" content={<SeriesSettings />}>
-              <Button opaque={true} style={'secondary'}>
+            <Dialog
+              title="Edit Series"
+              open={settings}
+              onOpenChange={(open) => setSettingsOpen(open)}
+              content={
+                <SeriesSettings
+                  id={id}
+                  mutate={mutate}
+                  modalSetter={setSettingsOpen}
+                />
+              }
+            >
+              <Button style={'secondary'} onClick={() => setSettingsOpen(true)}>
                 <Edit3 />
               </Button>
             </Dialog>
