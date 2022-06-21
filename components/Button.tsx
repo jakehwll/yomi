@@ -12,7 +12,14 @@ const Button = ({
 }: {
   children?: React.ReactNode
   onClick?: React.MouseEventHandler<HTMLButtonElement>
-  style?: 'primary' | 'secondary' | 'success' | 'danger' | 'transparent'
+  style?:
+    | 'primary'
+    | 'secondary'
+    | 'light'
+    | 'dark'
+    | 'success'
+    | 'danger'
+    | 'transparent'
   opaque?: boolean
   wide?: boolean
   type?: 'button' | 'submit' | 'reset'

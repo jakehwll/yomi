@@ -42,8 +42,17 @@
   h2 {
     font-weight: 600;
     font-size: 1.2rem;
-    margin-bottom: 1.5rem;
+    line-height: 1.4;
   }
+
+  p {
+    line-height: 1.5;
+    margin: 0.5rem 0 1rem;
+  }
+
+  --global-input-background: var(--global-color-white);
+  --global-input-color: var(--global-color-black);
+  --global-input-border: var(--global-color-gray);
 }
 
 .close {

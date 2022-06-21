@@ -13,12 +13,14 @@ import styles from 'styles/Dialog.module.scss'
 
 const Dialog = ({
   title,
+  description,
   children,
   content,
   open,
   onOpenChange,
 }: {
   title: string
+  description?: string
   children: React.ReactNode
   content: React.ReactNode
   setter?(val: boolean): void
@@ -34,7 +36,10 @@ const Dialog = ({
         <Overlay className={styles.overlay} />
         <Content className={styles.content}>
           <Title className={styles.title}>{title}</Title>
-          <Description className={styles.description}>{content}</Description>
+          <Description className={styles.description}>
+            {description && description}
+          </Description>
+          {content}
           <Close className={styles.close}>
             <X />
           </Close>

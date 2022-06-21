@@ -1,0 +1,12 @@
+@import 'Dialog.module.scss';
+
+.content {
+  header {
+    margin: 0.5rem 0rem;
+  }
+  footer {
+    margin: 0.5rem 0;
+    display: flex;
+    gap: 0.5rem;
+  }
+}

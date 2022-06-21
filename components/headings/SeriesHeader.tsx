@@ -1,28 +1,18 @@
+import { Item } from '@radix-ui/react-dropdown-menu'
+import AlertDialog from 'components/AlertDialog'
 import Button, { ButtonGroup } from 'components/Button'
 import Dialog from 'components/Dialog'
-import { Dropdown, DropdownItem } from 'components/Dropdown'
 import SeriesSettings from 'components/settings/Series'
 import Image from 'next/image'
+import { useRouter } from 'next/router'
 import { useState } from 'react'
-import { Edit3, MoreVertical } from 'react-feather'
+import { Edit3, Trash } from 'react-feather'
 import styles from 'styles/headings/SeriesHeader.module.scss'
 
 const MoreDropdown = () => {
-  return (
-    <>
-      <DropdownItem>
-        <Button
-          style={'danger'}
-          wide={true}
-          onClick={() => {
-            console.log('beep.')
-          }}
-        >
-          Delete
-        </Button>
-      </DropdownItem>
-    </>
-  )
+  const [deleteDialog, setDeleteDialog] = useState(false)
+
+  return <Item className={styles.item}></Item>
 }
 
 const SeriesHeader = ({
@@ -38,8 +28,8 @@ const SeriesHeader = ({
   volumes: number
   mutate(): void
 }) => {
+  const router = useRouter()
   const [settings, setSettingsOpen] = useState(false)
-  const [moreDropdown, setMoreDropdown] = useState(false)
 
   return (
     <>
@@ -62,15 +52,24 @@ const SeriesHeader = ({
                 <Edit3 />
               </Button>
             </Dialog>
-            <Dropdown
-              open={moreDropdown}
-              onOpenChange={(open) => setMoreDropdown(open)}
-              content={<MoreDropdown />}
+            <AlertDialog
+              title={'Delete Series'}
+              description={`Are you sure you want to delete ${title}?`}
+              onCancel={() => console.log('test')}
+              onSuccess={() => {
+                fetch(`/api/series/${id}`, {
+                  method: 'DELETE',
+                }).then(() => {
+                  router.push('/')
+                })
+              }}
             >
-              <Button onClick={() => setMoreDropdown(!moreDropdown)}>
-                <MoreVertical />
-              </Button>
-            </Dropdown>
+              <div>
+                <Button>
+                  <Trash />
+                </Button>
+              </div>
+            </AlertDialog>
           </ButtonGroup>
         </div>
         <div className={styles.background}>
@@ -91,3 +90,6 @@ const SeriesHeader = ({
 }
 
 export default SeriesHeader
+function setDeleteDialog(value: boolean): void {
+  throw new Error('Function not implemented.')
+}

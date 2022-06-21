@@ -2,15 +2,18 @@ import { Series } from '@prisma/client'
 import Button from 'components/Button'
 import Layout from 'components/layout'
 import type { NextPage } from 'next'
+import { useRouter } from 'next/router'
 import { FormEvent, useState } from 'react'
 import useSWR from 'swr'
 import fetcher from 'util/swr'
 
 const UnassignedSeries = () => {
-  const { data, error, mutate } = useSWR('/api/series/unassigned', fetcher)
+  const { data } = useSWR('/api/series/unassigned', fetcher)
 
   const [title, setTitle] = useState('')
   const [folder, setFolder] = useState('')
+
+  const router = useRouter()
 
   const handleSubmit = (event: FormEvent) => {
     if (!title || !folder) return
@@ -21,9 +24,14 @@ const UnassignedSeries = () => {
         title: title,
         folder: folder,
       }),
-    }).then(() => {
-      mutate()
     })
+      .then((response) => {
+        if (response.ok) return response.json()
+        else throw Error('Failed to update.')
+      })
+      .then((response) => {
+        router.push(`/series/${response.data.id}`)
+      })
   }
 
   if (data)
@@ -35,7 +43,11 @@ const UnassignedSeries = () => {
           <div>
             <select
               defaultValue={'undefined'}
-              onChange={(event) => setFolder(event.target.value)}
+              onChange={(event) => {
+                const titleSplit = event.target.value.split('/')
+                setTitle(titleSplit[titleSplit.length - 1])
+                setFolder(event.target.value)
+              }}
             >
               <option value={'undefined'} disabled>
                 Select Folder
@@ -56,8 +68,8 @@ const UnassignedSeries = () => {
               onChange={(event) => setTitle(event.target.value)}
             />
           </div>
-          <Button style={'primary'} type="submit">
-            Submit
+          <Button style={'primary'} type="submit" wide={true}>
+            Create Series
           </Button>
         </form>
       </>
@@ -70,16 +82,14 @@ const UnassignedVolumes = () => {
   const [volume, setVolume] = useState('')
   const [volumeTitle, setVolumeTitle] = useState('')
 
-  const {
-    data: seriesData,
-    error: seriesError,
-    mutate: seriesMutate,
-  } = useSWR(`/api/series`, fetcher)
-  const {
-    data: volumesData,
-    error: volumesError,
-    mutate: volumesMutate,
-  } = useSWR(`/api/series/${series}/unassigned`, fetcher)
+  const { data: seriesData, mutate: seriesMutate } = useSWR(
+    `/api/series`,
+    fetcher
+  )
+  const { data: volumesData, mutate: volumesMutate } = useSWR(
+    `/api/series/${series}/unassigned`,
+    fetcher
+  )
 
   const handleSubmit = (event: FormEvent) => {
     event.preventDefault()
@@ -94,6 +104,8 @@ const UnassignedVolumes = () => {
     }).then(() => {
       seriesMutate()
       volumesMutate()
+      setVolume('')
+      setVolumeTitle('')
     })
   }
 
@@ -122,7 +134,9 @@ const UnassignedVolumes = () => {
           <div>
             <select
               defaultValue={'undefined'}
-              onChange={(event) => setVolume(event.target.value)}
+              onChange={(event) => {
+                setVolume(event.target.value)
+              }}
             >
               <option value={'undefined'} disabled>
                 Select Folder
@@ -140,14 +154,14 @@ const UnassignedVolumes = () => {
           <div>
             <input
               type="text"
-              placeholder="Series Title"
+              placeholder="Volume Title"
               value={volumeTitle}
               onChange={(event) => setVolumeTitle(event.target.value)}
             />
           </div>
           <div>
-            <Button style={'primary'} type="submit">
-              Submit
+            <Button style={'primary'} type="submit" wide={true}>
+              Create Volume
             </Button>
           </div>
         </form>

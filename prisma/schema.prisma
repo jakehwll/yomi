@@ -28,5 +28,5 @@ model Book {
   updated_at DateTime? @updatedAt
   created_at DateTime? @default(now())
   seriesId   String?
-  Series     Series?   @relation(fields: [seriesId], references: [id])
+  Series     Series?   @relation(fields: [seriesId], references: [id], onUpdate: Cascade, onDelete: Cascade)
 }

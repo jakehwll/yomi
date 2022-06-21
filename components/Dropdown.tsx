@@ -23,8 +23,18 @@ const Dropdown = ({
   )
 }
 
-const DropdownItem = ({ children }: { children: React.ReactNode }) => {
-  return <Item className={styles.item}>{children}</Item>
+const DropdownItem = ({
+  children,
+  onSelect,
+}: {
+  children: React.ReactNode
+  onSelect(): void
+}) => {
+  return (
+    <Item className={styles.item} onSelect={onSelect} textValue={'test'}>
+      Test
+    </Item>
+  )
 }
 
 export { Dropdown, DropdownItem }

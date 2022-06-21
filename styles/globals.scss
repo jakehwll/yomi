@@ -80,8 +80,11 @@ h6 {
   }
 
   --global-sidebar-width: 16rem;
-
   --global-header-height: 4rem;
+
+  --global-input-background: var(--global-color-dark);
+  --global-input-color: var(--global-color-white);
+  --global-input-border: var(--global-color-gray-dark);
 }
 
 label {
@@ -90,16 +93,39 @@ label {
 
 input:not([type='checkbox']):not([type='radio']) {
   border-radius: 0.25rem;
-  padding: 0.5rem;
+  padding: 0.75rem;
 
-  border: 1px solid #dfe1e4;
-  background: white;
-  color: black;
+  border: 1px solid var(--global-input-border);
+  background: var(--global-input-background);
+  color: var(--global-input-color);
+
+  width: 100%;
 
   font-weight: 400;
   font-size: 0.95rem;
 
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.05);
+
+  &:focus {
+    border-color: var(--global-color-primary);
+    outline: 1px solid var(--global-color-primary);
+  }
+  &::placeholder {
+    color: var(--global-input-color);
+  }
+}
+
+select {
+  appearance: none;
+
+  border-radius: 0.25rem;
+  padding: 0.75rem 3rem 0.75rem 0.75rem;
+
+  border: 1px solid var(--global-input-border);
+  background: var(--global-input-background);
+  color: var(--global-input-color);
+
+  width: 100%;
 
   &:focus {
     border-color: var(--global-color-primary);
