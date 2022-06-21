@@ -1,5 +1,6 @@
 import { Series } from '@prisma/client'
 import Button from 'components/Button'
+import Card from 'components/Card'
 import Layout from 'components/layout'
 import type { NextPage } from 'next'
 import { useRouter } from 'next/router'
@@ -36,7 +37,7 @@ const UnassignedSeries = () => {
 
   if (data)
     return (
-      <>
+      <Card>
         <h2>Unassigned Series</h2>
 
         <form onSubmit={handleSubmit}>
@@ -72,7 +73,7 @@ const UnassignedSeries = () => {
             Create Series
           </Button>
         </form>
-      </>
+      </Card>
     )
   else return <></>
 }
@@ -111,7 +112,7 @@ const UnassignedVolumes = () => {
 
   if (seriesData)
     return (
-      <>
+      <Card>
         <h2>Unassigned Volumes</h2>
         <form onSubmit={handleSubmit}>
           <div>
@@ -165,7 +166,7 @@ const UnassignedVolumes = () => {
             </Button>
           </div>
         </form>
-      </>
+      </Card>
     )
   return <>...</>
 }
@@ -173,7 +174,6 @@ const UnassignedVolumes = () => {
 const Home: NextPage = () => {
   return (
     <Layout>
-      <h1>Media Management</h1>
       <UnassignedSeries />
       <UnassignedVolumes />
     </Layout>
