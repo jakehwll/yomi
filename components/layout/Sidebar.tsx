@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { BookOpen, Home } from 'react-feather'
+import { BookOpen, Home, User } from 'react-feather'
 import styles from 'styles/layout/Sidebar.module.scss'
 
 const _navigation = [
@@ -19,30 +19,36 @@ const _navigation = [
 
 const Sidebar = () => {
   return (
-    <nav className={styles.root}>
-      <Link href="/" passHref>
-        <a className={styles.brand}>yomi</a>
-      </Link>
-      <ul className={styles.navigation}>
-        {_navigation.map(
-          (v: {
-            icon: React.ReactNode
-            id: string
-            href: string
-            title: string
-          }) => (
-            <li key={v.id}>
-              <Link href={v.href}>
-                <a>
-                  {v.icon}
-                  <span>{v.title}</span>
-                </a>
-              </Link>
-            </li>
-          )
-        )}
-      </ul>
-    </nav>
+    <aside className={styles.root}>
+      <nav className={styles.header}>
+        <Link href="/" passHref>
+          <a className={styles.brand}>yomi</a>
+        </Link>
+        <ul className={styles.navigation}>
+          {_navigation.map(
+            (v: {
+              icon: React.ReactNode
+              id: string
+              href: string
+              title: string
+            }) => (
+              <li key={v.id}>
+                <Link href={v.href}>
+                  <a>
+                    {v.icon}
+                    <span>{v.title}</span>
+                  </a>
+                </Link>
+              </li>
+            )
+          )}
+        </ul>
+      </nav>
+      <div className={styles.user}>
+        <User />
+        <span>Jane Doe</span>
+      </div>
+    </aside>
   )
 }
 

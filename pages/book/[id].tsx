@@ -78,7 +78,7 @@ const Reader = () => {
   const { data, error } = useSWR(`/api/book/${id}`, fetcher)
 
   // ref
-  const ref = useRef(null)
+  const fullscreenRef = useRef(null)
 
   // constants
   const [index, setIndex] = useState(0)
@@ -88,7 +88,7 @@ const Reader = () => {
 
   // hooks
   const [fullscreen, toggleFullscreen] = useToggle(false)
-  const isFullscreen = useFullscreen(ref, fullscreen, {
+  const isFullscreen = useFullscreen(fullscreenRef, fullscreen, {
     onClose: () => toggleFullscreen(false),
   })
 
@@ -166,61 +166,69 @@ const Reader = () => {
 
   if (data)
     return (
-      <div className={styles.root} ref={ref}>
+      <div className={styles.root} ref={fullscreenRef}>
         <header className={cc([styles.header, { [styles.hidden]: !controls }])}>
-          <div className={styles.back}>
-            {data && (
-              <Button
-                onClick={() => router.push(`/series/${data.data.Series.id}`)}
-              >
-                <ArrowLeft />
-              </Button>
-            )}
-          </div>
-          <div className={styles.title}>
-            {data.data && `${data.data.Series.title} - ${data.data.title}`}
-          </div>
-          <div className={styles.tools}>
-            <ButtonGroup>
-              <Button onClick={toggleFullscreen}>
-                {!isFullscreen ? <Maximize2 /> : <Minimize2 />}
-              </Button>
-              <Dialog
-                title={'Reader Settings'}
-                content={<ReaderSettings {...readerSettingProps} />}
-              >
-                <Button>
-                  <Settings />
+          <div className={styles.wrapper}>
+            <div className={styles.back}>
+              {data && (
+                <Button
+                  onClick={() => router.push(`/series/${data.data.Series.id}`)}
+                >
+                  <ArrowLeft />
                 </Button>
-              </Dialog>
-            </ButtonGroup>
-            {/* TODO Download Page */}
+              )}
+            </div>
+            <div className={styles.title}>
+              {data.data && `${data.data.Series.title} - ${data.data.title}`}
+            </div>
+            <div className={styles.tools}>
+              <ButtonGroup>
+                <Button onClick={toggleFullscreen}>
+                  {!isFullscreen ? <Maximize2 /> : <Minimize2 />}
+                </Button>
+                <Dialog
+                  title={'Reader Settings'}
+                  content={<ReaderSettings {...readerSettingProps} />}
+                  ref={fullscreenRef.current || undefined}
+                  onOpenChange={(open) =>
+                    open === true && toggleFullscreen(false)
+                  }
+                >
+                  <Button>
+                    <Settings />
+                  </Button>
+                </Dialog>
+              </ButtonGroup>
+              {/* TODO Download Page */}
+            </div>
           </div>
         </header>
         <Pages render={render} />
         <footer className={cc([styles.footer, { [styles.hidden]: !controls }])}>
-          <ButtonGroup>
-            <Button onClick={() => setIndex(0)}>
-              <CornerLeftDown />
-            </Button>
-            <Button onClick={() => setIndex((index) => _prev(index))}>
-              <ArrowLeft />
-            </Button>
-          </ButtonGroup>
-          <div className={styles.timeline}>
-            <Slider
-              value={index + 1}
-              onValueChange={(number) => setIndex(number[0])}
-            />
+          <div className={styles.wrapper}>
+            <ButtonGroup>
+              <Button onClick={() => setIndex(0)}>
+                <CornerLeftDown />
+              </Button>
+              <Button onClick={() => setIndex((index) => _prev(index))}>
+                <ArrowLeft />
+              </Button>
+            </ButtonGroup>
+            <div className={styles.timeline}>
+              <Slider
+                value={index + 1}
+                onValueChange={(number) => setIndex(number[0])}
+              />
+            </div>
+            <ButtonGroup>
+              <Button onClick={() => setIndex((index) => _next(index))}>
+                <ArrowRight />
+              </Button>
+              <Button>
+                <CornerRightDown />
+              </Button>
+            </ButtonGroup>
           </div>
-          <ButtonGroup>
-            <Button onClick={() => setIndex((index) => _next(index))}>
-              <ArrowRight />
-            </Button>
-            <Button>
-              <CornerRightDown />
-            </Button>
-          </ButtonGroup>
         </footer>
       </div>
     )

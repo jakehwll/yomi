@@ -15,7 +15,7 @@ async function get(req: NextApiRequest, res: NextApiResponse) {
     res.setHeader('Content-Type', 'image/jpg')
     res.status(200).send(imageBuffer)
   } catch (error: any) {
-    res.status(500).send({ error: { message: 'Unknown error.', value: error } })
+    res.status(500).send({ error: 'Invalid response.', code: 500 })
   }
 }
 
@@ -24,5 +24,5 @@ export default async function handler(
   res: NextApiResponse
 ) {
   if (req.method === 'GET') get(req, res)
-  else res.status(404)
+  else res.status(404).json({ error: 'Invalid method for route.', code: 404 })
 }

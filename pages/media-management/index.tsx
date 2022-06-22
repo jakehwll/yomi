@@ -21,6 +21,9 @@ const UnassignedSeries = () => {
     event.preventDefault()
     fetch('/api/series', {
       method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
       body: JSON.stringify({
         title: title,
         folder: folder,
@@ -97,6 +100,9 @@ const UnassignedVolumes = () => {
     if (!volumeTitle || !volume || !series) return
     fetch('/api/book', {
       method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
       body: JSON.stringify({
         title: volumeTitle,
         folder: volume,

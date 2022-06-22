@@ -17,5 +17,8 @@ export default async function handler(
   res: NextApiResponse
 ) {
   if (req.method === 'POST') await post(req, res)
-  else return res.status(404).json({ error: 'ROUTE NOT VALID.' })
+  else
+    return res
+      .status(404)
+      .json({ error: 'Invalid route for method.', code: 404 })
 }

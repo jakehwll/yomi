@@ -32,5 +32,8 @@ export default async function handler(
 ) {
   if (req.method === 'GET') await get(req, res)
   else if (req.method === 'POST') await post(req, res)
-  else return res.status(404)
+  else
+    return res
+      .status(404)
+      .json({ error: 'Invalid method for route.', code: 404 })
 }

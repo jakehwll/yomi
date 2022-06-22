@@ -30,3 +30,12 @@ model Book {
   seriesId   String?
   Series     Series?   @relation(fields: [seriesId], references: [id], onUpdate: Cascade, onDelete: Cascade)
 }
+
+model Users {
+  userId        String      @id @unique @default(cuid())
+  email         String      @db.VarChar(250)
+  password      String      @db.VarChar(250)
+  registeredAt  DateTime?   @default(now())
+  isActive      Boolean     @default(true)
+  isAdmin       Boolean     @default(false)
+}

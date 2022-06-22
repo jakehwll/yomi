@@ -7,12 +7,16 @@ const Text = ({
   id,
   name,
   value,
+  type = 'text',
+  autoComplete,
   onChange,
 }: {
   label?: string
   id: string
   name: string
   value: string
+  type?: 'text' | 'password'
+  autoComplete?: string
   onChange: ChangeEventHandler
 }) => {
   return (
@@ -24,10 +28,11 @@ const Text = ({
       )}
       <div className={styles.input}>
         <input
-          type="text"
           name={name}
           id={id}
           value={value}
+          type={type}
+          autoComplete={autoComplete}
           onChange={onChange}
         />
       </div>

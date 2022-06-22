@@ -10,7 +10,10 @@ async function get(req: NextApiRequest, res: NextApiResponse) {
   const { id, page } = req.query
   const book = await getBook(id.toString())
   if (!book) {
-    res.status(404).send({})
+    res.status(404).send({
+      error: 'Request object not found',
+      code: 404,
+    })
     return
   }
   const parsePageNumber = (input: string) => {
@@ -21,7 +24,6 @@ async function get(req: NextApiRequest, res: NextApiResponse) {
   const files = await (
     await getDirectoryFiles(book.folder)
   ).map((pageString) => {
-    // ^p(\d+)(?:-p?(\d+))?$
     const pageMatchesRaw = pageString.value.match(/p\d+-?p?\d+/)
     const pageMatches = pageMatchesRaw[0]
       .match(/^p(\d+)(?:-p?(\d+))?$/)
@@ -76,5 +78,5 @@ export default async function handler(
   res: NextApiResponse
 ) {
   if (req.method === 'GET') get(req, res)
-  else res.status(404)
+  else res.status(404).json({ error: 'Invalid method for route.', code: 404 })
 }

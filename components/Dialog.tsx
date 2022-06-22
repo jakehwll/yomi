@@ -18,6 +18,7 @@ const Dialog = ({
   content,
   open,
   onOpenChange,
+  ref,
 }: {
   title: string
   description?: string
@@ -26,13 +27,14 @@ const Dialog = ({
   setter?(val: boolean): void
   open?: boolean
   onOpenChange?(open: boolean): void
+  ref?: HTMLElement
 }) => {
   return (
     <Root open={open} onOpenChange={onOpenChange}>
       <Trigger asChild className={styles.trigger}>
         {children}
       </Trigger>
-      <Portal className={styles.portal}>
+      <Portal className={styles.portal} container={ref}>
         <Overlay className={styles.overlay} />
         <Content className={styles.content}>
           <Title className={styles.title}>{title}</Title>
