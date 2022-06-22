@@ -7,16 +7,16 @@ import { FormEvent, useState } from 'react'
 import styles from 'styles/pages/Authentication.module.scss'
 
 const Login: NextPage = () => {
-  const [username, setUsername] = useState('')
+  const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
 
   const router = useRouter()
 
   const handleSubmit = (event: FormEvent) => {
     event.preventDefault()
-    if (!username || !password) return
+    if (!email || !password) return
     console.log({
-      username: username,
+      username: email,
       password: password,
     })
   }
@@ -26,13 +26,13 @@ const Login: NextPage = () => {
       <h1>yomi</h1>
       <form className={styles.form} onSubmit={handleSubmit}>
         <Text
-          id={'username'}
-          name={'username'}
-          value={username}
+          id={'email'}
+          name={'email'}
+          value={email}
           onChange={(event) =>
-            setUsername((event.target as HTMLInputElement).value)
+            setEmail((event.target as HTMLInputElement).value)
           }
-          label={'Username'}
+          label={'email'}
         />
         <Text
           id={'password'}

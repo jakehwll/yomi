@@ -2,35 +2,54 @@ import Button from 'components/Button'
 import Text from 'components/input/Text'
 import { NextPage } from 'next'
 import Link from 'next/link'
+import { useRouter } from 'next/router'
 import { FormEvent, useState } from 'react'
 import styles from 'styles/pages/Authentication.module.scss'
 
 const Login: NextPage = () => {
-  const [username, setUsername] = useState('')
+  const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
+  const [error, setError] = useState('')
+
+  const router = useRouter()
 
   const handleSubmit = (event: FormEvent) => {
     event.preventDefault()
-    if (!username || !password) return
-    console.log({
-      username: username,
-      password: password,
+    if (!email || !password) return setError('Missing error')
+    if (password !== confirmPassword) return setError("Passwords don't match.")
+    fetch('/api/auth/register', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        email: email,
+        password: password,
+      }),
     })
+      .then((response) => {
+        return response.json()
+      })
+      .then((json: any) => {
+        if (!json.error) router.push('/auth/login')
+        else setError(json.error)
+      })
   }
 
   return (
     <div className={styles.root}>
       <h1>yomi</h1>
+      {error && <div className={styles.error}>{error}</div>}
       <form className={styles.form} onSubmit={handleSubmit}>
         <Text
-          id={'username'}
-          name={'username'}
-          value={username}
+          id={'email'}
+          name={'email'}
+          value={email}
           onChange={(event) =>
-            setUsername((event.target as HTMLInputElement).value)
+            setEmail((event.target as HTMLInputElement).value)
           }
-          label={'Username'}
+          label={'Email'}
         />
         <Text
           id={'password'}

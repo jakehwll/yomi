@@ -1,11 +1,9 @@
-import { PrismaAdapter } from '@next-auth/prisma-adapter'
 import { compare } from 'bcrypt'
 import NextAuth from 'next-auth'
 import CredentialProvider from 'next-auth/providers/credentials'
 import prisma from 'util/prisma'
 
 export default NextAuth({
-  adapter: PrismaAdapter(prisma),
   providers: [
     CredentialProvider({
       name: 'credentials',
@@ -23,7 +21,7 @@ export default NextAuth({
       },
       authorize: async (credentials: any) => {
         // find who we're trying to login as.
-        const user = await prisma.users.findFirst({
+        const user = await prisma.account.findFirst({
           where: {
             email: credentials.email,
           },
@@ -38,11 +36,11 @@ export default NextAuth({
     }),
   ],
   callbacks: {
-    jwt: ({ token, user }) => {
+    jwt: async ({ token, user }) => {
       if (user) token.id = user.id
       return token
     },
-    session: ({ session, token }) => {
+    session: async ({ session, token }) => {
       if (token) session.id = token.id
       return session
     },

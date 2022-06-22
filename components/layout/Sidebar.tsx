@@ -1,3 +1,4 @@
+import { useSession } from 'next-auth/react'
 import Link from 'next/link'
 import { BookOpen, Home, User } from 'react-feather'
 import styles from 'styles/layout/Sidebar.module.scss'
@@ -16,6 +17,19 @@ const _navigation = [
     id: 'media-mangement',
   },
 ]
+
+const UserAccount = () => {
+  const { data: session } = useSession()
+
+  if (session)
+    return (
+      <div className={styles.user}>
+        <User />
+        <span>{session.user?.email}</span>
+      </div>
+    )
+  else return <>no user!</>
+}
 
 const Sidebar = () => {
   return (
@@ -44,10 +58,7 @@ const Sidebar = () => {
           )}
         </ul>
       </nav>
-      <div className={styles.user}>
-        <User />
-        <span>Jane Doe</span>
-      </div>
+      <UserAccount />
     </aside>
   )
 }
