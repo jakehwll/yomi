@@ -24,9 +24,10 @@ async function post(req: NextApiRequest, res: NextApiResponse) {
       .status(409)
       .json({ error: 'Account already exists for email.', code: 409 })
   // create a new user!
-  tryCatch(res, async () => {
-    const response = await createUser(data.email)
-    await createAccount(data.email, data.password, response.id, true)
+  const response = tryCatch(res, async () => {
+    const user = await createUser(data.email)
+    await createAccount(data.email, data.password, user.id, true)
+    return user
   })
   //
   res.status(201).json({
