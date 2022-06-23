@@ -1,6 +1,6 @@
 import { Series } from '@prisma/client'
 import { NextApiRequest, NextApiResponse } from 'next'
-import prisma from 'util/prisma'
+import prisma, { tryCatch } from 'util/prisma'
 import { getAllSeries } from 'util/series'
 
 export interface SeriesResponse extends Series {
@@ -17,12 +17,17 @@ async function get(req: NextApiRequest, res: NextApiResponse) {
 }
 
 async function post(req: NextApiRequest, res: NextApiResponse) {
-  if (!req.body) return
-  const response = await prisma.series.create({
-    data: req.body,
-  })
-  res.status(200).json({
-    data: response,
+  if (!req.body)
+    return res
+      .status(400)
+      .json({ error: 'Malformed or empty body. Is it JSON?', code: 400 })
+  tryCatch(res, async () => {
+    const response = await prisma.series.create({
+      data: req.body,
+    })
+    res.status(201).json({
+      data: response,
+    })
   })
 }
 

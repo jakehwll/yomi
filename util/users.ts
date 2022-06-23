@@ -1,6 +1,10 @@
 import { hash } from 'bcrypt'
 import prisma from './prisma'
 
+export const getUsers = async () => {
+  return await prisma.user.count
+}
+
 export const getUser = async (email: string) => {
   return await prisma.account.findFirst({
     where: {
@@ -20,13 +24,15 @@ export const createUser = async (email: string) => {
 export const createAccount = async (
   email: string,
   password: string,
-  userId: string
+  userId: string,
+  isAdmin: boolean
 ) => {
   return await prisma.account.create({
     data: {
       email: email,
       password: await hash(password, 10),
       userId: userId,
+      isAdmin: isAdmin,
     },
   })
 }

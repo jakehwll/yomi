@@ -17,7 +17,7 @@ import {
   Settings,
 } from 'react-feather'
 import { useFullscreen, useToggle } from 'react-use'
-import styles from 'styles/Reader.module.scss'
+import styles from 'styles/pages/Reader.module.scss'
 import useSWR from 'swr'
 import fetcher from 'util/swr'
 

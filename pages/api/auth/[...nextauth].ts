@@ -41,10 +41,6 @@ export default NextAuth({
       if (user) token.id = user.id
       return token
     },
-    session: async ({ session, token }) => {
-      if (token) session.id = token.id
-      return session
-    },
   },
   debug: process.env.NODE_ENV === 'development',
 })

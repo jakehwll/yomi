@@ -1,5 +1,6 @@
 import { Series } from '@prisma/client'
 import { NextApiRequest, NextApiResponse } from 'next'
+import { tryCatch } from 'util/prisma'
 import { deleteSeries, getSeries, updateSeries } from 'util/series'
 
 export interface SeriesResponse extends Series {
@@ -19,17 +20,21 @@ async function get(req: NextApiRequest, res: NextApiResponse) {
 async function update(req: NextApiRequest, res: NextApiResponse) {
   const { id } = req.query
   const data = req.body
-  const response = await updateSeries(id as string, data)
-  res.status(200).json({
-    data: response,
+  tryCatch(res, async () => {
+    const response = await updateSeries(id as string, data)
+    res.status(200).json({
+      data: response,
+    })
   })
 }
 
 async function _delete(req: NextApiRequest, res: NextApiResponse) {
   const { id } = req.query
-  const response = await deleteSeries(id as string)
-  res.status(200).json({
-    data: response,
+  tryCatch(res, async () => {
+    const response = await deleteSeries(id as string)
+    res.status(200).json({
+      data: response,
+    })
   })
 }
 

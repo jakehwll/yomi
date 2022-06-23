@@ -2,9 +2,9 @@ import Button from 'components/Button'
 import Text from 'components/input/Text'
 import Meta from 'components/Meta'
 import { NextPage } from 'next'
-import { signIn, SignInResponse } from 'next-auth/react'
+import { signIn, SignInResponse, useSession } from 'next-auth/react'
 import { useRouter } from 'next/router'
-import { FormEvent, useState } from 'react'
+import { FormEvent, useEffect, useState } from 'react'
 
 import styles from 'styles/pages/Authentication.module.scss'
 
@@ -13,6 +13,11 @@ const Login: NextPage = () => {
   const [password, setPassword] = useState('')
 
   const router = useRouter()
+  const session = useSession()
+
+  useEffect(() => {
+    if (session.data) router.push('/')
+  }, [])
 
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault()

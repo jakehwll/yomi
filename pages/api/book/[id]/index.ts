@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import { getBook, updateBook } from 'util/book'
-import prisma from 'util/prisma'
+import prisma, { tryCatch } from 'util/prisma'
 
 async function get(req: NextApiRequest, res: NextApiResponse) {
   const { id } = req.query
@@ -13,21 +13,25 @@ async function get(req: NextApiRequest, res: NextApiResponse) {
 async function update(req: NextApiRequest, res: NextApiResponse) {
   const { id } = req.query
   const data = req.body
-  const response = updateBook(id as string, data)
-  res.status(200).json({
-    data: response,
+  tryCatch(res, async () => {
+    const response = updateBook(id as string, data)
+    res.status(200).json({
+      data: response,
+    })
   })
 }
 
 async function _delete(req: NextApiRequest, res: NextApiResponse) {
   const { id } = req.query
-  const response = await prisma.book.delete({
-    where: {
-      id: id as string,
-    },
-  })
-  res.status(200).json({
-    data: response,
+  tryCatch(res, async () => {
+    const response = await prisma.book.delete({
+      where: {
+        id: id as string,
+      },
+    })
+    res.status(200).json({
+      data: response,
+    })
   })
 }
 

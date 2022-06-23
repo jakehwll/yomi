@@ -1,14 +1,16 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import prisma from 'util/prisma'
+import prisma, { tryCatch } from 'util/prisma'
 
 async function post(req: NextApiRequest, res: NextApiResponse) {
   if (!req.body) return
   const data = req.body
-  const response = await prisma.book.create({
-    data: data,
-  })
-  res.status(200).json({
-    data: response,
+  tryCatch(res, async () => {
+    const response = await prisma.book.create({
+      data: data,
+    })
+    res.status(201).json({
+      data: response,
+    })
   })
 }
 

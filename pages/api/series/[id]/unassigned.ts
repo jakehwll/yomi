@@ -6,11 +6,6 @@ async function get(req: NextApiRequest, res: NextApiResponse) {
   const { id } = req.query
   const series = await getSeries(id as string)
 
-  if (id === 'undefined') {
-    res.status(200).json({ data: [] })
-    return
-  }
-
   const response = await getDirectoryFolders((series as any).folder)
 
   res.status(200).json({

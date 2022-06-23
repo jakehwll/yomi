@@ -1,12 +1,35 @@
-// import { getToken } from 'next-auth/jwt'
-// import { NextRequest, NextResponse } from 'next/server'
-import { NextRequest } from 'next/server'
+import { getToken } from 'next-auth/jwt'
+import { NextRequest, NextResponse } from 'next/server'
 
-// TODO. API Authentication
+async function backend(req: NextRequest) {
+  const session = await getToken({ req, secret: process.env.NEXTAUTH_SECRET })
+  if (!session) {
+    return NextResponse.json({
+      error: 'Unauthorised.',
+      code: 404,
+    })
+  }
+  return NextResponse.next()
+}
+
+async function frontend(req: NextRequest) {
+  const url = req.nextUrl.clone()
+  const unauthorisedRoutes = ['/auth/login', '/auth/register']
+  if (
+    unauthorisedRoutes.includes(url.pathname) ||
+    url.pathname.startsWith('/_next')
+  )
+    return NextResponse.next()
+  const session = await getToken({ req, secret: process.env.NEXTAUTH_SECRET })
+  if (!session) {
+    url.pathname = '/api/auth/signin'
+    return NextResponse.redirect(url)
+  }
+  return NextResponse.next()
+}
 
 export async function middleware(req: NextRequest) {
-  // if (!req.url.includes('/protected-url')) return NextResponse.next()
-  // const session = await getToken({ req, secret: process.env.SECRET })
-  // if (!session) return NextResponse.redirect('/api/auth/signin')
-  // return NextResponse.next()
+  const url = req.nextUrl.clone()
+  if (url.pathname.startsWith('/api')) backend(req)
+  else frontend(req)
 }
