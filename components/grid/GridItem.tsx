@@ -8,7 +8,7 @@ const GridItem = ({
   subline,
   link,
 }: {
-  image: string
+  image?: string
   headline: string
   subline?: string
   link: string
@@ -20,7 +20,7 @@ const GridItem = ({
       </Link>
       <div className={styles.cover}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={image} />
+        <img src={image ? image : '/placeholder.jpg'} />
       </div>
       <div className={styles.meta}>
         <div className={styles.headline}>{headline}</div>

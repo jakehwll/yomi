@@ -3,6 +3,7 @@ import GridItem, { GridItemGhost } from 'components/grid/GridItem'
 import Layout from 'components/layout'
 import Loading from 'components/Loading'
 import Meta from 'components/Meta'
+import RequiresAuth from 'components/RequiresAuth'
 import type { NextPage } from 'next'
 import useSWR from 'swr'
 import fetcher from 'util/swr'
@@ -34,7 +35,7 @@ const SeriesGrid = () => {
         {data.data.map((v: SeriesResponse) => (
           <GridItem
             key={v.id}
-            image={`/api/series/${v.id}/thumbnail`}
+            image={v.thumbnail ? `/api/series/${v.id}/thumbnail` : undefined}
             headline={v.title}
             subline={`${v._count.books.toString() ?? ''} Volumes`}
             link={`/series/${v.id}`}
@@ -49,6 +50,7 @@ const Home: NextPage = () => {
   return (
     <>
       <Meta title={'Books'} />
+      <RequiresAuth />
       <Layout>
         <SeriesGrid />
       </Layout>

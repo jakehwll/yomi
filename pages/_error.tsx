@@ -1,12 +1,25 @@
 import Layout from 'components/layout'
+import Meta from 'components/Meta'
+import RequiresAuth from 'components/RequiresAuth'
 import type { NextPage } from 'next'
 
-const FourOhFour: NextPage = () => {
+const ErrorMessage = () => {
   return (
     <Layout>
-      <h1>Something went wrong.</h1>
+      <h1>Error.</h1>
     </Layout>
   )
 }
 
-export default FourOhFour
+const ErrorPage: NextPage = () => {
+  return (
+    <>
+      <Meta title={'Error'} />
+      <RequiresAuth />
+      <ErrorMessage />
+    </>
+  )
+}
+
+export default ErrorPage
+export { ErrorMessage }

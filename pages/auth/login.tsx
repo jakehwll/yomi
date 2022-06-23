@@ -35,7 +35,7 @@ const Login: NextPage = () => {
             onChange={(event) =>
               setEmail((event.target as HTMLInputElement).value)
             }
-            label={'email'}
+            label={'Email'}
           />
           <Text
             id={'password'}

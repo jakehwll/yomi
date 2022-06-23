@@ -28,7 +28,7 @@ const UserAccount = () => {
         <span>{session.user?.email}</span>
       </div>
     )
-  else return <>no user!</>
+  else return <></>
 }
 
 const Sidebar = () => {
