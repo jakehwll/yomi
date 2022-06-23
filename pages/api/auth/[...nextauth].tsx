@@ -10,13 +10,11 @@ export default NextAuth({
       credentials: {
         email: {
           label: 'Email',
-          type: 'text',
-          placeholder: 'johndoe@test.com',
+          type: 'email',
         },
         password: {
           label: 'Password',
           type: 'password',
-          placeholder: 'Password',
         },
       },
       authorize: async (credentials: any) => {
@@ -35,6 +33,9 @@ export default NextAuth({
       },
     }),
   ],
+  pages: {
+    signIn: '/auth/login',
+  },
   callbacks: {
     jwt: async ({ token, user }) => {
       if (user) token.id = user.id
@@ -45,8 +46,5 @@ export default NextAuth({
       return session
     },
   },
-  secret: 'h!3HD3sK^SrAa@',
-  jwt: {
-    secret: 'h!3HD3sK^SrAa@',
-  },
+  debug: process.env.NODE_ENV === 'development',
 })

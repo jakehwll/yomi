@@ -2,6 +2,7 @@ import Button from 'components/Button'
 import Text from 'components/input/Text'
 import Meta from 'components/Meta'
 import { NextPage } from 'next'
+import { signIn, SignInResponse } from 'next-auth/react'
 import { useRouter } from 'next/router'
 import { FormEvent, useState } from 'react'
 
@@ -13,13 +14,18 @@ const Login: NextPage = () => {
 
   const router = useRouter()
 
-  const handleSubmit = (event: FormEvent) => {
+  const handleSubmit = async (event: FormEvent) => {
     event.preventDefault()
     if (!email || !password) return
-    console.log({
-      username: email,
+    const response: SignInResponse | undefined = await signIn('credentials', {
+      redirect: false,
+      email: email,
       password: password,
+      callbackUrl: window.location.origin ? window.location.origin : '/',
     })
+    if (!response) return
+    if ((response as SignInResponse).url)
+      router.push((response as SignInResponse).url ?? '')
   }
 
   return (

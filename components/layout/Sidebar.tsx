@@ -18,9 +18,7 @@ const _navigation = [
   },
 ]
 
-const UserAccount = () => {
-  const { data: session } = useSession()
-
+const UserAccount = ({ session }: any) => {
   if (session)
     return (
       <div className={styles.user}>
@@ -32,6 +30,8 @@ const UserAccount = () => {
 }
 
 const Sidebar = () => {
+  const { data: session } = useSession()
+
   return (
     <aside className={styles.root}>
       <nav className={styles.header}>
@@ -58,7 +58,7 @@ const Sidebar = () => {
           )}
         </ul>
       </nav>
-      <UserAccount />
+      <UserAccount session={session} />
     </aside>
   )
 }
