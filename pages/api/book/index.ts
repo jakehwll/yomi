@@ -3,7 +3,7 @@ import prisma from 'util/prisma'
 
 async function post(req: NextApiRequest, res: NextApiResponse) {
   if (!req.body) return
-  const data = JSON.parse(req.body)
+  const data = req.body
   const response = await prisma.book.create({
     data: data,
   })

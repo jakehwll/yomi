@@ -122,7 +122,10 @@ select {
   padding: 0.75rem 3rem 0.75rem 0.75rem;
 
   border: 1px solid var(--global-input-border);
-  background: var(--global-input-background);
+  background-color: var(--global-input-background);
+  background-image: url('/icons/chevron-down.svg');
+  background-repeat: no-repeat;
+  background-position: right 0.5rem center;
   color: var(--global-input-color);
 
   width: 100%;

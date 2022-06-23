@@ -23,7 +23,7 @@ import fetcher from 'util/swr'
 const Pages = ({ render }: { render: Array<string> }) => {
   const router = useRouter()
   const { id } = router.query
-  const { data, error, mutate } = useSWR(`/api/book/${id}`, fetcher)
+  // const { data, error, mutate } = useSWR(id ? `/api/book/${id}` : '', fetcher)
 
   return (
     <section>
@@ -75,7 +75,7 @@ const ReaderSettings = ({
 const Reader = () => {
   const router = useRouter()
   const { id } = router.query
-  const { data, error } = useSWR(`/api/book/${id}`, fetcher)
+  const { data, error } = useSWR(id ? `/api/book/${id}` : '', fetcher)
 
   // ref
   const fullscreenRef = useRef(null)

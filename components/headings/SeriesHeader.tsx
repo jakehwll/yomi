@@ -55,7 +55,6 @@ const SeriesHeader = ({
             <AlertDialog
               title={'Delete Series'}
               description={`Are you sure you want to delete ${title}?`}
-              onCancel={() => console.log('test')}
               onSuccess={() => {
                 fetch(`/api/series/${id}`, {
                   method: 'DELETE',

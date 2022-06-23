@@ -19,7 +19,7 @@ async function get(req: NextApiRequest, res: NextApiResponse) {
 async function post(req: NextApiRequest, res: NextApiResponse) {
   if (!req.body) return
   const response = await prisma.series.create({
-    data: JSON.parse(req.body),
+    data: req.body,
   })
   res.status(200).json({
     data: response,

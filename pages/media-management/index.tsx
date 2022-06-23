@@ -49,8 +49,8 @@ const UnassignedSeries = () => {
               defaultValue={'undefined'}
               onChange={(event) => {
                 const titleSplit = event.target.value.split('/')
-                setTitle(titleSplit[titleSplit.length - 1])
                 setFolder(event.target.value)
+                setTitle(titleSplit[titleSplit.length - 1])
               }}
             >
               <option value={'undefined'} disabled>
@@ -142,7 +142,9 @@ const UnassignedVolumes = () => {
             <select
               defaultValue={'undefined'}
               onChange={(event) => {
+                const titleSplit = event.target.value.split('/')
                 setVolume(event.target.value)
+                setVolumeTitle(titleSplit[titleSplit.length - 1])
               }}
             >
               <option value={'undefined'} disabled>
