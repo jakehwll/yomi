@@ -1,6 +1,8 @@
 import { GridWrapper } from 'components/grid'
 import GridItem, { GridItemGhost } from 'components/grid/GridItem'
 import Layout from 'components/layout'
+import Loading from 'components/Loading'
+import Meta from 'components/Meta'
 import type { NextPage } from 'next'
 import useSWR from 'swr'
 import fetcher from 'util/swr'
@@ -40,14 +42,17 @@ const SeriesGrid = () => {
         ))}
       </GridWrapper>
     )
-  return <span>...</span>
+  return <Loading />
 }
 
 const Home: NextPage = () => {
   return (
-    <Layout>
-      <SeriesGrid />
-    </Layout>
+    <>
+      <Meta title={'Books'} />
+      <Layout>
+        <SeriesGrid />
+      </Layout>
+    </>
   )
 }
 

@@ -2,6 +2,7 @@ import { Series } from '@prisma/client'
 import Button from 'components/Button'
 import Card from 'components/Card'
 import Layout from 'components/layout'
+import Meta from 'components/Meta'
 import type { NextPage } from 'next'
 import { useRouter } from 'next/router'
 import { FormEvent, useState } from 'react'
@@ -42,7 +43,6 @@ const UnassignedSeries = () => {
     return (
       <Card>
         <h2>Unassigned Series</h2>
-
         <form onSubmit={handleSubmit}>
           <div>
             <select
@@ -176,15 +176,18 @@ const UnassignedVolumes = () => {
         </form>
       </Card>
     )
-  return <>...</>
+  return <></>
 }
 
 const Home: NextPage = () => {
   return (
-    <Layout>
-      <UnassignedSeries />
-      <UnassignedVolumes />
-    </Layout>
+    <>
+      <Meta title={'Media Management'} />
+      <Layout>
+        <UnassignedSeries />
+        <UnassignedVolumes />
+      </Layout>
+    </>
   )
 }
 

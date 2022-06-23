@@ -1,5 +1,6 @@
 import Button from 'components/Button'
 import Text from 'components/input/Text'
+import Meta from 'components/Meta'
 import { NextPage } from 'next'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
@@ -38,50 +39,53 @@ const Login: NextPage = () => {
   }
 
   return (
-    <div className={styles.root}>
-      <h1>yomi</h1>
-      {error && <div className={styles.error}>{error}</div>}
-      <form className={styles.form} onSubmit={handleSubmit}>
-        <Text
-          id={'email'}
-          name={'email'}
-          value={email}
-          onChange={(event) =>
-            setEmail((event.target as HTMLInputElement).value)
-          }
-          label={'Email'}
-        />
-        <Text
-          id={'password'}
-          name={'password'}
-          value={password}
-          type={'password'}
-          onChange={(event) =>
-            setPassword((event.target as HTMLInputElement).value)
-          }
-          label={'Password'}
-        />
-        <Text
-          id={'confirm-password'}
-          name={'confirm-password'}
-          value={confirmPassword}
-          type={'password'}
-          onChange={(event) =>
-            setConfirmPassword((event.target as HTMLInputElement).value)
-          }
-          label={'Confirm Password'}
-        />
-        <Button style={'primary'} wide={true} type="submit">
-          Submit
-        </Button>
-        <p className={styles.divider}>
-          Already got an account?{' '}
-          <Link href="/auth/login" passHref>
-            <a>Login</a>
-          </Link>
-        </p>
-      </form>
-    </div>
+    <>
+      <Meta title={'Register'} />
+      <div className={styles.root}>
+        <h1>yomi</h1>
+        {error && <div className={styles.error}>{error}</div>}
+        <form className={styles.form} onSubmit={handleSubmit}>
+          <Text
+            id={'email'}
+            name={'email'}
+            value={email}
+            onChange={(event) =>
+              setEmail((event.target as HTMLInputElement).value)
+            }
+            label={'Email'}
+          />
+          <Text
+            id={'password'}
+            name={'password'}
+            value={password}
+            type={'password'}
+            onChange={(event) =>
+              setPassword((event.target as HTMLInputElement).value)
+            }
+            label={'Password'}
+          />
+          <Text
+            id={'confirm-password'}
+            name={'confirm-password'}
+            value={confirmPassword}
+            type={'password'}
+            onChange={(event) =>
+              setConfirmPassword((event.target as HTMLInputElement).value)
+            }
+            label={'Confirm Password'}
+          />
+          <Button style={'primary'} wide={true} type="submit">
+            Submit
+          </Button>
+          <p className={styles.divider}>
+            Already got an account?{' '}
+            <Link href="/auth/login" passHref>
+              <a>Login</a>
+            </Link>
+          </p>
+        </form>
+      </div>
+    </>
   )
 }
 
