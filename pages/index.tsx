@@ -1,7 +1,7 @@
 import { GridWrapper } from 'components/grid'
 import GridItem, { GridItemGhost } from 'components/grid/GridItem'
+import Loading from 'components/grid/Loading'
 import Layout from 'components/layout'
-import Loading from 'components/Loading'
 import Meta from 'components/Meta'
 import RequiresAuth from 'components/RequiresAuth'
 import type { NextPage } from 'next'

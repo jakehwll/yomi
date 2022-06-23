@@ -1,5 +1,5 @@
 import { Loader } from 'react-feather'
-import styles from 'styles/Loading.module.scss'
+import styles from 'styles/grid/Loading.module.scss'
 
 const Loading = () => {
   return (

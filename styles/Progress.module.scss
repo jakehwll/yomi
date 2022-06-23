@@ -1,0 +1,24 @@
+.root {
+  pointer-events: none;
+  transition: 0.25s ease all;
+  opacity: 0;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 2000;
+}
+
+.bar {
+  background: var(--global-color-primary);
+  height: 2px;
+  left: 0;
+  right: 0;
+  top: 0;
+  transition: 0.25s ease all;
+  width: 100%;
+}
+
+.loading {
+  opacity: 1;
+}
