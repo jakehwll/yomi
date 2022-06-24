@@ -1,8 +1,12 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import { getDirectoryFolders } from 'util/fs'
 import { getAllSeries } from 'util/series'
+import { getAuthorisedUser } from 'util/users'
 
 async function get(req: NextApiRequest, res: NextApiResponse) {
+  // check we have an authorised user.
+  if (!(await getAuthorisedUser(req)))
+    return res.status(403).json({ error: 'Unauthorised. Nice try.', code: 403 })
   const directoriesList = await getDirectoryFolders('/data')
   const seriesDirectoriesList = await (
     await getAllSeries()

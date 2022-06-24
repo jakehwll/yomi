@@ -1,7 +1,7 @@
 import { Series } from '@prisma/client'
 import { NextApiRequest, NextApiResponse } from 'next'
-import { tryCatch } from 'util/prisma'
 import { deleteSeries, getSeries, updateSeries } from 'util/series'
+import { getAuthorisedAdmin } from 'util/users'
 
 export interface SeriesResponse extends Series {
   _count: {
@@ -18,23 +18,25 @@ async function get(req: NextApiRequest, res: NextApiResponse) {
 }
 
 async function update(req: NextApiRequest, res: NextApiResponse) {
+  // check we have an authorised user.
+  if (!(await getAuthorisedAdmin(req)))
+    return res.status(403).json({ error: 'Unauthorised. Nice try.', code: 403 })
   const { id } = req.query
   const data = req.body
-  tryCatch(res, async () => {
-    const response = await updateSeries(id as string, data)
-    res.status(200).json({
-      data: response,
-    })
+  const response = await updateSeries(id as string, data)
+  res.status(200).json({
+    data: response,
   })
 }
 
 async function _delete(req: NextApiRequest, res: NextApiResponse) {
+  // check we have an authorised user.
+  if (!(await getAuthorisedAdmin(req)))
+    return res.status(403).json({ error: 'Unauthorised. Nice try.', code: 403 })
   const { id } = req.query
-  tryCatch(res, async () => {
-    const response = await deleteSeries(id as string)
-    res.status(200).json({
-      data: response,
-    })
+  const response = await deleteSeries(id as string)
+  res.status(200).json({
+    data: response,
   })
 }
 

@@ -36,26 +36,14 @@ model Account {
   email              String   @unique
   password           String
   userId             String
-
   isAdmin            Boolean
-  
   id_token           String?  @db.Text
   session_state      String?
-
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-}
-
-model Session {
-  id           String   @id @default(cuid())
-  sessionToken String   @unique
-  userId       String
-  expires      DateTime
-  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model User {
   id            String    @id @default(cuid())
   email         String?   @unique
   accounts      Account[]
-  sessions      Session[]
 }

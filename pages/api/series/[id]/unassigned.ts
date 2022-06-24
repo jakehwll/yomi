@@ -1,8 +1,12 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import { getDirectoryFolders } from 'util/fs'
 import { getSeries } from 'util/series'
+import { getAuthorisedUser } from 'util/users'
 
 async function get(req: NextApiRequest, res: NextApiResponse) {
+  // check we have an authorised user.
+  if (!(await getAuthorisedUser(req)))
+    return res.status(403).json({ error: 'Unauthorised. Nice try.', code: 403 })
   const { id } = req.query
   const series = await getSeries(id as string)
 

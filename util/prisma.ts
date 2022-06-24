@@ -4,9 +4,9 @@ import { NextApiResponse } from 'next'
 const prisma = new PrismaClient()
 
 var tryCatch = function (res: NextApiResponse, _function: Function) {
-  return () => {
+  return async () => {
     try {
-      _function()
+      await _function()
     } catch (error) {
       res.status(500).json({
         error: 'Failed to create.',

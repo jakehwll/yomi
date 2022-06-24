@@ -83,8 +83,11 @@ h6 {
   --global-header-height: 4rem;
 
   --global-input-background: var(--global-color-dark);
+  --global-input-background-rgb: var(--global-color-dark-rgb);
   --global-input-color: var(--global-color-white);
+  --global-input-color-rgb: var(--global-color-white-rgb);
   --global-input-border: var(--global-color-dark-gray);
+  --global-input-border-rgb: var(--global-color-dark-gray-rgb);
 }
 
 label {
@@ -111,7 +114,7 @@ input:not([type='checkbox']):not([type='radio']) {
     outline: 1px solid var(--global-color-primary);
   }
   &::placeholder {
-    color: var(--global-input-color);
+    color: rgba(var(--global-input-color-rgb), 0.5);
   }
 }
 

@@ -5,8 +5,13 @@ import path from 'path'
 import sharp from 'sharp'
 import { getBook } from 'util/book'
 import { getDirectoryFiles } from 'util/fs'
+import { getAuthorisedUser } from 'util/users'
 
 async function get(req: NextApiRequest, res: NextApiResponse) {
+  // check we have an authorised user.
+  if (!(await getAuthorisedUser(req)))
+    return res.status(403).json({ error: 'Unauthorised. Nice try.', code: 403 })
+  //
   const { id, page } = req.query
   const book = await getBook(id.toString())
   if (!book) {

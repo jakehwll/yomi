@@ -1,6 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import { getBook, updateBook } from 'util/book'
-import prisma, { tryCatch } from 'util/prisma'
+import prisma from 'util/prisma'
+import { getAuthorisedAdmin } from 'util/users'
 
 async function get(req: NextApiRequest, res: NextApiResponse) {
   const { id } = req.query
@@ -11,27 +12,31 @@ async function get(req: NextApiRequest, res: NextApiResponse) {
 }
 
 async function update(req: NextApiRequest, res: NextApiResponse) {
+  // check we have an authorised user.
+  if (!(await getAuthorisedAdmin(req)))
+    return res.status(403).json({ error: 'Unauthorised. Nice try.', code: 403 })
+  // gather the id and body from the request
   const { id } = req.query
   const data = req.body
-  tryCatch(res, async () => {
-    const response = updateBook(id as string, data)
-    res.status(200).json({
-      data: response,
-    })
+  // attempt to update the book and serve the data to the user.
+  const response = updateBook(id as string, data)
+  res.status(200).json({
+    data: response,
   })
 }
 
 async function _delete(req: NextApiRequest, res: NextApiResponse) {
+  // check we have an authorised user.
+  if (!(await getAuthorisedAdmin(req)))
+    return res.status(403).json({ error: 'Unauthorised. Nice try.', code: 403 })
   const { id } = req.query
-  tryCatch(res, async () => {
-    const response = await prisma.book.delete({
-      where: {
-        id: id as string,
-      },
-    })
-    res.status(200).json({
-      data: response,
-    })
+  const response = await prisma.book.delete({
+    where: {
+      id: id as string,
+    },
+  })
+  res.status(200).json({
+    data: response,
   })
 }
 

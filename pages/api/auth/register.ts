@@ -1,5 +1,4 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import { tryCatch } from 'util/prisma'
 import { createAccount, createUser, getUser, getUsers } from 'util/users'
 
 async function post(req: NextApiRequest, res: NextApiResponse) {
@@ -24,11 +23,8 @@ async function post(req: NextApiRequest, res: NextApiResponse) {
       .status(409)
       .json({ error: 'Account already exists for email.', code: 409 })
   // create a new user!
-  const response = tryCatch(res, async () => {
-    const user = await createUser(data.email)
-    await createAccount(data.email, data.password, user.id, true)
-    return user
-  })
+  const response = await createUser(data.email)
+  await createAccount(data.email, data.password, response.id, true)
   //
   res.status(201).json({
     data: response,

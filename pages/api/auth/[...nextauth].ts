@@ -27,7 +27,11 @@ export default NextAuth({
         // nope. no user found.
         if (!user) return null
         // is the password correct?
-        if (await compare(credentials.password, user.password)) return user
+        if (await compare(credentials.password, user.password))
+          return {
+            email: user.email,
+            isAdmin: user.isAdmin,
+          }
         // nope. password incorrect.
         return null
       },
@@ -37,8 +41,9 @@ export default NextAuth({
     signIn: '/auth/login',
   },
   callbacks: {
-    jwt: async ({ token, user }) => {
+    jwt: async ({ token, isNewUser, profile, user }) => {
       if (user) token.id = user.id
+      if (user) user.test = 'asdf'
       return token
     },
   },
