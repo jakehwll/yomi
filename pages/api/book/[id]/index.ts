@@ -45,7 +45,7 @@ export default async function handler(
   res: NextApiResponse
 ) {
   if (req.method === 'GET') get(req, res)
-  else if (req.method === 'UPDATE') update(req, res)
+  else if (req.method === 'PATCH') update(req, res)
   else if (req.method === 'DELETE') _delete(req, res)
   else res.status(404).json({ error: 'Invalid method for route.', code: 404 })
 }

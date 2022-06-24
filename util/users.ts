@@ -30,7 +30,7 @@ export const getAuthorisedUser = async (req: NextApiRequest) => {
   return false
 }
 
-export const getAuthorisedAdmin = async (req: NextApiRequest) => {
+export const getAuthorisedAdmin = async (req?: NextApiRequest) => {
   const session = await getSession({ req })
   if (!session) return false
   if (session.user) {

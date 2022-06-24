@@ -41,7 +41,7 @@ const SeriesSettings = ({
         setLoading(false)
         modalSetter(false)
       } else {
-        // errorz
+        setLoading(false)
       }
     })
   }
