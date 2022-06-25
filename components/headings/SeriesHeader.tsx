@@ -1,19 +1,13 @@
-import { Item } from '@radix-ui/react-dropdown-menu'
 import AlertDialog from 'components/AlertDialog'
 import Button, { ButtonGroup } from 'components/Button'
 import Dialog from 'components/Dialog'
 import SeriesSettings from 'components/settings/Series'
+import { SeriesThumbnailSettings } from 'components/settings/Thumbnail'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
 import { useState } from 'react'
-import { Edit3, Trash } from 'react-feather'
+import { Edit3, Image as ImageIcon, Trash } from 'react-feather'
 import styles from 'styles/headings/SeriesHeader.module.scss'
-
-const MoreDropdown = () => {
-  const [deleteDialog, setDeleteDialog] = useState(false)
-
-  return <Item className={styles.item}></Item>
-}
 
 const SeriesHeader = ({
   id,
@@ -30,6 +24,7 @@ const SeriesHeader = ({
 }) => {
   const router = useRouter()
   const [settings, setSettingsOpen] = useState(false)
+  const [thumb, setThumbnailOpen] = useState(false)
 
   return (
     <>
@@ -50,6 +45,22 @@ const SeriesHeader = ({
             >
               <Button onClick={() => setSettingsOpen(true)}>
                 <Edit3 />
+              </Button>
+            </Dialog>
+            <Dialog
+              title="Edit Thumbnail"
+              open={thumb}
+              onOpenChange={(open) => setThumbnailOpen(open)}
+              content={
+                <SeriesThumbnailSettings
+                  id={id}
+                  mutate={mutate}
+                  modalSetter={setThumbnailOpen}
+                />
+              }
+            >
+              <Button onClick={() => setThumbnailOpen(true)}>
+                <ImageIcon />
               </Button>
             </Dialog>
             <AlertDialog

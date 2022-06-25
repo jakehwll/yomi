@@ -14,7 +14,7 @@ async function get(req: NextApiRequest, res: NextApiResponse) {
   //
   const { id, page } = req.query
   const book = await getBook(id.toString())
-  if (!book) {
+  if (!book || !book.Series) {
     res.status(404).send({
       error: 'Request object not found',
       code: 404,
@@ -27,7 +27,7 @@ async function get(req: NextApiRequest, res: NextApiResponse) {
     return parseInt(rawNumber)
   }
   const files = await (
-    await getDirectoryFiles(book.folder)
+    await getDirectoryFiles(`${book.Series.folder}${book.folder}`)
   ).map((pageString) => {
     const pageMatchesRaw = pageString.value.match(/p\d+-?p?\d+/)
     const pageMatches = pageMatchesRaw[0]
@@ -56,7 +56,7 @@ async function get(req: NextApiRequest, res: NextApiResponse) {
   const beautiful = keyBy(flatten(files), 'pageNum')
 
   const fileMeta = beautiful[parseInt(page.toString() ?? '')]
-  const filePath = path.join(process.cwd(), fileMeta.value.location)
+  const filePath = path.join(fileMeta.value.location)
   let imageBuffer = readFileSync(filePath)
 
   if (fileMeta.series) {
@@ -75,7 +75,7 @@ async function get(req: NextApiRequest, res: NextApiResponse) {
   }
 
   res.setHeader('Content-Type', 'image/jpg')
-  res.status(200).send(imageBuffer)
+  return res.status(200).send(imageBuffer)
 }
 
 export default async function handler(

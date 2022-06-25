@@ -43,15 +43,23 @@ const Pages = ({ render }: { render: Array<string> }) => {
 }
 
 const ReaderSettings = ({
+  index,
+  setIndex,
   invertControls,
   setInvertControls,
   invertPages,
   setInvertPages,
+  pageAmount,
+  setPageAmount,
 }: {
+  index: number
+  setIndex(val: number): void
   invertControls: boolean
   setInvertControls(val: boolean): void
   invertPages: boolean
   setInvertPages(val: boolean): void
+  pageAmount: number
+  setPageAmount(val: number): void
 }) => {
   return (
     <div>
@@ -69,6 +77,18 @@ const ReaderSettings = ({
         value={invertPages}
         onChange={() => setInvertPages(!invertPages)}
       />
+      <Checkbox
+        label="Dual Pages"
+        name={'dual-pages'}
+        id={'dual-pages'}
+        value={pageAmount == 2}
+        onChange={(event) => {
+          setPageAmount((event.target as HTMLInputElement).checked ? 2 : 1)
+          setIndex(
+            (event.target as HTMLInputElement).checked ? index / 2 : index * 2
+          )
+        }}
+      />
     </div>
   )
 }
@@ -84,6 +104,7 @@ const Reader = () => {
   // constants
   const [index, setIndex] = useState(0)
   const [pageAmount, setPageAmount] = useState(2)
+  const [pageCount, setPageCount] = useState(0)
   const [controls, setControls] = useState(true)
   const [render, setRender] = useState<Array<string>>([])
 
@@ -98,10 +119,14 @@ const Reader = () => {
   const [invertPages, setInvertPages] = useState(false)
 
   const readerSettingProps = {
-    invertControls,
-    setInvertControls,
-    invertPages,
-    setInvertPages,
+    index: index,
+    setIndex: setIndex,
+    invertControls: invertControls,
+    setInvertControls: setInvertControls,
+    invertPages: invertPages,
+    setInvertPages: setInvertPages,
+    pageAmount: pageAmount,
+    setPageAmount: setPageAmount,
   }
 
   const _prev = (pageNum: number) => {
@@ -132,7 +157,12 @@ const Reader = () => {
     if (invertPages) pages = pages.reverse()
     // update the renderer.
     setRender(pages)
-  }, [id, index, invertPages])
+  }, [id, index, invertPages, pageAmount])
+
+  useEffect(() => {
+    if (!data) return
+    setPageCount(data.count)
+  }, [data])
 
   // TODO.
   // home - Return to index 0.

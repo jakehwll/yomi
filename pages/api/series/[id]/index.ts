@@ -10,6 +10,7 @@ export interface SeriesResponse extends Series {
 }
 
 async function get(req: NextApiRequest, res: NextApiResponse) {
+  // gather the id from the request
   const { id } = req.query
   const response = await getSeries(id as string)
   res.status(200).json({
@@ -21,6 +22,7 @@ async function update(req: NextApiRequest, res: NextApiResponse) {
   // check we have an authorised user.
   if (!(await getAuthorisedAdmin(req)))
     return res.status(403).json({ error: 'Unauthorised. Nice try.', code: 403 })
+  // gather the id from the request
   const { id } = req.query
   const data = req.body
   const response = await updateSeries(id as string, data)
@@ -33,6 +35,7 @@ async function _delete(req: NextApiRequest, res: NextApiResponse) {
   // check we have an authorised user.
   if (!(await getAuthorisedAdmin(req)))
     return res.status(403).json({ error: 'Unauthorised. Nice try.', code: 403 })
+  // gather the id from the request
   const { id } = req.query
   const response = await deleteSeries(id as string)
   res.status(200).json({

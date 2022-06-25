@@ -15,35 +15,46 @@ model Series {
   title      String
   folder     String
   thumbnail  String?
-  updated_at DateTime? @updatedAt
-  created_at DateTime? @default(now())
+  updated_at DateTime?      @updatedAt
+  created_at DateTime?      @default(now())
   books      Book[]
 }
 
 model Book {
-  id         String    @id @unique @default(cuid())
-  title      String
-  folder     String
-  thumbnail  String?
-  updated_at DateTime? @updatedAt
-  created_at DateTime? @default(now())
-  seriesId   String?
+  id           String         @id @unique @default(cuid())
+  title        String
+  folder       String
+  thumbnail    String?
+  updated_at   DateTime?      @updatedAt
+  created_at   DateTime?      @default(now())
+  seriesId     String?
   Series     Series?   @relation(fields: [seriesId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  ReadProgress ReadProgress[]
 }
 
 model Account {
-  id                 String   @id @default(cuid())
-  email              String   @unique
-  password           String
-  userId             String
-  isAdmin            Boolean
-  id_token           String?  @db.Text
-  session_state      String?
+  id            String  @id @default(cuid())
+  email         String  @unique
+  password      String
+  userId        String
+  isAdmin       Boolean
+  id_token      String?
+  session_state String?
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model User {
-  id            String    @id @default(cuid())
-  email         String?   @unique
-  accounts      Account[]
+  id           String         @id @default(cuid())
+  email        String?        @unique
+  accounts     Account[]
+  ReadProgress ReadProgress[]
+}
+
+model ReadProgress {
+  id        String @id @unique @default(cuid())
+  progress  Int
+  User      User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  Book      Book   @relation(fields: [bookId], references: [id], onDelete: Cascade)
+  userId    String @unique
+  bookId    String @unique
 }

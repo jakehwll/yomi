@@ -1,13 +1,20 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import { getBook, updateBook } from 'util/book'
+import { getDirectoryFiles } from 'util/fs'
 import prisma from 'util/prisma'
 import { getAuthorisedAdmin } from 'util/users'
 
 async function get(req: NextApiRequest, res: NextApiResponse) {
   const { id } = req.query
   const response = await getBook(id as string)
+  if (!response || !response.Series)
+    return res.status(404).json({ error: 'Resource not found.', code: 404 })
+  const files = await getDirectoryFiles(
+    `${response.Series.folder}${response.folder}`
+  )
   res.status(200).json({
     data: response,
+    pages: files.length,
   })
 }
 
@@ -29,6 +36,7 @@ async function _delete(req: NextApiRequest, res: NextApiResponse) {
   // check we have an authorised user.
   if (!(await getAuthorisedAdmin(req)))
     return res.status(403).json({ error: 'Unauthorised. Nice try.', code: 403 })
+  // gather the id from the request
   const { id } = req.query
   const response = await prisma.book.delete({
     where: {

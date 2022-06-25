@@ -1,26 +1,55 @@
-import fs from 'fs'
+import { readFileSync } from 'fs'
+import { globby } from 'globby'
 import { NextApiRequest, NextApiResponse } from 'next'
-import path from 'path'
 import { getSeries } from 'util/series'
-import { getAuthorisedUser } from 'util/users'
+import { getAuthorisedAdmin, getAuthorisedUser } from 'util/users'
 
 async function get(req: NextApiRequest, res: NextApiResponse) {
   // check we have an authorised user.
   if (!(await getAuthorisedUser(req)))
     return res.status(403).json({ error: 'Unauthorised. Nice try.', code: 403 })
+  const {
+    query: { list },
+  } = req
+  if (list === '') getFiles(req, res)
+  else getThumbnailFile(req, res)
+}
+
+async function getThumbnailFile(req: NextApiRequest, res: NextApiResponse) {
+  // gather the id from the request
   const { id } = req.query
   const data: any = await getSeries(id as string)
-
-  const fileURI = `${data.folder}${data.thumbnail}`
-  const filePath = path.join(process.cwd(), fileURI)
-
+  const filePath = `${data.folder}${data.thumbnail}`
   try {
-    const imageBuffer = fs.readFileSync(filePath)
+    const imageBuffer = readFileSync(`${filePath}`)
     res.setHeader('Content-Type', 'image/jpg')
     res.status(200).send(imageBuffer)
-  } catch (error: any) {
-    res.status(500).send({ error: 'Invalid response.', code: 500 })
-  }
+  } catch {}
+}
+
+async function getFiles(req: NextApiRequest, res: NextApiResponse) {
+  // check we have an authorised user.
+  if (!(await getAuthorisedAdmin(req)))
+    return res.status(403).json({ error: 'Unauthorised. Nice try.', code: 403 })
+  // gather the id from the request
+  const { id } = req.query
+  const data: any = await getSeries(id as string)
+  const files = (
+    await globby(`${process.cwd()}${data.folder}/**/*.jpg`, {
+      onlyFiles: true,
+      objectMode: true,
+    })
+  ).map((v: any) => {
+    // get our path and file.
+    let path = v.path
+    // remove the process and wrapping folder
+    path = path.replaceAll(process.cwd(), '')
+    path = path.replaceAll(data.folder, '')
+    return path
+  })
+  res.status(200).json({
+    data: files,
+  })
 }
 
 export default async function handler(

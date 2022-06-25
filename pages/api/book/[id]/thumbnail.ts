@@ -1,23 +1,76 @@
 import { readFileSync } from 'fs'
+import { globby } from 'globby'
 import { NextApiRequest, NextApiResponse } from 'next'
-import path from 'path'
 import { getBook } from 'util/book'
-import { getAuthorisedUser } from 'util/users'
+import prisma from 'util/prisma'
+import { getAuthorisedAdmin, getAuthorisedUser } from 'util/users'
+
+async function post(req: NextApiRequest, res: NextApiResponse) {
+  // check we have an authorised user.
+  if (!(await getAuthorisedAdmin(req)))
+    return res.status(403).json({ error: 'Unauthorised. Nice try.', code: 403 })
+  // gather the id and body from the request
+  const { id } = req.query
+  const data = req.body
+  //
+  const response = await prisma.book.update({
+    where: {
+      id: id.toString(),
+    },
+    data: data,
+  })
+  res.status(200).json({
+    data: response,
+  })
+}
 
 async function get(req: NextApiRequest, res: NextApiResponse) {
   // check we have an authorised user.
   if (!(await getAuthorisedUser(req)))
     return res.status(403).json({ error: 'Unauthorised. Nice try.', code: 403 })
-  //
+  const {
+    query: { list },
+  } = req
+  if (list === '') getFiles(req, res)
+  else getThumbnailFile(req, res)
+}
+
+async function getThumbnailFile(req: NextApiRequest, res: NextApiResponse) {
+  // gather the id from the request
   const { id } = req.query
-  const data: any = getBook(id as string)
-  const fileURI = `${data.folder}${data.thumbnail}`
-  const filePath = path.join(process.cwd(), fileURI)
+  const data: any = await getBook(id as string)
+  const filePath = `${data.Series.folder}${data.folder}${data.thumbnail}`
   try {
-    const imageBuffer = readFileSync(filePath)
+    const imageBuffer = readFileSync(`${filePath}`)
     res.setHeader('Content-Type', 'image/jpg')
     res.status(200).send(imageBuffer)
+    return res
   } catch {}
+}
+
+async function getFiles(req: NextApiRequest, res: NextApiResponse) {
+  // check we have an authorised user.
+  if (!(await getAuthorisedAdmin(req)))
+    return res.status(403).json({ error: 'Unauthorised. Nice try.', code: 403 })
+  // gather the id from the request
+  const { id } = req.query
+  const data: any = await getBook(id as string)
+  const files = (
+    await globby(`${data.folder}/**/*.jpg`, {
+      onlyFiles: true,
+      objectMode: true,
+    })
+  ).map((v: any) => {
+    // get our path and file.
+    let path = v.path
+    // remove the process and wrapping folder
+    path = path.replaceAll(process.cwd(), '')
+    path = path.replaceAll(data.folder, '')
+    return path
+  })
+  res.status(200).json({
+    data: files,
+  })
 }
 
 export default async function handler(
@@ -25,5 +78,6 @@ export default async function handler(
   res: NextApiResponse
 ) {
   if (req.method === 'GET') get(req, res)
+  else if (req.method === 'POST') post(req, res)
   else res.status(404).json({ error: 'Invalid method for route.', code: 404 })
 }

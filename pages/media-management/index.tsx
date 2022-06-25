@@ -59,7 +59,7 @@ const UnassignedSeries = () => {
               </option>
               {data.data.map((v: any) => {
                 return (
-                  <option key={v} value={v}>
+                  <option key={v} value={`/data/${v}`}>
                     {v}
                   </option>
                 )
@@ -130,37 +130,40 @@ const UnassignedVolumes = () => {
               <option value={'undefined'} disabled>
                 Select Series
               </option>
-              {seriesData.data.map((v: Series) => {
-                return (
-                  <option key={v.id} value={v.id}>
-                    {v.title}
-                  </option>
-                )
-              })}
-            </select>
-          </div>
-          <div>
-            <select
-              defaultValue={'undefined'}
-              onChange={(event) => {
-                const titleSplit = event.target.value.split('/')
-                setVolume(event.target.value)
-                setVolumeTitle(titleSplit[titleSplit.length - 1])
-              }}
-            >
-              <option value={'undefined'} disabled>
-                Select Folder
-              </option>
-              {volumesData &&
-                volumesData.data.map((v: String) => {
+              {seriesData &&
+                seriesData.data.map((v: Series) => {
                   return (
-                    <option value={v.toString()} key={v.toString()}>
-                      {v}
+                    <option key={v.id} value={v.id}>
+                      {v.title}
                     </option>
                   )
                 })}
             </select>
           </div>
+          {volumesData && (
+            <div>
+              <select
+                defaultValue={'undefined'}
+                onChange={(event) => {
+                  const titleSplit = event.target.value.split('/')
+                  setVolume(event.target.value)
+                  setVolumeTitle(titleSplit[titleSplit.length - 1])
+                }}
+              >
+                <option value={'undefined'} disabled>
+                  Select Folder
+                </option>
+                {volumesData.data &&
+                  volumesData.data.map((v: String) => {
+                    return (
+                      <option value={`/${v.toString()}`} key={v.toString()}>
+                        {v}
+                      </option>
+                    )
+                  })}
+              </select>
+            </div>
+          )}
           <div>
             <input
               type="text"

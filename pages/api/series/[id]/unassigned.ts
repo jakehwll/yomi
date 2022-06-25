@@ -7,14 +7,21 @@ async function get(req: NextApiRequest, res: NextApiResponse) {
   // check we have an authorised user.
   if (!(await getAuthorisedUser(req)))
     return res.status(403).json({ error: 'Unauthorised. Nice try.', code: 403 })
+  // gather the id from the request
   const { id } = req.query
   const series = await getSeries(id as string)
 
-  const response = await getDirectoryFolders((series as any).folder)
-
-  res.status(200).json({
-    data: response,
-  })
+  if (series) {
+    const response = await getDirectoryFolders(`${series.folder}`)
+    res.status(200).json({
+      data: response,
+    })
+  } else {
+    res.status(404).json({
+      error: 'Resource not found.',
+      code: 400,
+    })
+  }
 }
 
 export default async function handler(
