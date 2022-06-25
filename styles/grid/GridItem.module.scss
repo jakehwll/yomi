@@ -3,6 +3,12 @@
   border-radius: 0.25rem;
   position: relative;
   // min-width: 16rem;
+  &:hover {
+    .edit {
+      opacity: 1;
+      transition: 0.25s ease;
+    }
+  }
 }
 
 .link {
@@ -63,4 +69,15 @@
     border-radius: 0.2rem;
     background: rgba(white, 0.1);
   }
+}
+
+.edit {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  z-index: 30;
+  opacity: 0;
+  background: rgba(black, 0.5);
+  border-radius: 0.25rem;
+  transition: 0.25s ease;
 }

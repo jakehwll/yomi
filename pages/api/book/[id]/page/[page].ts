@@ -122,11 +122,13 @@ async function get(req: NextApiRequest, res: NextApiResponse) {
       .toBuffer()
     // we should have our buffer by now, lets serve him!
     res.setHeader('Content-Type', 'image/jpg')
-    return res.status(200).send(newImageBuffer)
+    res.status(200).send(newImageBuffer)
+    return res.end()
   } else {
     // we should have our buffer by now, lets serve him!
     res.setHeader('Content-Type', 'image/jpg')
-    return res.status(200).send(imageBuffer)
+    res.status(200).send(imageBuffer)
+    return res.end()
   }
 }
 

@@ -1,9 +1,8 @@
 import AlertDialog from 'components/AlertDialog'
 import Button, { ButtonGroup } from 'components/Button'
 import Dialog from 'components/Dialog'
-import SeriesSettings from 'components/settings/Series'
-import { SeriesThumbnailSettings } from 'components/settings/Thumbnail'
-import Image from 'next/image'
+import SeriesSettings from 'components/settings/series/Meta'
+import { SeriesThumbnailSettings } from 'components/settings/series/Thumbnail'
 import { useRouter } from 'next/router'
 import { useState } from 'react'
 import { Edit3, Image as ImageIcon, Trash } from 'react-feather'
@@ -48,7 +47,7 @@ const SeriesHeader = ({
               </Button>
             </Dialog>
             <Dialog
-              title="Edit Thumbnail"
+              title="Edit Series Thumbnail"
               open={thumb}
               onOpenChange={(open) => setThumbnailOpen(open)}
               content={
@@ -83,11 +82,11 @@ const SeriesHeader = ({
           </ButtonGroup>
         </div>
         <div className={styles.background}>
-          <Image src={image} layout="fill" alt="" />
+          <img src={image} alt="" />
         </div>
         <div className={styles.image}>
           <div className={styles.wrapper}>
-            <Image src={image} layout="fill" alt="" />
+            <img src={image} alt="" />
           </div>
         </div>
         <div className={styles.content}>

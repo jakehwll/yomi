@@ -1,9 +1,10 @@
 import Button from 'components/Button'
+import Text from 'components/input/Text'
 import { FormEvent, useEffect, useState } from 'react'
 import useSWR from 'swr'
 import fetcher from 'util/swr'
 
-const SeriesThumbnailSettings = ({
+const BookSettings = ({
   id,
   mutate,
   modalSetter,
@@ -12,7 +13,7 @@ const SeriesThumbnailSettings = ({
   mutate(): void
   modalSetter(val: boolean): void
 }) => {
-  const { data, error } = useSWR(`/api/series/${id}/thumbnail?list`, fetcher)
+  const { data, error } = useSWR(`/api/book/${id}`, fetcher)
 
   const [loading, setLoading] = useState(false)
 
@@ -26,7 +27,7 @@ const SeriesThumbnailSettings = ({
   const handleSubmit = (event: FormEvent) => {
     event.preventDefault()
     setLoading(true)
-    fetch(`/api/series/${id}/thumbnail`, {
+    fetch(`/api/book/${id}`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
@@ -48,21 +49,15 @@ const SeriesThumbnailSettings = ({
   return (
     <>
       <form onSubmit={handleSubmit}>
-        <div>
-          <select defaultValue={'undefined'} onChange={(event) => {}}>
-            <option value={'undefined'} disabled>
-              Select File
-            </option>
-            {data &&
-              data.data.map((v: any) => {
-                return (
-                  <option key={v} value={v}>
-                    {v}
-                  </option>
-                )
-              })}
-          </select>
-        </div>
+        <Text
+          label={'Title'}
+          id={'title'}
+          name={'title'}
+          value={title}
+          onChange={(event) =>
+            setTitle((event.target as HTMLInputElement).value)
+          }
+        />
         <Button style={'success'} wide={true} loading={loading} type="submit">
           Save
         </Button>
@@ -71,4 +66,4 @@ const SeriesThumbnailSettings = ({
   )
 }
 
-export { SeriesThumbnailSettings }
+export default BookSettings

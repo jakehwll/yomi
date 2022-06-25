@@ -1,5 +1,6 @@
 import { Book } from '@prisma/client'
-import { GridItem, GridWrapper } from 'components/grid'
+import { GridWrapper } from 'components/grid'
+import GridItemBook from 'components/grid/GridItemBook'
 import SeriesHeader from 'components/headings/SeriesHeader'
 import Layout from 'components/layout'
 import Meta from 'components/Meta'
@@ -8,17 +9,27 @@ import { ErrorMessage } from 'pages/_error'
 import useSWR from 'swr'
 import fetcher from 'util/swr'
 
-const BookGrid = ({ books }: { books: Array<Book> }) => {
+const BookGrid = ({
+  books,
+  mutate,
+}: {
+  books: Array<Book>
+  mutate(): void
+}) => {
   return (
     <>
       <GridWrapper>
         {books &&
           books.map((v: Book) => (
-            <GridItem
-              image={v.thumbnail ? v.thumbnail : '/placeholder.jpg'}
+            <GridItemBook
+              id={v.id}
+              image={
+                v.thumbnail ? `/api/book/${v.id}/thumbnail` : '/placeholder.jpg'
+              }
               key={v.id}
               headline={v.title}
               link={`/book/${v.id}`}
+              mutate={mutate}
             />
           ))}
         {!books && <h1>no volumes.</h1>}
@@ -53,7 +64,7 @@ export const Series = () => {
                 id={id as string}
                 mutate={mutate}
               />
-              <BookGrid books={data.data.books} />
+              <BookGrid books={data.data.books} mutate={mutate} />
             </>
           )}
         </Layout>
