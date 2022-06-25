@@ -17,8 +17,10 @@ async function post(req: NextApiRequest, res: NextApiResponse) {
   // attempt to update the book and serve the data to the user.
   const response = await prisma.readProgress.upsert({
     where: {
-      userId: user.id,
-      bookId: id.toString(),
+      userId_bookId: {
+        userId: user.id,
+        bookId: id.toString(),
+      },
     },
     update: {
       progress: data.progress,

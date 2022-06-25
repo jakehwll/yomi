@@ -51,10 +51,12 @@ model User {
 }
 
 model ReadProgress {
-  id        String @id @unique @default(cuid())
+  id        String @unique @default(cuid())
   progress  Int
   User      User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   Book      Book   @relation(fields: [bookId], references: [id], onDelete: Cascade)
   userId    String @unique
   bookId    String @unique
+
+  @@id([userId, bookId])
 }

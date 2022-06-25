@@ -164,6 +164,19 @@ const Reader = () => {
     setPageCount(data.count)
   }, [data])
 
+  useEffect(() => {
+    if (data)
+      fetch(`/api/book/${data.data.id}/read_progress`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          progress: index * pageAmount,
+        }),
+      })
+  }, [index])
+
   // TODO.
   // home - Return to index 0.
   // end - Return to index last.
