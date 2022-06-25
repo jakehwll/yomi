@@ -3,7 +3,6 @@ import GridItem, { GridItemGhost } from 'components/grid/GridItem'
 import Loading from 'components/grid/Loading'
 import Layout from 'components/layout'
 import Meta from 'components/Meta'
-import RequiresAuth from 'components/RequiresAuth'
 import type { NextPage } from 'next'
 import useSWR from 'swr'
 import fetcher from 'util/swr'
@@ -50,7 +49,6 @@ const Home: NextPage = () => {
   return (
     <>
       <Meta title={'Books'} />
-      <RequiresAuth />
       <Layout>
         <SeriesGrid />
       </Layout>

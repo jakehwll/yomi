@@ -3,7 +3,6 @@ import Footer from 'components/layout/Footer'
 import SearchInput from 'components/layout/Search'
 import Sidebar from 'components/layout/Sidebar'
 import Meta from 'components/Meta'
-import RequiresAuth from 'components/RequiresAuth'
 import type { NextPage } from 'next'
 import styles from 'styles/layout/Layout.module.scss'
 
@@ -11,7 +10,6 @@ const Search: NextPage = () => {
   return (
     <>
       <Meta title={'Search'} />
-      <RequiresAuth />
       <div className={styles.root}>
         <Sidebar />
         <Content>

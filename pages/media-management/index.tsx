@@ -3,7 +3,6 @@ import Button from 'components/Button'
 import Card from 'components/Card'
 import Layout from 'components/layout'
 import Meta from 'components/Meta'
-import RequiresAuth from 'components/RequiresAuth'
 import type { NextPage } from 'next'
 import { useRouter } from 'next/router'
 import { FormEvent, useState } from 'react'
@@ -187,7 +186,6 @@ const Home: NextPage = () => {
   return (
     <>
       <Meta title={'Media Management'} />
-      <RequiresAuth />
       <Layout>
         <UnassignedSeries />
         <UnassignedVolumes />

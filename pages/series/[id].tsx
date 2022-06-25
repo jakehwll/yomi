@@ -3,7 +3,6 @@ import { GridItem, GridWrapper } from 'components/grid'
 import SeriesHeader from 'components/headings/SeriesHeader'
 import Layout from 'components/layout'
 import Meta from 'components/Meta'
-import RequiresAuth from 'components/RequiresAuth'
 import { useRouter } from 'next/router'
 import { ErrorMessage } from 'pages/_error'
 import useSWR from 'swr'
@@ -42,7 +41,6 @@ export const Series = () => {
 
   return (
     <>
-      <RequiresAuth />
       {data && (
         <Layout>
           {data.data && (

@@ -1,6 +1,5 @@
 import Layout from 'components/layout'
 import Meta from 'components/Meta'
-import RequiresAuth from 'components/RequiresAuth'
 import type { NextPage } from 'next'
 
 const ErrorMessage = () => {
@@ -15,7 +14,6 @@ const ErrorPage: NextPage = () => {
   return (
     <>
       <Meta title={'Error'} />
-      <RequiresAuth />
       <ErrorMessage />
     </>
   )
