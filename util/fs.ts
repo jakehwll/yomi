@@ -1,23 +1,31 @@
-import { readdirSync } from 'fs'
+import { globby } from 'globby'
 
-const getDirectoryFiles = async (_path: string) => {
-  return readdirSync(`${process.cwd()}${_path}`, {}).map((v: any) => {
-    return {
-      path: _path,
-      value: v,
-      location: `${process.cwd()}${_path}/${v}`,
-    }
+const getDirectoryFiles = async ({ path }: { path: string }) => {
+  return globby(`${process.cwd()}${path}`, {
+    objectMode: true,
+    onlyFiles: true,
   })
 }
 
-const getDirectoryFolders = async (_path: string) => {
-  return readdirSync(`${process.cwd()}${_path}`, {
-    withFileTypes: true,
+const getDirectoryFolders = async ({
+  path,
+  depth,
+}: {
+  path: string
+  depth?: number
+}) => {
+  return globby(`${process.cwd()}${path}`, {
+    objectMode: true,
+    onlyDirectories: true,
+    deep: depth,
   })
-    .filter((dirent) => dirent.isDirectory())
-    .map((v: any) => {
-      return `${v.name}`
-    })
+  // return readdirSync(`${process.cwd()}${_path}`, {
+  //   withFileTypes: true,
+  // })
+  //   .filter((dirent) => dirent.isDirectory())
+  //   .map((v: any) => {
+  //     return `${v.name}`
+  //   })
 }
 
 export { getDirectoryFiles, getDirectoryFolders }

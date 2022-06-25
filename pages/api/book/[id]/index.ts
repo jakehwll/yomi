@@ -9,9 +9,10 @@ async function get(req: NextApiRequest, res: NextApiResponse) {
   const response = await getBook(id as string)
   if (!response || !response.Series)
     return res.status(404).json({ error: 'Resource not found.', code: 404 })
-  const files = await getDirectoryFiles(
-    `${response.Series.folder}${response.folder}`
-  )
+  // TODO. Resolve pagecount to current number.
+  const files = await getDirectoryFiles({
+    path: `${response.Series.folder}${response.folder}`,
+  })
   res.status(200).json({
     data: response,
     pages: files.length,

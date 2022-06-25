@@ -7,16 +7,20 @@ async function get(req: NextApiRequest, res: NextApiResponse) {
   // check we have an authorised user.
   if (!(await getAuthorisedUser(req)))
     return res.status(403).json({ error: 'Unauthorised. Nice try.', code: 403 })
-  const directoriesList = await getDirectoryFolders(`/data`)
+  const directoriesList = await (
+    await getDirectoryFolders({ path: `/data`, depth: 1 })
+  ).map((v) => {
+    return v.name
+  })
   const seriesDirectoriesList = await (
     await getAllSeries()
   ).map((v) => {
-    return v.folder
+    return v.title
   })
 
   res.status(200).json({
     data: directoriesList.filter((v) => {
-      return !seriesDirectoriesList.includes(`/data/${v}`)
+      return !seriesDirectoriesList.includes(`${v}`)
     }),
   })
 }

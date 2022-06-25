@@ -12,7 +12,14 @@ async function get(req: NextApiRequest, res: NextApiResponse) {
   const series = await getSeries(id as string)
 
   if (series) {
-    const response = await getDirectoryFolders(`${series.folder}`)
+    const response = (
+      await getDirectoryFolders({
+        path: `${series.folder}`,
+        depth: 1,
+      })
+    ).map((v) => {
+      return v.name
+    })
     res.status(200).json({
       data: response,
     })
