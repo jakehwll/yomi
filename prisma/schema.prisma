@@ -55,8 +55,7 @@ model ReadProgress {
   progress  Int
   User      User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   Book      Book   @relation(fields: [bookId], references: [id], onDelete: Cascade)
-  userId    String @unique
-  bookId    String @unique
-
+  userId    String
+  bookId    String
   @@id([userId, bookId])
 }
