@@ -1,20 +1,14 @@
 import { PrismaClient } from '@prisma/client'
-import { NextApiResponse } from 'next'
 
-const prisma = new PrismaClient()
+let prisma: PrismaClient
 
-var tryCatch = function (res: NextApiResponse, _function: Function) {
-  return async () => {
-    try {
-      await _function()
-    } catch (error) {
-      res.status(500).json({
-        error: 'Failed to create.',
-        code: 500,
-      })
-    }
+if (process.env.NODE_ENV === 'production') {
+  prisma = new PrismaClient()
+} else {
+  if (!(global as any).prisma) {
+    ;(global as any).prisma = new PrismaClient()
   }
+  prisma = (global as any).prisma
 }
 
 export default prisma
-export { tryCatch }
