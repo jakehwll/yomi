@@ -6,7 +6,7 @@ async function backend(req: NextRequest) {
   if (!session) {
     return NextResponse.json({
       error: 'Unauthorised.',
-      code: 404,
+      code: 403,
     })
   }
   return NextResponse.next()
@@ -18,18 +18,22 @@ async function frontend(req: NextRequest) {
   if (
     unauthorisedRoutes.includes(url.pathname) ||
     url.pathname.startsWith('/_next')
-  )
+  ) {
     return NextResponse.next()
-  const session = await getToken({ req, secret: process.env.NEXTAUTH_SECRET })
-  if (!session) {
-    url.pathname = '/api/auth/signin'
-    return NextResponse.redirect(url)
+  } else {
+    const session = await getToken({ req, secret: process.env.NEXTAUTH_SECRET })
+    if (session === null) {
+      return NextResponse.redirect(
+        new URL(`/auth/login?from=${req.nextUrl.pathname}`, req.url)
+      )
+    } else {
+      return NextResponse.next()
+    }
   }
-  return NextResponse.next()
 }
 
 export async function middleware(req: NextRequest) {
   const url = req.nextUrl.clone()
-  if (url.pathname.startsWith('/api')) backend(req)
-  else frontend(req)
+  if (url.pathname.startsWith('/api')) return backend(req)
+  else return frontend(req)
 }
