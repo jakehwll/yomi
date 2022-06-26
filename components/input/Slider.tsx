@@ -3,9 +3,11 @@ import styles from 'styles/input/Slider.module.scss'
 
 const SliderEl = ({
   value,
+  max,
   onValueChange,
 }: {
   value: number
+  max?: number
   onValueChange(value: Array<number>): void
 }) => {
   return (
@@ -13,7 +15,7 @@ const SliderEl = ({
       defaultValue={[value]}
       value={[value - 1]}
       min={0}
-      max={100}
+      max={max ?? 100}
       step={1}
       aria-label="Volume"
       className={styles.root}

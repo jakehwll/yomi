@@ -137,7 +137,8 @@ const Reader = () => {
   }
   const _next = (pageNum: number) => {
     // TODO dont allow to page out of bounds.
-    if (pageNum - -1 < 0) return -1
+    if (pageNum + 1 > pageCount / pageAmount - 2)
+      return pageCount / pageAmount - 2
     // add one to our page number to increment.
     return pageNum + 1
   }
@@ -161,7 +162,7 @@ const Reader = () => {
 
   useEffect(() => {
     if (!data) return
-    setPageCount(data.count)
+    setPageCount(data.pages)
   }, [data])
 
   useEffect(() => {
@@ -187,13 +188,13 @@ const Reader = () => {
   useEffect(() => {
     const keyHandler = (event: KeyboardEvent) => {
       if (event.key === ' ') setControls((controls) => !controls)
-      if (event.key === 'm') setControls((controls) => !controls)
     }
     document.addEventListener('keydown', keyHandler)
     return () => document.removeEventListener('keydown', keyHandler)
   }, [])
 
   useEffect(() => {
+    // TODO. Add check if in modal or button.
     const keyHandler = (event: KeyboardEvent) => {
       if (event.key === 'ArrowRight')
         setIndex((pageNum) =>
@@ -206,7 +207,7 @@ const Reader = () => {
     }
     document.addEventListener('keydown', keyHandler)
     return () => document.removeEventListener('keydown', keyHandler)
-  }, [invertControls])
+  }, [pageCount, invertControls])
 
   return (
     <>
@@ -231,7 +232,7 @@ const Reader = () => {
                 </div>
                 <div className={styles.title}>
                   {data.data &&
-                    `${data.data.Series.title} - ${data.data.title}`}
+                    `${data.data.Series.title} - ${data.data.title} (${index}/${pageCount})`}
                 </div>
                 <div className={styles.tools}>
                   <ButtonGroup>
@@ -271,6 +272,7 @@ const Reader = () => {
                 <div className={styles.timeline}>
                   <Slider
                     value={index + 1}
+                    max={pageCount / pageAmount - 2}
                     onValueChange={(number) => setIndex(number[0])}
                   />
                 </div>

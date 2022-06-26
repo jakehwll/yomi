@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import { getBook, updateBook } from 'util/book'
+import { getBook, getFilesData, updateBook } from 'util/book'
 import { getDirectoryFiles } from 'util/fs'
 import prisma from 'util/prisma'
 import { getAuthorisedAdmin } from 'util/users'
@@ -13,10 +13,11 @@ async function get(req: NextApiRequest, res: NextApiResponse) {
   const files = await getDirectoryFiles({
     path: `${response.Series.folder}${response.folder}`,
   })
+  let filesData = getFilesData({ files: files })
   res.status(200).json({
-    collection: 'series',
+    collection: 'book',
     data: response,
-    pages: files.length,
+    pages: Object.keys(filesData).length ?? 0,
   })
 }
 
