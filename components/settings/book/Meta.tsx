@@ -4,19 +4,19 @@ import { FormEvent, useEffect, useState } from 'react'
 import useSWR from 'swr'
 import fetcher from 'util/swr'
 
-const BookSettings = ({
-  id,
-  mutate,
-  modalSetter,
-}: {
+interface BookSettingsProps {
   id: string
   mutate(): void
   modalSetter(val: boolean): void
-}) => {
+}
+
+const BookSettings: React.FC<BookSettingsProps> = ({
+  id,
+  mutate,
+  modalSetter,
+}: BookSettingsProps) => {
   const { data, error } = useSWR(`/api/book/${id}`, fetcher)
-
   const [loading, setLoading] = useState(false)
-
   const [title, setTitle] = useState('')
 
   useEffect(() => {

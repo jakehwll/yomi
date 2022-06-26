@@ -9,14 +9,7 @@ import { useRouter } from 'next/router'
 import { useState } from 'react'
 import styles from 'styles/headings/SeriesHeader.module.scss'
 
-const SeriesHeader = ({
-  id,
-  title,
-  image,
-  volumes,
-  mutate,
-  data,
-}: {
+interface SeriesHeaderProps {
   id: string
   title: string
   image: string
@@ -25,7 +18,16 @@ const SeriesHeader = ({
   data: {
     data: Series
   }
-}) => {
+}
+
+const SeriesHeader: React.FC<SeriesHeaderProps> = ({
+  id,
+  title,
+  image,
+  volumes,
+  mutate,
+  data,
+}: SeriesHeaderProps) => {
   const router = useRouter()
   const [settings, setSettingsOpen] = useState(false)
   const [thumb, setThumbnailOpen] = useState(false)
@@ -105,6 +107,3 @@ const SeriesHeader = ({
 }
 
 export default SeriesHeader
-function setDeleteDialog(value: boolean): void {
-  throw new Error('Function not implemented.')
-}

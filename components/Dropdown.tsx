@@ -1,17 +1,24 @@
 import { Content, Item, Root, Trigger } from '@radix-ui/react-dropdown-menu'
 import styles from 'styles/Dropdown.module.scss'
 
-const Dropdown = ({
-  children,
-  content,
-  open,
-  onOpenChange,
-}: {
+interface DropdownProps {
   children: React.ReactNode
   content: React.ReactNode
   open?: boolean
   onOpenChange?(open: boolean): void
-}) => {
+}
+
+interface DropdownItemProps {
+  children: React.ReactNode
+  onSelect(): void
+}
+
+const Dropdown: React.FC<DropdownProps> = ({
+  children,
+  content,
+  open,
+  onOpenChange,
+}: DropdownProps) => {
   return (
     <Root open={open} onOpenChange={onOpenChange}>
       <Trigger className={styles.trigger} asChild>
@@ -23,16 +30,13 @@ const Dropdown = ({
   )
 }
 
-const DropdownItem = ({
+const DropdownItem: React.FC<DropdownItemProps> = ({
   children,
   onSelect,
-}: {
-  children: React.ReactNode
-  onSelect(): void
-}) => {
+}: DropdownItemProps) => {
   return (
     <Item className={styles.item} onSelect={onSelect} textValue={'test'}>
-      Test
+      {children}
     </Item>
   )
 }

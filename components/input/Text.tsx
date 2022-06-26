@@ -2,15 +2,7 @@ import { Label } from '@radix-ui/react-label'
 import { ChangeEventHandler } from 'react'
 import styles from 'styles/input/Text.module.scss'
 
-const Text = ({
-  label,
-  id,
-  name,
-  value,
-  type = 'text',
-  autoComplete,
-  onChange,
-}: {
+interface TextInputProps {
   label?: string
   id: string
   name: string
@@ -18,7 +10,17 @@ const Text = ({
   type?: 'text' | 'password'
   autoComplete?: string
   onChange: ChangeEventHandler
-}) => {
+}
+
+const Text: React.FC<TextInputProps> = ({
+  label,
+  id,
+  name,
+  value,
+  type = 'text',
+  autoComplete,
+  onChange,
+}: TextInputProps) => {
   return (
     <div className={styles.root}>
       {label && (

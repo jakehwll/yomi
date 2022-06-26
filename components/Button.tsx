@@ -2,14 +2,7 @@ import cc from 'classcat'
 import { Loader2 } from 'lucide-react'
 import styles from 'styles/Button.module.scss'
 
-const Button = ({
-  children,
-  onClick,
-  style = 'transparent',
-  wide,
-  type,
-  loading,
-}: {
+interface ButtonProps {
   children?: React.ReactNode
   onClick?: React.MouseEventHandler<HTMLButtonElement>
   style?:
@@ -24,7 +17,16 @@ const Button = ({
   wide?: boolean
   type?: 'button' | 'submit' | 'reset'
   loading?: boolean
-}) => {
+}
+
+const Button: React.FC<ButtonProps> = ({
+  children,
+  onClick,
+  style = 'transparent',
+  wide,
+  type,
+  loading,
+}: ButtonProps) => {
   return (
     <button
       type={type ?? 'button'}

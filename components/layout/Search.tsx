@@ -2,7 +2,7 @@ import { useRouter } from 'next/router'
 import { useEffect, useRef, useState } from 'react'
 import styles from 'styles/layout/Search.module.scss'
 
-const SearchInput = () => {
+const SearchInput: React.FC = () => {
   const router = useRouter()
   const input = useRef<HTMLInputElement>(null)
   const [query, setQuery] = useState(router.query.query ?? '')

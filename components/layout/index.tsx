@@ -5,13 +5,15 @@ import Footer from './Footer'
 import Search from './Search'
 import Sidebar from './Sidebar'
 
-const Layout = ({
-  children,
-  padding = true,
-}: {
+interface LayoutProps {
   children: React.ReactNode
   padding?: boolean
-}) => {
+}
+
+const Layout: React.FC<LayoutProps> = ({
+  children,
+  padding = true,
+}: LayoutProps) => {
   return (
     <div className={styles.root}>
       <Sidebar />

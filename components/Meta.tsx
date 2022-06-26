@@ -1,6 +1,10 @@
 import Head from 'next/head'
 
-const Meta = ({ title }: { title: string }) => {
+interface MetaProps {
+  title: string
+}
+
+const Meta: React.FC<MetaProps> = ({ title }: MetaProps) => {
   return (
     <Head>
       <title>{`${title} - yomi`}</title>

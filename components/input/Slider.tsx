@@ -1,15 +1,17 @@
 import { Range, Root, Thumb, Track } from '@radix-ui/react-slider'
 import styles from 'styles/input/Slider.module.scss'
 
-const SliderEl = ({
-  value,
-  max,
-  onValueChange,
-}: {
+interface SliderProps {
   value: number
   max?: number
   onValueChange(value: Array<number>): void
-}) => {
+}
+
+const Slider: React.FC<SliderProps> = ({
+  value,
+  max,
+  onValueChange,
+}: SliderProps) => {
   return (
     <Root
       defaultValue={[value]}
@@ -29,4 +31,4 @@ const SliderEl = ({
   )
 }
 
-export default SliderEl
+export default Slider

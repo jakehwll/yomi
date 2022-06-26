@@ -12,15 +12,7 @@ import {
 import styles from 'styles/AlertDialog.module.scss'
 import Button from './Button'
 
-const AlertDialog = ({
-  children,
-  open,
-  title,
-  description,
-  onOpenChange,
-  onCancel = () => {},
-  onSuccess = () => {},
-}: {
+interface AlertDialogProps {
   children?: React.ReactNode
   open?: boolean
   title: string
@@ -28,7 +20,17 @@ const AlertDialog = ({
   onOpenChange?(open: boolean): void
   onCancel?(): void
   onSuccess?(): void
-}) => {
+}
+
+const AlertDialog: React.FC<AlertDialogProps> = ({
+  children,
+  open,
+  title,
+  description,
+  onOpenChange,
+  onCancel = () => {},
+  onSuccess = () => {},
+}: AlertDialogProps) => {
   return (
     <Root open={open} onOpenChange={onOpenChange}>
       {children && (

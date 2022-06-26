@@ -2,9 +2,11 @@ import { useNProgress } from '@tanem/react-nprogress'
 import cc from 'classcat'
 import styles from 'styles/Progress.module.scss'
 
-const Loading: React.FC<{ isRouteChanging: boolean }> = ({
-  isRouteChanging,
-}) => {
+interface LoadingProps {
+  isRouteChanging: boolean
+}
+
+const Loading: React.FC<LoadingProps> = ({ isRouteChanging }: LoadingProps) => {
   const { isFinished, progress } = useNProgress({
     isAnimating: isRouteChanging,
   })

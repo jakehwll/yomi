@@ -1,7 +1,12 @@
 import { BookOpen, Home, User } from 'lucide-react'
+import { Session } from 'next-auth'
 import { useSession } from 'next-auth/react'
 import Link from 'next/link'
 import styles from 'styles/layout/Sidebar.module.scss'
+
+interface UserAccountProps {
+  session: Session
+}
 
 const _navigation = [
   {
@@ -18,18 +23,18 @@ const _navigation = [
   },
 ]
 
-const UserAccount = ({ session }: any) => {
-  if (session)
-    return (
-      <div className={styles.user}>
-        <User />
-        <span>{session.user?.email}</span>
-      </div>
-    )
-  else return <></>
+const UserAccount: React.FC<UserAccountProps> = ({
+  session,
+}: UserAccountProps) => {
+  return (
+    <div className={styles.user}>
+      <User />
+      <span>{session.user?.email}</span>
+    </div>
+  )
 }
 
-const Sidebar = () => {
+const Sidebar: React.FC = () => {
   const { data: session } = useSession()
 
   return (
@@ -58,7 +63,7 @@ const Sidebar = () => {
           )}
         </ul>
       </nav>
-      <UserAccount session={session} />
+      {session && <UserAccount session={session} />}
     </aside>
   )
 }

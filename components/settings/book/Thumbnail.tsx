@@ -4,17 +4,19 @@ import { FormEvent, useEffect, useState } from 'react'
 import useSWR from 'swr'
 import fetcher from 'util/swr'
 
-const BookThumbnailSettings = ({
-  id,
-  mutate,
-  modalSetter,
-  bookData,
-}: {
+interface BookThumbnailSettings {
   id: string
   mutate(): void
   modalSetter(val: boolean): void
   bookData?: Book
-}) => {
+}
+
+const BookThumbnailSettings: React.FC<BookThumbnailSettings> = ({
+  id,
+  mutate,
+  modalSetter,
+  bookData,
+}: BookThumbnailSettings) => {
   const { data, error } = useSWR(`/api/book/${id}/thumbnail?list`, fetcher)
   const [loading, setLoading] = useState(false)
   const [thumbnail, setThumbnail] = useState('')

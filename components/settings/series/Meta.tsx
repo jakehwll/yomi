@@ -4,19 +4,19 @@ import { FormEvent, useEffect, useState } from 'react'
 import useSWR from 'swr'
 import fetcher from 'util/swr'
 
-const SeriesSettings = ({
-  id,
-  mutate,
-  modalSetter,
-}: {
+interface SeriesSettingsProps {
   id: string
   mutate(): void
   modalSetter(val: boolean): void
-}) => {
+}
+
+const SeriesSettings: React.FC<SeriesSettingsProps> = ({
+  id,
+  mutate,
+  modalSetter,
+}: SeriesSettingsProps) => {
   const { data, error } = useSWR(`/api/series/${id}`, fetcher)
-
   const [loading, setLoading] = useState(false)
-
   const [title, setTitle] = useState('')
 
   useEffect(() => {

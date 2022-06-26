@@ -11,15 +11,7 @@ import {
 import { X } from 'lucide-react'
 import styles from 'styles/Dialog.module.scss'
 
-const Dialog = ({
-  title,
-  description,
-  children,
-  content,
-  open,
-  onOpenChange,
-  ref,
-}: {
+interface DialogProps {
   title: string
   description?: string
   children: React.ReactNode
@@ -28,7 +20,17 @@ const Dialog = ({
   open?: boolean
   onOpenChange?(open: boolean): void
   ref?: HTMLElement
-}) => {
+}
+
+const Dialog: React.FC<DialogProps> = ({
+  title,
+  description,
+  children,
+  content,
+  open,
+  onOpenChange,
+  ref,
+}: DialogProps) => {
   return (
     <Root open={open} onOpenChange={onOpenChange}>
       <Trigger asChild className={styles.trigger}>
