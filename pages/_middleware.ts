@@ -2,8 +2,9 @@ import { getToken } from 'next-auth/jwt'
 import { NextRequest, NextResponse } from 'next/server'
 
 async function backend(req: NextRequest) {
+  const url = req.nextUrl.clone()
   const session = await getToken({ req, secret: process.env.NEXTAUTH_SECRET })
-  if (!session) {
+  if (!session && !url.pathname.startsWith('/api/auth')) {
     return NextResponse.json({
       error: 'Unauthorised.',
       code: 403,
