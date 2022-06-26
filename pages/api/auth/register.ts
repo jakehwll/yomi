@@ -10,7 +10,7 @@ async function post(req: NextApiRequest, res: NextApiResponse) {
   }
   // TODO. Open this up to public registration, if enabled.
   // check if we already have a user, disable if so.
-  if (await getUsers()) {
+  if ((await (await getUsers()).length) > 1) {
     res.status(400).json({ error: 'Registrations are closed.', code: 400 })
     return res.end()
   }
