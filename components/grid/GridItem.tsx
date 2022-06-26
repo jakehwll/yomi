@@ -34,7 +34,7 @@ const GridItemGhost = () => {
   return (
     <div className={cc([styles.root, styles.ghost])}>
       <div className={styles.cover}></div>
-      <div className={styles.meta}>
+      <div className={cc([styles.meta, styles.meta__ghost])}>
         <div className={cc([styles.headline, styles.headline__ghost])}>
           &nbsp;
         </div>

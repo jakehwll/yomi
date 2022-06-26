@@ -7,6 +7,9 @@ const getAllSeries = async () => {
         select: { books: true },
       },
     },
+    orderBy: {
+      title: 'asc',
+    },
   })
 }
 
@@ -18,7 +21,11 @@ const getSeries = async (seriesId: string) => {
       },
     },
     include: {
-      books: true,
+      books: {
+        orderBy: {
+          title: 'asc',
+        },
+      },
     },
   })
 }
