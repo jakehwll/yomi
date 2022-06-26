@@ -1,5 +1,5 @@
 import cc from 'classcat'
-import { Loader } from 'react-feather'
+import { Loader2 } from 'lucide-react'
 import styles from 'styles/Button.module.scss'
 
 const Button = ({
@@ -38,7 +38,7 @@ const Button = ({
       ])}
       onClick={onClick}
     >
-      {loading && <Loader />}
+      {loading && <Loader2 />}
       {children}
     </button>
   )

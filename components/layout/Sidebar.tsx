@@ -1,6 +1,6 @@
+import { BookOpen, Home, User } from 'lucide-react'
 import { useSession } from 'next-auth/react'
 import Link from 'next/link'
-import { BookOpen, Home, User } from 'react-feather'
 import styles from 'styles/layout/Sidebar.module.scss'
 
 const _navigation = [

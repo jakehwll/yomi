@@ -1,3 +1,4 @@
+import { Book } from '@prisma/client'
 import Button from 'components/Button'
 import { FormEvent, useEffect, useState } from 'react'
 import useSWR from 'swr'
@@ -7,20 +8,20 @@ const BookThumbnailSettings = ({
   id,
   mutate,
   modalSetter,
+  bookData,
 }: {
   id: string
   mutate(): void
   modalSetter(val: boolean): void
+  bookData?: Book
 }) => {
   const { data, error } = useSWR(`/api/book/${id}/thumbnail?list`, fetcher)
-
   const [loading, setLoading] = useState(false)
-
   const [thumbnail, setThumbnail] = useState('')
 
   useEffect(() => {
     if (!data) return
-    setThumbnail(data.data.thumbnail ?? 'undefined')
+    setThumbnail((bookData && bookData?.thumbnail) || '')
   }, [data])
 
   const handleSubmit = (event: FormEvent) => {
@@ -53,6 +54,7 @@ const BookThumbnailSettings = ({
             defaultValue={'undefined'}
             onChange={(event) => setThumbnail(event.target.value)}
             value={thumbnail}
+            disabled={!data}
           >
             <option value={'undefined'} disabled>
               Select File

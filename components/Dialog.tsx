@@ -8,7 +8,7 @@ import {
   Title,
   Trigger,
 } from '@radix-ui/react-dialog'
-import { X } from 'react-feather'
+import { X } from 'lucide-react'
 import styles from 'styles/Dialog.module.scss'
 
 const Dialog = ({

@@ -138,4 +138,8 @@ select {
     border-color: var(--global-color-primary);
     outline: 1px solid var(--global-color-primary);
   }
+
+  &:disabled {
+    background: var(--global-input-border);
+  }
 }

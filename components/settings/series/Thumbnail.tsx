@@ -7,20 +7,20 @@ const SeriesThumbnailSettings = ({
   id,
   mutate,
   modalSetter,
+  defaultValue,
 }: {
   id: string
   mutate(): void
   modalSetter(val: boolean): void
+  defaultValue?: string
 }) => {
   const { data, error } = useSWR(`/api/series/${id}/thumbnail?list`, fetcher)
-
   const [loading, setLoading] = useState(false)
-
-  const [thumbnail, setThumbnail] = useState('')
+  const [thumbnail, setThumbnail] = useState(defaultValue ?? 'none')
 
   useEffect(() => {
     if (!data) return
-    setThumbnail(data.data.thumbnail ?? 'undefined')
+    setThumbnail(defaultValue ?? '')
   }, [data])
 
   const handleSubmit = (event: FormEvent) => {
@@ -53,6 +53,7 @@ const SeriesThumbnailSettings = ({
             defaultValue={'undefined'}
             onChange={(event) => setThumbnail(event.target.value)}
             value={thumbnail}
+            disabled={!data}
           >
             <option value={'undefined'} disabled>
               Select File
@@ -60,7 +61,7 @@ const SeriesThumbnailSettings = ({
             {data &&
               data.data.map((v: any) => {
                 return (
-                  <option key={v} value={v}>
+                  <option key={v} value={v} selected={v === defaultValue}>
                     {v}
                   </option>
                 )

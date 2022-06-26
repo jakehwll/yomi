@@ -5,8 +5,6 @@ import Checkbox from 'components/input/Checkbox'
 import Slider from 'components/input/Slider'
 import Meta from 'components/Meta'
 import { range } from 'lodash'
-import { useRouter } from 'next/router'
-import { useEffect, useRef, useState } from 'react'
 import {
   ArrowLeft,
   ArrowRight,
@@ -15,7 +13,9 @@ import {
   Maximize2,
   Minimize2,
   Settings,
-} from 'react-feather'
+} from 'lucide-react'
+import { useRouter } from 'next/router'
+import { useEffect, useRef, useState } from 'react'
 import { useFullscreen, useToggle } from 'react-use'
 import styles from 'styles/pages/Reader.module.scss'
 import useSWR from 'swr'
@@ -137,8 +137,8 @@ const Reader = () => {
   }
   const _next = (pageNum: number) => {
     // TODO dont allow to page out of bounds.
-    if (pageNum + 1 > pageCount / pageAmount - 2)
-      return pageCount / pageAmount - 2
+    if (pageNum + 1 > pageCount / pageAmount - 1)
+      return pageCount / pageAmount - 1
     // add one to our page number to increment.
     return pageNum + 1
   }
@@ -232,7 +232,9 @@ const Reader = () => {
                 </div>
                 <div className={styles.title}>
                   {data.data &&
-                    `${data.data.Series.title} - ${data.data.title} (${index}/${pageCount})`}
+                    `${data.data.Series.title} - ${data.data.title} (${index}/${
+                      pageCount / pageAmount - 1
+                    })`}
                 </div>
                 <div className={styles.tools}>
                   <ButtonGroup>
@@ -272,7 +274,7 @@ const Reader = () => {
                 <div className={styles.timeline}>
                   <Slider
                     value={index + 1}
-                    max={pageCount / pageAmount - 2}
+                    max={pageCount / pageAmount - 1}
                     onValueChange={(number) => setIndex(number[0])}
                   />
                 </div>

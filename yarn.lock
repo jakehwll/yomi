@@ -2065,6 +2065,11 @@ lru-cache@^6.0.0:
   dependencies:
     yallist "^4.0.0"
 
+lucide-react@^0.68.0:
+  version "0.68.0"
+  resolved "https://registry.yarnpkg.com/lucide-react/-/lucide-react-0.68.0.tgz#837f5b558b544fe8488ff8a546c5b340a17b51df"
+  integrity sha512-qeO4xDgMi+hJZOZeETy0kgYA7nuWfsYXVyDKr7Q+BUHfPq/rLAN4iYM+UWMjbwfNxmtA0uUIMLmxtTWeBugQPw==
+
 make-dir@^3.1.0:
   version "3.1.0"
   resolved "https://registry.yarnpkg.com/make-dir/-/make-dir-3.1.0.tgz#415e967046b3a7f1d185277d84aa58203726a13f"
@@ -2593,13 +2598,6 @@ react-dom@^18.2.0:
   dependencies:
     loose-envify "^1.1.0"
     scheduler "^0.23.0"
-
-react-feather@^2.0.10:
-  version "2.0.10"
-  resolved "https://registry.yarnpkg.com/react-feather/-/react-feather-2.0.10.tgz#0e9abf05a66754f7b7bb71757ac4da7fb6be3b68"
-  integrity sha512-BLhukwJ+Z92Nmdcs+EMw6dy1Z/VLiJTzEQACDUEnWMClhYnFykJCGWQx+NmwP/qQHGX/5CzQ+TGi8ofg2+HzVQ==
-  dependencies:
-    prop-types "^15.7.2"
 
 react-is@^16.7.0, react-is@^16.8.1:
   version "16.13.1"

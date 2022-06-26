@@ -1,5 +1,9 @@
 import prisma from './prisma'
 
+/**
+ * Scan the database for all available series.
+ * @returns Found <Series /> object or null.
+ */
 const getAllSeries = async () => {
   return await prisma.series.findMany({
     include: {
@@ -13,6 +17,11 @@ const getAllSeries = async () => {
   })
 }
 
+/**
+ * Grab a series based on its seriesId value.
+ * @param seriesId Given Series Id in the database
+ * @returns Found <Series /> object or null.
+ */
 const getSeries = async (seriesId: string) => {
   return await prisma.series.findFirst({
     where: {
@@ -30,6 +39,12 @@ const getSeries = async (seriesId: string) => {
   })
 }
 
+/**
+ * Update a book based on its bookId value.
+ * @param seriesId Given Series Id in the database.
+ * @param data New data to insert into the database.
+ * @returns Found <Series /> object or null.
+ */
 const updateSeries = async (seriesId: string, data: object) => {
   return await prisma.series.update({
     where: {
@@ -39,6 +54,11 @@ const updateSeries = async (seriesId: string, data: object) => {
   })
 }
 
+/**
+ * Remove a series based on its bookId value.
+ * @param seriesId Given Series Id in the database.
+ * @returns Found <Series /> object or null.
+ */
 const deleteSeries = async (seriesId: string) => {
   return await prisma.series.delete({
     where: {

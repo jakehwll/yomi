@@ -1,7 +1,23 @@
-import { Dirent } from 'fs'
-import { keyBy, flatten } from 'lodash'
+import { flatten, keyBy } from 'lodash'
+import { getDirectoryFilesProps } from './fs'
 import prisma from './prisma'
 
+export interface pageMetaData {
+  metadata: {
+    name: string
+    path: string
+  }
+  series?: {
+    index: number
+    total: number
+  }
+}
+
+/**
+ * Grab a book based on its bookId value.
+ * @param bookId Given Book's Id in the database.
+ * @returns Found <Book /> object or null.
+ */
 const getBook = async (bookId: string) => {
   return await prisma.book.findFirst({
     where: {
@@ -15,7 +31,13 @@ const getBook = async (bookId: string) => {
   })
 }
 
-const updateBook = async (bookId: string, data: object) => {
+/**
+ * Update a book based on its bookId value.
+ * @param bookId Given Book's Id in the database.
+ * @param data New data to insert into the database.
+ * @returns Found book object or null.
+ */
+const updateBook = async (bookId: string, data: Object) => {
   return await prisma.book.update({
     where: {
       id: bookId,
@@ -24,13 +46,16 @@ const updateBook = async (bookId: string, data: object) => {
   })
 }
 
-interface getDirectoryFilesProps {
-  name: string
-  path: string
-  dirent: Dirent
-}
-
-const getFilesData = ({ files }: { files: Array<getDirectoryFilesProps> }) => {
+/**
+ * Returns readable metadata to the `/book/{id}` page.
+ * @param files A list of files in the getDirectoryFilesProps format (globify).
+ * @returns An Array<pageMetaData> object.
+ */
+const getFilesData = ({
+  files,
+}: {
+  files: Array<getDirectoryFilesProps>
+}): Array<pageMetaData> => {
   const rawFileArray = files.map(({ name, path }: getDirectoryFilesProps) => {
     // grab the `p000-(p)000` string from the filename.
     let regexPageNumbers = name.match(/p\d+-?p?\d+/)
@@ -81,7 +106,7 @@ const getFilesData = ({ files }: { files: Array<getDirectoryFilesProps> }) => {
       }
     }
   })
-  return keyBy(flatten(rawFileArray), '_pageNum')
+  return keyBy(flatten(rawFileArray), '_pageNum') as any
 }
 
 export { getBook, updateBook, getFilesData }

@@ -2,17 +2,19 @@ import cc from 'classcat'
 import Link from 'next/link'
 import styles from 'styles/grid/GridItem.module.scss'
 
-const GridItem = ({
-  image,
-  headline,
-  subline,
-  link,
-}: {
+interface GridItemProps {
   image?: string
   headline: string
   subline?: string
   link: string
-}) => {
+}
+
+const GridItem: React.FC<GridItemProps> = ({
+  image,
+  headline,
+  subline,
+  link,
+}: GridItemProps) => {
   return (
     <div className={styles.root}>
       <Link href={link} passHref={true}>
@@ -30,7 +32,7 @@ const GridItem = ({
   )
 }
 
-const GridItemGhost = () => {
+const GridItemGhost: React.FC = () => {
   return (
     <div className={cc([styles.root, styles.ghost])}>
       <div className={styles.cover}></div>

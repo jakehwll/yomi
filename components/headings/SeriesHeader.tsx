@@ -1,11 +1,12 @@
+import { Series } from '@prisma/client'
 import AlertDialog from 'components/AlertDialog'
 import Button, { ButtonGroup } from 'components/Button'
 import Dialog from 'components/Dialog'
 import SeriesSettings from 'components/settings/series/Meta'
 import { SeriesThumbnailSettings } from 'components/settings/series/Thumbnail'
+import { Edit3, Image as ImageIcon, Trash } from 'lucide-react'
 import { useRouter } from 'next/router'
 import { useState } from 'react'
-import { Edit3, Image as ImageIcon, Trash } from 'react-feather'
 import styles from 'styles/headings/SeriesHeader.module.scss'
 
 const SeriesHeader = ({
@@ -14,12 +15,16 @@ const SeriesHeader = ({
   image,
   volumes,
   mutate,
+  data,
 }: {
   id: string
   title: string
   image: string
   volumes: number
   mutate(): void
+  data: {
+    data: Series
+  }
 }) => {
   const router = useRouter()
   const [settings, setSettingsOpen] = useState(false)
@@ -55,6 +60,7 @@ const SeriesHeader = ({
                   id={id}
                   mutate={mutate}
                   modalSetter={setThumbnailOpen}
+                  defaultValue={data.data.thumbnail ?? ''}
                 />
               }
             >

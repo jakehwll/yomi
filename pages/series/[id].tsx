@@ -30,6 +30,7 @@ const BookGrid = ({
               headline={v.title}
               link={`/book/${v.id}`}
               mutate={mutate}
+              data={v}
             />
           ))}
         {!books && <h1>no volumes.</h1>}
@@ -63,6 +64,7 @@ export const Series = () => {
                 volumes={data.data.books.length}
                 id={id as string}
                 mutate={mutate}
+                data={data}
               />
               <BookGrid books={data.data.books} mutate={mutate} />
             </>
