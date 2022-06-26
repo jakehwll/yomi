@@ -14,6 +14,7 @@ async function get(req: NextApiRequest, res: NextApiResponse) {
     path: `${response.Series.folder}${response.folder}`,
   })
   res.status(200).json({
+    collection: 'series',
     data: response,
     pages: files.length,
   })
@@ -29,6 +30,7 @@ async function update(req: NextApiRequest, res: NextApiResponse) {
   // attempt to update the book and serve the data to the user.
   const response = updateBook(id as string, data)
   res.status(200).json({
+    collection: 'book',
     data: response,
   })
 }
@@ -45,6 +47,7 @@ async function _delete(req: NextApiRequest, res: NextApiResponse) {
     },
   })
   res.status(200).json({
+    collection: 'book',
     data: response,
   })
 }

@@ -27,8 +27,8 @@ async function getThumbnailFile(req: NextApiRequest, res: NextApiResponse) {
     res.status(200).send(imageBuffer)
     return res.end()
   } catch {
-    res.status(404)
-    res.end()
+    res.status(404).send({})
+    return res.end()
   }
 }
 
@@ -53,8 +53,10 @@ async function getFiles(req: NextApiRequest, res: NextApiResponse) {
     return path
   })
   res.status(200).json({
+    collection: 'series',
     data: files,
   })
+  return res.end()
 }
 
 async function patch(req: NextApiRequest, res: NextApiResponse) {
@@ -72,8 +74,10 @@ async function patch(req: NextApiRequest, res: NextApiResponse) {
     data: data,
   })
   res.status(200).json({
+    collection: 'series',
     data: response,
   })
+  return res.end()
 }
 
 export default async function handler(

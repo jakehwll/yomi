@@ -33,6 +33,7 @@ async function post(req: NextApiRequest, res: NextApiResponse) {
   await createAccount(data.email, data.password, response.id, true)
   //
   res.status(201).json({
+    collection: 'user',
     data: response,
   })
   return res.end()

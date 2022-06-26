@@ -76,9 +76,11 @@
 }
 
 .edit {
+  max-width: calc(100% - 2rem);
   position: absolute;
-  top: 1rem;
-  right: 1rem;
+  top: 0.5rem;
+  left: 50%;
+  transform: translateX(-50%);
   z-index: 30;
   opacity: 0;
   background: rgba(black, 0.5);

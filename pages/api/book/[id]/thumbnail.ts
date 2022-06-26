@@ -24,11 +24,12 @@ async function getThumbnailFile(req: NextApiRequest, res: NextApiResponse) {
   try {
     const imageBuffer = readFileSync(`${process.cwd()}${fileURI}`)
     res.setHeader('Content-Type', 'image/jpg')
-    res.send(imageBuffer)
-    res.status(200)
-    res.end()
-    return res
-  } catch {}
+    res.status(200).send(imageBuffer)
+    return res.end()
+  } catch {
+    res.status(404).send({})
+    return res.end()
+  }
 }
 
 async function getFiles(req: NextApiRequest, res: NextApiResponse) {
@@ -45,13 +46,15 @@ async function getFiles(req: NextApiRequest, res: NextApiResponse) {
     let path = v.path
     // remove the process and wrapping folder
     path = path.replaceAll(process.cwd(), '')
-    path = path.replaceAll(data.folder, '')
+    path = path.replace(data.folder, '')
     path = path.replaceAll(data.Series.folder, '')
     return path
   })
   res.status(200).json({
+    collection: 'book',
     data: files,
   })
+  return res.end()
 }
 
 async function patch(req: NextApiRequest, res: NextApiResponse) {
@@ -69,8 +72,10 @@ async function patch(req: NextApiRequest, res: NextApiResponse) {
     data: data,
   })
   res.status(200).json({
+    collection: 'book',
     data: response,
   })
+  return res.end()
 }
 
 export default async function handler(

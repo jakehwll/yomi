@@ -14,6 +14,7 @@ async function get(req: NextApiRequest, res: NextApiResponse) {
   const { id } = req.query
   const response = await getSeries(id as string)
   res.status(200).json({
+    collection: 'series',
     data: response,
   })
 }
@@ -27,6 +28,7 @@ async function update(req: NextApiRequest, res: NextApiResponse) {
   const data = req.body
   const response = await updateSeries(id as string, data)
   res.status(200).json({
+    collection: 'series',
     data: response,
   })
 }
@@ -39,6 +41,7 @@ async function _delete(req: NextApiRequest, res: NextApiResponse) {
   const { id } = req.query
   const response = await deleteSeries(id as string)
   res.status(200).json({
+    collection: 'series',
     data: response,
   })
 }

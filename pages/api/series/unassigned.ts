@@ -19,6 +19,7 @@ async function get(req: NextApiRequest, res: NextApiResponse) {
   })
 
   res.status(200).json({
+    collection: 'series',
     data: directoriesList.filter((v) => {
       return !seriesDirectoriesList.includes(`${v}`)
     }),

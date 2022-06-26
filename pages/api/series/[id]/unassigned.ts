@@ -21,6 +21,7 @@ async function get(req: NextApiRequest, res: NextApiResponse) {
       return v.name
     })
     res.status(200).json({
+      collection: 'series',
       data: response,
     })
   } else {

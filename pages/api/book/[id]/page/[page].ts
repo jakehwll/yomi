@@ -81,7 +81,6 @@ async function get(req: NextApiRequest, res: NextApiResponse) {
   // check we have an authorised user.
   if (!(await getAuthorisedUser(req)))
     return res.status(403).json({ error: 'Unauthorised. Nice try.', code: 403 })
-  //
   // gather the id from the request
   const { id, page } = req.query
   // gather the book data from the request.
@@ -98,6 +97,7 @@ async function get(req: NextApiRequest, res: NextApiResponse) {
   let files = await getDirectoryFiles({
     path: `${book.Series.folder}${book.folder}`,
   })
+  if (files.length === 0) throw Error('Directory cannot be empty.')
   // map all our files and detect their titles.
   let filesData = getFilesData({ files: files })
   // alright. now that we have our data, let's create the buffer!

@@ -8,6 +8,7 @@ async function post(req: NextApiRequest, res: NextApiResponse) {
     data: data,
   })
   res.status(200).json({
+    collection: 'book',
     data: response,
   })
 }

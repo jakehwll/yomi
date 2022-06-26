@@ -32,6 +32,7 @@ async function post(req: NextApiRequest, res: NextApiResponse) {
     },
   })
   res.status(200).json({
+    collection: 'read_progress',
     data: response,
   })
 }

@@ -16,6 +16,7 @@ async function get(req: NextApiRequest, res: NextApiResponse) {
     return res.status(403).json({ error: 'Unauthorised. Nice try.', code: 403 })
   const response = await getAllSeries()
   res.status(200).json({
+    collection: 'series',
     data: response,
   })
 }
@@ -32,6 +33,7 @@ async function post(req: NextApiRequest, res: NextApiResponse) {
     data: req.body,
   })
   res.status(201).json({
+    collection: 'series',
     data: response,
   })
 }
