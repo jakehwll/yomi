@@ -3,3 +3,4 @@ data
 .next
 .env
 .env.example
+/prisma/prod.db

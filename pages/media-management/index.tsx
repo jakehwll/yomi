@@ -32,10 +32,12 @@ const UnassignedSeries = () => {
     })
       .then((response) => {
         if (response.ok) return response.json()
-        else throw Error('Failed to update.')
       })
       .then((response) => {
         router.push(`/series/${response.data.id}`)
+      })
+      .catch((error) => {
+        console.log(error)
       })
   }
 

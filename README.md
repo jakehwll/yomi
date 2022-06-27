@@ -20,16 +20,21 @@ Prerequisites.
 - Docker
 - Docker Compose
 
-**Docker**
-
-```sh
-# todo
-```
-
 **Docker Compose**
 
 ```yaml
-# todo.
+version: '3'
+services:
+  app:
+    image: ghcr.io/jakehwll/yomi
+    restart: unless-stopped
+    ports:
+      - 3000:3000
+    environment:
+      - NEXTAUTH_URL=http://CHANGE_ME
+      - NEXTAUTH_SECRET=CHANGE_ME
+    volumes:
+      - /path/to/manga:/app/data
 ```
 
 ### Development

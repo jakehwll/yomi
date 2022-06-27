@@ -42,4 +42,4 @@ yarn-error.log*
 /data
 
 # prisma
-prisma/prod.db
+/prisma/prod.db

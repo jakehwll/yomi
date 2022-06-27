@@ -16,6 +16,9 @@
   color: var(--global-color-light);
   margin-top: 1rem;
   margin-bottom: 1rem;
+  a {
+    color: var(--global-color-white);
+  }
 }
 
 .error {

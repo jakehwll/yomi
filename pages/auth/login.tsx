@@ -11,6 +11,8 @@ import styles from 'styles/pages/Authentication.module.scss'
 const Login: NextPage = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [error, setError] = useState('')
+  const [loading, setLoading] = useState(false)
 
   const router = useRouter()
   const session = useSession()
@@ -22,15 +24,19 @@ const Login: NextPage = () => {
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault()
     if (!email || !password) return
-    const response: SignInResponse | undefined = await signIn('credentials', {
+    setLoading(true)
+    const response = await signIn('credentials', {
       redirect: false,
       email: email,
       password: password,
       callbackUrl: window.location.origin ? window.location.origin : '/',
     })
-    if (!response) return
-    if ((response as SignInResponse).url)
-      router.push((response as SignInResponse).url ?? '')
+    if (response !== undefined) {
+      const _res = response as SignInResponse
+      if (_res.error) setError(_res.error)
+      else router.push(_res.url ?? '/')
+      setLoading(false)
+    }
   }
 
   return (
@@ -58,8 +64,8 @@ const Login: NextPage = () => {
             }
             label={'Password'}
           />
-          <Button style={'primary'} wide={true} type="submit">
-            Submit
+          <Button style={'primary'} wide={true} type="submit" loading={loading}>
+            Login
           </Button>
           <p className={styles.divider}>&mdash;</p>
           <Button

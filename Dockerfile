@@ -2,8 +2,8 @@ FROM node:16
 
 WORKDIR /app
 
-ADD package.json .
-ADD yarn.lock .
+COPY package.json .
+COPY yarn.lock .
 
 RUN yarn install
 
@@ -14,4 +14,4 @@ RUN yarn build
 
 EXPOSE 3000
 
-ENTRYPOINT ["yarn", "push-start"]
+ENTRYPOINT ["yarn", "start"]

@@ -18,15 +18,16 @@ const SeriesThumbnailSettings: React.FC<SeriesThumbnailSettingsProps> = ({
 }: SeriesThumbnailSettingsProps) => {
   const { data, error } = useSWR(`/api/series/${id}/thumbnail?list`, fetcher)
   const [loading, setLoading] = useState(false)
-  const [thumbnail, setThumbnail] = useState(defaultValue ?? 'none')
+  const [thumbnail, setThumbnail] = useState(defaultValue ?? 'undefined')
 
   useEffect(() => {
     if (!data) return
-    setThumbnail(defaultValue ?? '')
+    setThumbnail(defaultValue ?? 'undefined')
   }, [data])
 
   const handleSubmit = (event: FormEvent) => {
     event.preventDefault()
+    if (thumbnail === 'undefined') return
     setLoading(true)
     fetch(`/api/series/${id}/thumbnail`, {
       method: 'PATCH',
@@ -57,9 +58,7 @@ const SeriesThumbnailSettings: React.FC<SeriesThumbnailSettingsProps> = ({
             value={thumbnail}
             disabled={!data}
           >
-            <option value={'undefined'} disabled>
-              Select File
-            </option>
+            <option value={'undefined'}>Select File</option>
             {data &&
               data.data.map((v: any) => {
                 return (

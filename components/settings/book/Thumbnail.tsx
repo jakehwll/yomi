@@ -19,15 +19,16 @@ const BookThumbnailSettings: React.FC<BookThumbnailSettings> = ({
 }: BookThumbnailSettings) => {
   const { data, error } = useSWR(`/api/book/${id}/thumbnail?list`, fetcher)
   const [loading, setLoading] = useState(false)
-  const [thumbnail, setThumbnail] = useState('')
+  const [thumbnail, setThumbnail] = useState('undefined')
 
   useEffect(() => {
     if (!data) return
-    setThumbnail((bookData && bookData?.thumbnail) || '')
+    setThumbnail((bookData && bookData?.thumbnail) || 'undefined')
   }, [data])
 
   const handleSubmit = (event: FormEvent) => {
     event.preventDefault()
+    if (thumbnail === 'undefined') return
     setLoading(true)
     fetch(`/api/book/${id}/thumbnail`, {
       method: 'PATCH',
@@ -58,9 +59,7 @@ const BookThumbnailSettings: React.FC<BookThumbnailSettings> = ({
             value={thumbnail}
             disabled={!data}
           >
-            <option value={'undefined'} disabled>
-              Select File
-            </option>
+            <option value={'undefined'}>Select File</option>
             {data &&
               data.data.map((v: any) => {
                 return (

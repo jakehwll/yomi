@@ -47,6 +47,6 @@ export default NextAuth({
       return token
     },
   },
-  secret: process.env.NEXTAUTH_SECERT,
+  secret: process.env.NEXTAUTH_SECRET,
   debug: process.env.NODE_ENV === 'development',
 })
