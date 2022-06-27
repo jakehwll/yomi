@@ -40,3 +40,6 @@ yarn-error.log*
 
 # buildtime
 /data
+
+# prisma
+prisma/prod.db
