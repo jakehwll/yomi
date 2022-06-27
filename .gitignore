@@ -43,3 +43,6 @@ yarn-error.log*
 
 # prisma
 /prisma/prod.db
+
+# docker
+docker-compose.yml
