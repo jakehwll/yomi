@@ -1,15 +1,8 @@
-<div align="center">
+<img src="public/favicon.svg" alt="logo" width="92" height="auto" />
 
-  <img src="public/favicon.svg" alt="logo" width="92" height="auto" />
-  <h1>yomi.</h1>
+# yomi
 
-  <h4>
-    <a href="https://github.com/jakehwll/yomi/issues">Issues</a>
-    <span> · </span>
-    <a href="#getting-started">Documentation</a>
-  </h4>
-  
-</div>
+[Issues](https://github.com/jakehwll/yomi/issues)</a> · [Getting Started](#getting-started)
 
 ## Introduction
 
