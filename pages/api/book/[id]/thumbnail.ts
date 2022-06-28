@@ -1,5 +1,6 @@
 import { readFileSync } from 'fs'
 import { NextApiRequest, NextApiResponse } from 'next'
+import sharp from 'sharp'
 import { getBook } from 'util/book'
 import { getDirectoryFiles } from 'util/fs'
 import prisma from 'util/prisma'
@@ -24,10 +25,23 @@ async function getThumbnailFile(req: NextApiRequest, res: NextApiResponse) {
   try {
     const imageBuffer = readFileSync(`${process.cwd()}${fileURI}`)
     res.setHeader('Content-Type', 'image/jpg')
-    res.status(200).send(imageBuffer)
+    res.status(200).send(
+      await sharp(imageBuffer)
+        .resize({
+          width: 384,
+          height: 576,
+          fit: 'cover',
+        })
+        .jpeg({
+          quality: 80,
+        })
+        .toBuffer()
+    )
     return res.end()
-  } catch {
-    res.status(404).send({})
+  } catch (error) {
+    res.status(404).json({
+      error: 'File not found',
+    })
     return res.end()
   }
 }
