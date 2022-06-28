@@ -69,6 +69,8 @@
 
 .group {
   display: flex;
+  align-items: center;
+  justify-content: center;
   .root {
     border-radius: 0rem;
     &:first-of-type {
