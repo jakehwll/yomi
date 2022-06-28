@@ -2,6 +2,7 @@ import { readFileSync } from 'fs'
 import { globby } from 'globby'
 import { NextApiRequest, NextApiResponse } from 'next'
 import sharp from 'sharp'
+import { isProduction } from 'util/environment'
 import prisma from 'util/prisma'
 import { getSeries } from 'util/series'
 import { getAuthorisedAdmin, getAuthorisedUser } from 'util/users'
@@ -23,7 +24,9 @@ async function getThumbnailFile(req: NextApiRequest, res: NextApiResponse) {
   const data: any = await getSeries(id as string)
   const fileURI = `${data.folder}${data.thumbnail}`
   try {
-    const imageBuffer = readFileSync(`${process.cwd()}${fileURI}`)
+    const imageBuffer = readFileSync(
+      `${isProduction && process.cwd()}${fileURI}`
+    )
     res.setHeader('Content-Type', 'image/jpg')
     res.status(200).send(
       await sharp(imageBuffer)
@@ -52,15 +55,21 @@ async function getFiles(req: NextApiRequest, res: NextApiResponse) {
   const { id } = req.query
   const data: any = await getSeries(id as string)
   const files = (
-    await globby(`${process.cwd()}${data.folder}/**/*.jpg`, {
-      onlyFiles: true,
-      objectMode: true,
-    })
+    await globby(
+      `${process.env.NODE_ENV === 'production' && process.cwd()}${
+        data.folder
+      }/**/*.jpg`,
+      {
+        onlyFiles: true,
+        objectMode: true,
+      }
+    )
   ).map((v: any) => {
     // get our path and file.
     let path = v.path
     // remove the process and wrapping folder
-    path = path.replaceAll(process.cwd(), '')
+    if (process.env.NODE_ENV === 'production')
+      path = path.replaceAll(process.cwd(), '')
     path = path.replaceAll(data.folder, '')
     return path
   })

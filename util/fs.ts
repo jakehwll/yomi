@@ -1,5 +1,6 @@
 import { Dirent } from 'fs'
 import { globby } from 'globby'
+import { isProduction } from './environment'
 
 export interface getDirectoryFilesProps {
   name: string
@@ -20,7 +21,7 @@ const getDirectoryFiles = async ({
   path: string
   depth?: number
 }) => {
-  return globby(`${process.cwd()}${path}`, {
+  return globby(`${isProduction && process.cwd()}${path}`, {
     objectMode: true,
     onlyFiles: true,
     deep: depth,
@@ -40,11 +41,14 @@ const getDirectoryFolders = async ({
   path: string
   depth?: number
 }) => {
-  return globby(`${process.cwd()}${path}`, {
-    objectMode: true,
-    onlyDirectories: true,
-    deep: depth,
-  })
+  return globby(
+    `${process.env.NODE_ENV === 'production' && process.cwd()}${path}`,
+    {
+      objectMode: true,
+      onlyDirectories: true,
+      deep: depth,
+    }
+  )
 }
 
 export { getDirectoryFiles, getDirectoryFolders }
