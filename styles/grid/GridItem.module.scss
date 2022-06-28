@@ -76,7 +76,8 @@
 }
 
 .edit {
-  max-width: calc(100% - 2rem);
+  width: 100%;
+  max-width: calc(100% - 1rem);
   position: absolute;
   top: 0.5rem;
   left: 50%;

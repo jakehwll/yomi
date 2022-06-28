@@ -1,10 +1,11 @@
 import { Book } from '@prisma/client'
 import cc from 'classcat'
+import AlertDialog from 'components/AlertDialog'
 import Button, { ButtonGroup } from 'components/Button'
 import Dialog from 'components/Dialog'
 import BookSettings from 'components/settings/book/Meta'
 import { BookThumbnailSettings } from 'components/settings/book/Thumbnail'
-import { Edit3, Image as ImageIcon } from 'lucide-react'
+import { Edit3, Image as ImageIcon, Trash } from 'lucide-react'
 import Link from 'next/link'
 import { useState } from 'react'
 import styles from 'styles/grid/GridItem.module.scss'
@@ -64,6 +65,23 @@ const GridItemBook: React.FC<GridItemBookProps> = ({
               <Edit3 />
             </Button>
           </Dialog>
+          <AlertDialog
+            title={'Delete Series'}
+            description={`Are you sure you want to delete ${data.title}?`}
+            onSuccess={() => {
+              fetch(`/api/book/${data.id}`, {
+                method: 'DELETE',
+              }).then(() => {
+                mutate()
+              })
+            }}
+          >
+            <div>
+              <Button>
+                <Trash />
+              </Button>
+            </div>
+          </AlertDialog>
         </ButtonGroup>
       </div>
       <Link href={link} passHref={true}>

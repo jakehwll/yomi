@@ -30,6 +30,9 @@ const UserAccount: React.FC<UserAccountProps> = ({
     <div className={styles.user}>
       <User />
       <span>{session.user?.email}</span>
+      <Link href="/settings/user" passHref>
+        <a></a>
+      </Link>
     </div>
   )
 }

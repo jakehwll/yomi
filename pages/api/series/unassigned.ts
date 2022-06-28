@@ -10,18 +10,18 @@ async function get(req: NextApiRequest, res: NextApiResponse) {
   const directoriesList = await (
     await getDirectoryFolders({ path: `/data`, depth: 1 })
   ).map((v) => {
-    return v.name
+    return v.path.replaceAll(process.cwd(), '')
   })
   const seriesDirectoriesList = await (
     await getAllSeries()
   ).map((v) => {
-    return v.title
+    return v.folder
   })
 
   res.status(200).json({
     collection: 'series',
     data: directoriesList.filter((v) => {
-      return !seriesDirectoriesList.includes(`${v}`)
+      return !seriesDirectoriesList.includes(v)
     }),
   })
 }

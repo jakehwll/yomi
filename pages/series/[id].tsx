@@ -33,7 +33,6 @@ const BookGrid = ({
               data={v}
             />
           ))}
-        {!books && <h1>no volumes.</h1>}
       </GridWrapper>
     </>
   )
@@ -53,24 +52,22 @@ export const Series = () => {
 
   return (
     <>
-      {data && (
-        <Layout>
-          {data.data && (
-            <>
-              <Meta title={data.data.title} />
-              <SeriesHeader
-                title={data.data.title}
-                image={`/api/series/${id}/thumbnail`}
-                volumes={data.data.books.length}
-                id={id as string}
-                mutate={mutate}
-                data={data}
-              />
-              <BookGrid books={data.data.books} mutate={mutate} />
-            </>
-          )}
-        </Layout>
-      )}
+      <Layout>
+        {data && data.data && (
+          <>
+            <Meta title={data.data.title} />
+            <SeriesHeader
+              title={data.data.title}
+              image={`/api/series/${id}/thumbnail`}
+              volumes={data.data.books.length}
+              id={id as string}
+              mutate={mutate}
+              data={data}
+            />
+            <BookGrid books={data.data.books} mutate={mutate} />
+          </>
+        )}
+      </Layout>
     </>
   )
 }

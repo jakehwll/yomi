@@ -18,7 +18,7 @@ async function get(req: NextApiRequest, res: NextApiResponse) {
         depth: 1,
       })
     ).map((v) => {
-      return v.name
+      return `/${v.name}`
     })
     res.status(200).json({
       collection: 'series',

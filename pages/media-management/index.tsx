@@ -1,33 +1,29 @@
 import { Series } from '@prisma/client'
-import Button from 'components/Button'
 import Card from 'components/Card'
+import Form from 'components/form/Form'
+import { Input, Select } from 'components/form/Input'
 import Layout from 'components/layout'
 import Meta from 'components/Meta'
 import type { NextPage } from 'next'
 import { useRouter } from 'next/router'
-import { FormEvent, useState } from 'react'
+import { ChangeEvent, useState } from 'react'
 import useSWR from 'swr'
 import fetcher from 'util/swr'
 
 const UnassignedSeries = () => {
   const { data } = useSWR('/api/series/unassigned', fetcher)
 
-  const [title, setTitle] = useState('')
-  const [folder, setFolder] = useState('')
-
   const router = useRouter()
 
-  const handleSubmit = (event: FormEvent) => {
-    if (!title || !folder) return
-    event.preventDefault()
+  const handleSubmit = (data: any) => {
     fetch('/api/series', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        title: title,
-        folder: folder,
+        folder: data.folder,
+        title: data.title,
       }),
     })
       .then((response) => {
@@ -45,155 +41,95 @@ const UnassignedSeries = () => {
     return (
       <Card>
         <h2>Unassigned Series</h2>
-        <form onSubmit={handleSubmit}>
-          <div>
-            <select
-              defaultValue={'undefined'}
-              onChange={(event) => {
-                const titleSplit = event.target.value.split('/')
-                setFolder(event.target.value)
-                setTitle(titleSplit[titleSplit.length - 1])
-              }}
-            >
-              <option value={'undefined'} disabled>
-                Select Folder
-              </option>
-              {data.data.map((v: any) => {
-                return (
-                  <option key={v} value={`/data/${v}`}>
-                    {v}
-                  </option>
-                )
-              })}
-            </select>
-          </div>
-          <div>
-            <input
-              placeholder="Series Title"
-              value={title}
-              onChange={(event) => setTitle(event.target.value)}
-            />
-          </div>
-          <Button style={'primary'} type="submit" wide={true}>
-            Create Series
-          </Button>
-        </form>
+        <Form onSubmit={handleSubmit} submitText={'Create Series'}>
+          <Select
+            label={'Select Folder'}
+            name={'folder'}
+            options={data ? data.data : []}
+            required
+          />
+          <Input label={'Series Title'} name={'title'} required />
+        </Form>
       </Card>
     )
   else return <></>
 }
 
-const UnassignedVolumes = () => {
-  const [series, setSeries] = useState('undefined')
-  const [volume, setVolume] = useState('')
-  const [volumeTitle, setVolumeTitle] = useState('')
-
+const UnassignedBooks = () => {
+  const [currentSeries, setCurrentSeries] = useState('')
   const { data: seriesData, mutate: seriesMutate } = useSWR(
     `/api/series`,
     fetcher
   )
-  const { data: volumesData, mutate: volumesMutate } = useSWR(
-    `/api/series/${series}/unassigned`,
-    fetcher
+  const { data: booksData, mutate: booksMutate } = useSWR(
+    `/api/series/${currentSeries}/unassigned`,
+    currentSeries ? fetcher : null
   )
 
-  const handleSubmit = (event: FormEvent) => {
-    event.preventDefault()
-    if (!volumeTitle || !volume || !series) return
+  const handleSubmit = (data: any) => {
     fetch('/api/book', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        title: volumeTitle,
-        folder: volume,
-        seriesId: series,
+        seriesId: data.series,
+        title: data.title,
+        folder: data.folder,
       }),
     }).then(() => {
       seriesMutate()
-      volumesMutate()
-      setVolume('')
-      setVolumeTitle('')
+      // volumesMutate()
     })
   }
 
   if (seriesData)
     return (
       <Card>
-        <h2>Unassigned Volumes</h2>
-        <form onSubmit={handleSubmit}>
-          <div>
-            <select
-              defaultValue={'undefined'}
-              onChange={(event) => setSeries(event.target.value)}
-            >
-              <option value={'undefined'} disabled>
-                Select Series
-              </option>
-              {seriesData &&
-                seriesData.data.map((v: Series) => {
-                  return (
-                    <option key={v.id} value={v.id}>
-                      {v.title}
-                    </option>
-                  )
-                })}
-            </select>
-          </div>
-          {volumesData && (
-            <div>
-              <select
-                defaultValue={'undefined'}
-                onChange={(event) => {
-                  const titleSplit = event.target.value.split('/')
-                  setVolume(event.target.value)
-                  setVolumeTitle(titleSplit[titleSplit.length - 1])
-                }}
-              >
-                <option value={'undefined'} disabled>
-                  Select Folder
-                </option>
-                {volumesData.data &&
-                  volumesData.data.map((v: String) => {
-                    return (
-                      <option value={`/${v.toString()}`} key={v.toString()}>
-                        {v}
-                      </option>
-                    )
-                  })}
-              </select>
-            </div>
-          )}
-          <div>
-            <input
-              type="text"
-              placeholder="Volume Title"
-              value={volumeTitle}
-              onChange={(event) => setVolumeTitle(event.target.value)}
-            />
-          </div>
-          <div>
-            <Button style={'primary'} type="submit" wide={true}>
-              Create Volume
-            </Button>
-          </div>
-        </form>
+        <h2>Unassigned Books</h2>
+        <Form onSubmit={handleSubmit} submitText={'Create Book'}>
+          <Select
+            label="Series"
+            name={'series'}
+            options={
+              seriesData
+                ? seriesData.data.map((v: Series) => {
+                    return [v.id, v.title]
+                  })
+                : []
+            }
+            onChange={(event: ChangeEvent<HTMLOptionElement>) =>
+              setCurrentSeries(event.target.value)
+            }
+          />
+          <Select
+            label="Folder"
+            name={'folder'}
+            options={
+              booksData
+                ? booksData.data.map((v: any) => {
+                    return [v, v]
+                  })
+                : []
+            }
+          />
+          <Input label="Volume Title" name="title" />
+        </Form>
       </Card>
     )
   return <></>
 }
 
-const Home: NextPage = () => {
+const MediaManagement: NextPage = () => {
   return (
     <>
       <Meta title={'Media Management'} />
       <Layout>
         <UnassignedSeries />
-        <UnassignedVolumes />
+        <UnassignedBooks />
       </Layout>
     </>
   )
 }
 
-export default Home
+export default MediaManagement
