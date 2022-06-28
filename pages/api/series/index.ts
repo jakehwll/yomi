@@ -1,4 +1,5 @@
 import { Series } from '@prisma/client'
+import { orderBy } from 'lodash'
 import { NextApiRequest, NextApiResponse } from 'next'
 import prisma from 'util/prisma'
 import { getAllSeries } from 'util/series'
@@ -14,7 +15,11 @@ async function get(req: NextApiRequest, res: NextApiResponse) {
   // check we have an authorised user.
   if (!(await getAuthorisedUser(req)))
     return res.status(403).json({ error: 'Unauthorised. Nice try.', code: 403 })
-  const response = await getAllSeries()
+  const response = orderBy(
+    await getAllSeries(),
+    [(series) => series.title.toLowerCase()],
+    ['asc']
+  )
   res.status(200).json({
     collection: 'series',
     data: response,

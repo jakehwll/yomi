@@ -13,6 +13,11 @@ async function get(req: NextApiRequest, res: NextApiResponse) {
   // gather the id from the request
   const { id } = req.query
   const response = await getSeries(id as string)
+  if (response && response.books) {
+    response.books = response.books.sort((a, b) => {
+      return a.title.localeCompare(b.title, 'en', { numeric: true })
+    })
+  }
   res.status(200).json({
     collection: 'series',
     data: response,
