@@ -9,19 +9,28 @@ interface FormProps {
   children: React.ReactElement | Array<React.ReactElement>
   onSubmit(event: any): void
   submitText?: string
+  loading?: boolean
+  resetSubmit?: boolean
 }
 
 const Form = ({
   defaultValues,
   children,
   onSubmit,
+  resetSubmit = false,
   submitText,
+  loading,
 }: FormProps): ReactElement => {
   const methods = useForm({ defaultValues })
-  const { handleSubmit } = methods
+  const { handleSubmit, reset } = methods
+
+  const _handleSubmit = (event: { [key: string]: any }) => {
+    if (resetSubmit) reset()
+    return onSubmit(event)
+  }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <form onSubmit={handleSubmit(_handleSubmit)}>
       {React.Children.map(children, (child) => {
         if (!child) return
         return child.props.name
@@ -34,7 +43,7 @@ const Form = ({
             })
           : child
       })}
-      <Button type="submit" style="primary" wide={true}>
+      <Button type="submit" style="primary" wide={true} loading={loading}>
         {submitText ? submitText : 'Submit'}
       </Button>
     </form>

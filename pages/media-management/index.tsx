@@ -12,10 +12,12 @@ import fetcher from 'util/swr'
 
 const UnassignedSeries = () => {
   const { data } = useSWR('/api/series/unassigned', fetcher)
-
   const router = useRouter()
 
+  const [loading, setLoading] = useState(false)
+
   const handleSubmit = (data: any) => {
+    setLoading(true)
     fetch('/api/series', {
       method: 'POST',
       headers: {
@@ -27,6 +29,7 @@ const UnassignedSeries = () => {
       }),
     })
       .then((response) => {
+        setLoading(false)
         if (response.ok) return response.json()
       })
       .then((response) => {
@@ -41,7 +44,11 @@ const UnassignedSeries = () => {
     return (
       <Card>
         <h2>Unassigned Series</h2>
-        <Form onSubmit={handleSubmit} submitText={'Create Series'}>
+        <Form
+          onSubmit={handleSubmit}
+          submitText={'Create Series'}
+          loading={loading}
+        >
           <Select
             label={'Select Folder'}
             name={'folder'}
@@ -66,7 +73,10 @@ const UnassignedBooks = () => {
     currentSeries ? fetcher : null
   )
 
+  const [loading, setLoading] = useState(false)
+
   const handleSubmit = (data: any) => {
+    setLoading(true)
     fetch('/api/book', {
       method: 'POST',
       headers: {
@@ -78,8 +88,8 @@ const UnassignedBooks = () => {
         folder: data.folder,
       }),
     }).then(() => {
+      setLoading(false)
       seriesMutate()
-      // volumesMutate()
     })
   }
 
@@ -87,7 +97,12 @@ const UnassignedBooks = () => {
     return (
       <Card>
         <h2>Unassigned Books</h2>
-        <Form onSubmit={handleSubmit} submitText={'Create Book'}>
+        <Form
+          onSubmit={handleSubmit}
+          submitText={'Create Book'}
+          loading={loading}
+          resetSubmit={true}
+        >
           <Select
             label="Series"
             name={'series'}

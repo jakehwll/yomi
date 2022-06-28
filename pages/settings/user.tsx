@@ -12,8 +12,12 @@ const ChangePassword = () => {
     <Card>
       <h2>Change Password</h2>
       <Form onSubmit={handleSubmit} submitText={'Change Password'}>
-        <Input label="Password" name={'password'} />
-        <Input label="Confirm Password" name={'confirm-password'} />
+        <Input label="Password" type="password" name={'password'} />
+        <Input
+          label="Confirm Password"
+          type="password"
+          name={'confirm-password'}
+        />
       </Form>
     </Card>
   )
