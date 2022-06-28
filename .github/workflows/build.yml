@@ -40,7 +40,8 @@ jobs:
           echo IMAGE_ID=$IMAGE_ID
           echo VERSION=$VERSION
           # Build and Publish container image.
-          docker build --push --tag $IMAGE_ID:$VERSION
+          docker build --tag $IMAGE_ID:$VERSION .
+          docker push $IMAGE_ID:$VERSION
           # Build and Publish multi-arch container image
           # docker buildx build --push \
           # --tag $IMAGE_ID:$VERSION \
