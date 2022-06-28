@@ -1,7 +1,7 @@
 # Based on the following Github Action.
 # https://github.com/ahmetozer/github-actions-multi-arch-container-ghcr.io
 
-name: Build `main`
+name: Build Images
 
 on:
   push:
