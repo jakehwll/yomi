@@ -44,6 +44,7 @@ const Login: NextPage = () => {
       <Meta title={'Login'} />
       <div className={styles.root}>
         <h1>yomi</h1>
+        {error && <div className={styles.error}>{error}</div>}
         <form className={styles.form} onSubmit={handleSubmit}>
           <Text
             id={'email'}

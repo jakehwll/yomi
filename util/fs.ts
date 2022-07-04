@@ -21,7 +21,7 @@ const getDirectoryFiles = async ({
   path: string
   depth?: number
 }) => {
-  return globby(`${isProduction && process.cwd()}${path}`, {
+  return globby(`${!isProduction && process.cwd()}${path}`, {
     objectMode: true,
     onlyFiles: true,
     deep: depth,
@@ -41,14 +41,12 @@ const getDirectoryFolders = async ({
   path: string
   depth?: number
 }) => {
-  return globby(
-    `${process.env.NODE_ENV === 'production' && process.cwd()}${path}`,
-    {
-      objectMode: true,
-      onlyDirectories: true,
-      deep: depth,
-    }
-  )
+  console.log(`${!isProduction && process.cwd()}${path}`)
+  return globby(`${!isProduction && process.cwd()}${path}`, {
+    objectMode: true,
+    onlyDirectories: true,
+    deep: depth,
+  })
 }
 
 export { getDirectoryFiles, getDirectoryFolders }

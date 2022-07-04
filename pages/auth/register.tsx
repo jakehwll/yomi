@@ -34,7 +34,6 @@ const Login: NextPage = () => {
         else console.log(response)
       })
       .then((json: any) => {
-        // if (!json) return
         if (!json.ok) router.push('/auth/login')
         else setError(json.statusText)
       })

@@ -25,7 +25,7 @@ async function getThumbnailFile(req: NextApiRequest, res: NextApiResponse) {
   const fileURI = `${data.Series.folder}${data.folder}/${data.thumbnail}`
   try {
     const imageBuffer = readFileSync(
-      `${isProduction && process.cwd()}${fileURI}`
+      `${!isProduction && process.cwd()}${fileURI}`
     )
     res.setHeader('Content-Type', 'image/jpg')
     res.status(200).send(
@@ -62,8 +62,7 @@ async function getFiles(req: NextApiRequest, res: NextApiResponse) {
     // get our path and file.
     let path = v.path
     // remove the process and wrapping folder
-    if (process.env.NODE_ENV === 'production')
-      path = path.replaceAll(process.cwd(), '')
+    if (!isProduction) path = path.replaceAll(process.cwd(), '')
     path = path.replace(data.folder, '')
     path = path.replaceAll(data.Series.folder, '')
     return path

@@ -34,7 +34,8 @@ services:
       - NEXTAUTH_URL=http://CHANGE_ME
       - NEXTAUTH_SECRET=CHANGE_ME
     volumes:
-      - /path/to/manga:/app/data
+      - /path/to/manga:/data/library
+      - /path/to/config:/data/config
 ```
 
 ### Development

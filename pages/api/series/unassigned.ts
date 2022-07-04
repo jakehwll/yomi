@@ -9,9 +9,9 @@ async function get(req: NextApiRequest, res: NextApiResponse) {
   if (!(await getAuthorisedUser(req)))
     return res.status(403).json({ error: 'Unauthorised. Nice try.', code: 403 })
   const directoriesList = await (
-    await getDirectoryFolders({ path: `/data`, depth: 1 })
+    await getDirectoryFolders({ path: `/data/library`, depth: 1 })
   ).map((v) => {
-    if (isProduction) return v.path.replaceAll(process.cwd(), '')
+    if (!isProduction) return v.path.replaceAll(process.cwd(), '')
     else return v.path
   })
   const seriesDirectoriesList = await (
