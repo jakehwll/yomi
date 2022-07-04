@@ -36,7 +36,11 @@ async function get(req: NextApiRequest, res: NextApiResponse) {
   let files = await getDirectoryFiles({
     path: `${book.Series.folder}${book.folder}`,
   })
-  if (files.length === 0) throw Error('Directory cannot be empty.')
+  if (files.length === 0)
+    res.status(500).send({
+      error: 'Request directory is empty or not found.',
+      code: 500,
+    })
   // map all our files and detect their titles.
   let filesData = getFilesData({ files: files })
   // alright. now that we have our data, let's create the buffer!

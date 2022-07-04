@@ -2,7 +2,7 @@ import { readFileSync } from 'fs'
 import { NextApiRequest, NextApiResponse } from 'next'
 import sharp from 'sharp'
 import { getBook } from 'util/book'
-import { isProduction } from 'util/environment'
+import { isContainerised } from 'util/environment'
 import { getDirectoryFiles } from 'util/fs'
 import prisma from 'util/prisma'
 import { getAuthorisedAdmin, getAuthorisedUser } from 'util/users'
@@ -25,7 +25,7 @@ async function getThumbnailFile(req: NextApiRequest, res: NextApiResponse) {
   const fileURI = `${data.Series.folder}${data.folder}/${data.thumbnail}`
   try {
     const imageBuffer = readFileSync(
-      `${!isProduction && process.cwd()}${fileURI}`
+      `${!isContainerised && process.cwd()}${fileURI}`
     )
     res.setHeader('Content-Type', 'image/jpg')
     res.status(200).send(
@@ -62,7 +62,7 @@ async function getFiles(req: NextApiRequest, res: NextApiResponse) {
     // get our path and file.
     let path = v.path
     // remove the process and wrapping folder
-    if (!isProduction) path = path.replaceAll(process.cwd(), '')
+    if (!isContainerised) path = path.replaceAll(process.cwd(), '')
     path = path.replace(data.folder, '')
     path = path.replaceAll(data.Series.folder, '')
     return path

@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import { isProduction } from 'util/environment'
+import { isContainerised } from 'util/environment'
 import { getDirectoryFolders } from 'util/fs'
 import { getAllSeries } from 'util/series'
 import { getAuthorisedUser } from 'util/users'
@@ -11,7 +11,7 @@ async function get(req: NextApiRequest, res: NextApiResponse) {
   const directoriesList = await (
     await getDirectoryFolders({ path: `/data/library`, depth: 1 })
   ).map((v) => {
-    if (!isProduction) return v.path.replaceAll(process.cwd(), '')
+    if (!isContainerised) return v.path.replaceAll(process.cwd(), '')
     else return v.path
   })
   const seriesDirectoriesList = await (
