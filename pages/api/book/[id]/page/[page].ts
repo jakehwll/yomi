@@ -23,7 +23,7 @@ async function get(req: NextApiRequest, res: NextApiResponse) {
   // gather the id from the request
   const { id, page } = req.query
   // gather the book data from the request.
-  const book = await getBook(id.toString())
+  const book = await getBook(id ? id.toString() : '')
   // 404 if we don't have the book on file.
   if (!book || !book.Series) {
     res.status(404).send({
@@ -43,6 +43,8 @@ async function get(req: NextApiRequest, res: NextApiResponse) {
     })
   // map all our files and detect their titles.
   let filesData = getFilesData({ files: files })
+  // check we have a page.
+  if (!page) return
   // alright. now that we have our data, let's create the buffer!
   const fileMeta = filesData[
     parseInt(page.toString() ?? '')

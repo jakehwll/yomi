@@ -19,7 +19,7 @@ async function post(req: NextApiRequest, res: NextApiResponse) {
     where: {
       userId_bookId: {
         userId: user.id,
-        bookId: id.toString(),
+        bookId: id ? id.toString() : '',
       },
     },
     update: {
@@ -27,7 +27,7 @@ async function post(req: NextApiRequest, res: NextApiResponse) {
     },
     create: {
       userId: user.id,
-      bookId: id.toString(),
+      bookId: id ? id.toString() : '',
       progress: data.progress,
     },
   })

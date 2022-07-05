@@ -84,7 +84,7 @@ async function patch(req: NextApiRequest, res: NextApiResponse) {
   //
   const response = await prisma.book.update({
     where: {
-      id: id.toString(),
+      id: id && id.toString(),
     },
     data: data,
   })
