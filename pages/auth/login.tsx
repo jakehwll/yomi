@@ -4,7 +4,7 @@ import Meta from 'components/Meta'
 import { NextPage } from 'next'
 import { signIn, SignInResponse, useSession } from 'next-auth/react'
 import { useRouter } from 'next/router'
-import { FormEvent, useEffect, useState } from 'react'
+import { FormEvent, useState } from 'react'
 
 import styles from 'styles/pages/Authentication.module.scss'
 
@@ -17,10 +17,6 @@ const Login: NextPage = () => {
   const router = useRouter()
   const session = useSession()
 
-  useEffect(() => {
-    if (session.data) router.push('/')
-  }, [])
-
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault()
     if (!email || !password) return
@@ -29,12 +25,13 @@ const Login: NextPage = () => {
       redirect: false,
       email: email,
       password: password,
-      callbackUrl: window.location.origin ? window.location.origin : '/',
     })
     if (response !== undefined) {
-      const _res = response as SignInResponse
-      if (_res.error) setError(_res.error)
-      else router.push(_res.url ?? '/')
+      if ((response as SignInResponse).error)
+        setError((response as SignInResponse).error ?? '')
+      else {
+        router.push('/')
+      }
       setLoading(false)
     }
   }
