@@ -50,9 +50,10 @@ async function get(req: NextApiRequest, res: NextApiResponse) {
     parseInt(page.toString() ?? '')
   ] as PageMetadataProps
   const fileURI = fileMeta?.metadata.path
-  let imageBuffer = readFileSync(fileURI ?? '')
-  // cry if we cant find the file.
-  if (!imageBuffer) {
+  let imageBuffer
+  try {
+    imageBuffer = readFileSync(fileURI ?? '')
+  } catch {
     res.status(404).send({
       error: 'Request object not found.',
       code: 404,
