@@ -25,7 +25,7 @@ async function getThumbnailFile(req: NextApiRequest, res: NextApiResponse) {
   const fileURI = `${data.folder}${data.thumbnail}`
   try {
     const imageBuffer = readFileSync(
-      `${!isContainerised && process.cwd()}${fileURI}`
+      `${!isContainerised ? process.cwd() : ''}${fileURI}`
     )
     res.setHeader('Content-Type', 'image/jpg')
     res.status(200).send(
@@ -56,7 +56,7 @@ async function getFiles(req: NextApiRequest, res: NextApiResponse) {
   const data: any = await getSeries(id as string)
   const files = (
     await globby(
-      `${!isContainerised && process.cwd()}${data.folder}/**/*.jpg`,
+      `${!isContainerised ? process.cwd() : ''}${data.folder}/**/*.jpg`,
       {
         onlyFiles: true,
         objectMode: true,

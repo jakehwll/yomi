@@ -25,7 +25,7 @@ async function getThumbnailFile(req: NextApiRequest, res: NextApiResponse) {
   const fileURI = `${data.Series.folder}${data.folder}/${data.thumbnail}`
   try {
     const imageBuffer = readFileSync(
-      `${!isContainerised && process.cwd()}${fileURI}`
+      `${!isContainerised ? process.cwd() : ''}${fileURI}`
     )
     res.setHeader('Content-Type', 'image/jpg')
     res.status(200).send(

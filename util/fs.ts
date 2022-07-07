@@ -21,7 +21,7 @@ const getDirectoryFiles = async ({
   path: string
   depth?: number
 }) => {
-  return globby(`${!isContainerised && process.cwd()}${path}`, {
+  return globby(`${!isContainerised ? process.cwd() : ''}${path}`, {
     objectMode: true,
     onlyFiles: true,
     deep: depth,
@@ -41,7 +41,7 @@ const getDirectoryFolders = async ({
   path: string
   depth?: number
 }) => {
-  return globby(`${!isContainerised && process.cwd()}${path}`, {
+  return globby(`${!isContainerised ? process.cwd() : ''}${path}`, {
     objectMode: true,
     onlyDirectories: true,
     deep: depth,
