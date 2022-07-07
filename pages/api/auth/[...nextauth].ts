@@ -41,9 +41,8 @@ export default NextAuth({
     signIn: '/auth/login',
   },
   callbacks: {
-    jwt: async ({ token, isNewUser, profile, user }) => {
+    jwt: async ({ token, user }) => {
       if (user) token.id = user.id
-      if (user) user.test = 'asdf'
       return token
     },
   },
