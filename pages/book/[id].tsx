@@ -22,10 +22,6 @@ import useSWR from 'swr'
 import fetcher from 'util/swr'
 
 const Pages = ({ render }: { render: Array<string> }) => {
-  const router = useRouter()
-  const { id } = router.query
-  // const { data, error, mutate } = useSWR(id ? `/api/book/${id}` : '', fetcher)
-
   return (
     <section>
       <div className={styles.canvas}>
@@ -39,6 +35,21 @@ const Pages = ({ render }: { render: Array<string> }) => {
         })}
       </div>
     </section>
+  )
+}
+
+const FauxPages = ({ fauxRender }: { fauxRender: Array<string> }) => {
+  return (
+    <div>
+      {fauxRender.map((v: string, i: number) => {
+        return (
+          <>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={v} alt="" />
+          </>
+        )
+      })}
+    </div>
   )
 }
 
@@ -107,6 +118,7 @@ const Reader = () => {
   const [pageCount, setPageCount] = useState(0)
   const [controls, setControls] = useState(true)
   const [render, setRender] = useState<Array<string>>([])
+  const [fauxRender, setFauxRender] = useState<Array<string>>([])
 
   // hooks
   const [fullscreen, toggleFullscreen] = useToggle(false)
@@ -145,11 +157,10 @@ const Reader = () => {
 
   useEffect(() => {
     if (id === undefined) return setRender([])
-    // TODO only render the front-cover.
     if (index === 0) return setRender([`/api/book/${id}/page/0`])
     if (index === 1) return setRender([`/api/book/${id}/page/1`])
-    // TODO only render the back-cover.
-    if (index === -1) return setRender([`/api/book/${id}/page/${-1}`])
+    if (index === pageCount)
+      return setRender([`/api/book/${id}/page/${pageCount}`])
     // loop all pages for our pageAmount range and render them
     let pages = range(index * pageAmount, index * pageAmount + pageAmount).map(
       (v: number) => `/api/book/${id}/page/${v}`
@@ -159,6 +170,29 @@ const Reader = () => {
     // update the renderer.
     setRender(pages)
   }, [id, index, invertPages, pageAmount])
+
+  useEffect(() => {
+    if (index * pageAmount - 2 < 1)
+      pageAmount === 2
+        ? setFauxRender(
+            range(0, 6).map((v: number) => `/api/book/${id}/page/${v}`)
+          )
+        : setFauxRender(
+            range(0, 5).map((v: number) => `/api/book/${id}/page/${v}`)
+          )
+    else
+      pageAmount === 2
+        ? setFauxRender(
+            range(index * pageAmount - 2, index * pageAmount + 4).map(
+              (v: number) => `/api/book/${id}/page/${v}`
+            )
+          )
+        : setFauxRender(
+            range(index * pageAmount - 2, index * pageAmount + 3).map(
+              (v: number) => `/api/book/${id}/page/${v}`
+            )
+          )
+  }, [index])
 
   useEffect(() => {
     if (!data) return
@@ -259,6 +293,7 @@ const Reader = () => {
               </div>
             </header>
             <Pages render={render} />
+            <FauxPages fauxRender={fauxRender} />
             <footer
               className={cc([styles.footer, { [styles.hidden]: !controls }])}
             >
