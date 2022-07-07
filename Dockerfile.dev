@@ -2,15 +2,12 @@ FROM node:16
 
 WORKDIR /app
 
-COPY package.json .
-COPY yarn.lock .
+COPY package.json /app
+COPY yarn.lock /app
 
 RUN yarn install
 
-COPY . .
-
-RUN npx prisma generate
-RUN yarn build
+COPY . /app
 
 EXPOSE 3000
 
