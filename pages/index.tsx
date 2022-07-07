@@ -3,6 +3,7 @@ import GridItem, { GridItemGhost } from 'components/grid/GridItem'
 import Loading from 'components/grid/Loading'
 import Layout from 'components/layout'
 import Meta from 'components/Meta'
+import { range } from 'lodash'
 import type { NextPage } from 'next'
 import useSWR from 'swr'
 import fetcher from 'util/swr'
@@ -15,16 +16,9 @@ const SeriesGrid = () => {
   if (!data)
     return (
       <GridWrapper>
-        <GridItemGhost />
-        <GridItemGhost />
-        <GridItemGhost />
-        <GridItemGhost />
-        <GridItemGhost />
-        <GridItemGhost />
-        <GridItemGhost />
-        <GridItemGhost />
-        <GridItemGhost />
-        <GridItemGhost />
+        {range(0, 12).map((v: number) => {
+          return <GridItemGhost key={v} />
+        })}
       </GridWrapper>
     )
   if (data) if (!data.data) return <h1>No series found.</h1>

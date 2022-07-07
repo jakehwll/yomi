@@ -27,7 +27,7 @@ const Pages = ({ render }: { render: Array<string> }) => {
       <div className={styles.canvas}>
         {render.map((v: string, i: number) => {
           return (
-            <div className={styles.page} key={i}>
+            <div className={styles.page} key={v}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={v} alt="" />
             </div>
@@ -40,7 +40,7 @@ const Pages = ({ render }: { render: Array<string> }) => {
 
 const FauxPages = ({ fauxRender }: { fauxRender: Array<string> }) => {
   return (
-    <div>
+    <div className={styles.faux}>
       {fauxRender.map((v: string, i: number) => {
         return (
           <>
@@ -107,7 +107,7 @@ const ReaderSettings = ({
 const Reader = () => {
   const router = useRouter()
   const { id } = router.query
-  const { data, error } = useSWR(id ? `/api/book/${id}` : '', fetcher)
+  const { data, error } = useSWR(`/api/book/${id}`, id ? fetcher : () => {})
 
   // ref
   const fullscreenRef = useRef(null)
@@ -172,27 +172,24 @@ const Reader = () => {
   }, [id, index, invertPages, pageAmount])
 
   useEffect(() => {
+    if (!id) return
     if (index * pageAmount - 2 < 1)
-      pageAmount === 2
-        ? setFauxRender(
-            range(0, 6).map((v: number) => `/api/book/${id}/page/${v}`)
-          )
-        : setFauxRender(
-            range(0, 5).map((v: number) => `/api/book/${id}/page/${v}`)
-          )
+      setFauxRender(
+        range(0, 10).map((v: number) => `/api/book/${id}/page/${v}`)
+      )
+    else if (index * pageAmount + 8 > pageCount)
+      setFauxRender(
+        range(pageCount - 2, pageCount + 8).map(
+          (v: number) => `/api/book/${id}/page/${v}`
+        )
+      )
     else
-      pageAmount === 2
-        ? setFauxRender(
-            range(index * pageAmount - 2, index * pageAmount + 4).map(
-              (v: number) => `/api/book/${id}/page/${v}`
-            )
-          )
-        : setFauxRender(
-            range(index * pageAmount - 2, index * pageAmount + 3).map(
-              (v: number) => `/api/book/${id}/page/${v}`
-            )
-          )
-  }, [index])
+      setFauxRender(
+        range(index * pageAmount - 2, index * pageAmount + 8).map(
+          (v: number) => `/api/book/${id}/page/${v}`
+        )
+      )
+  }, [id, index])
 
   useEffect(() => {
     if (!data) return
@@ -266,9 +263,9 @@ const Reader = () => {
                 </div>
                 <div className={styles.title}>
                   {data.data &&
-                    `${data.data.Series.title} - ${data.data.title} (${index}/${
-                      pageCount / pageAmount - 1
-                    })`}
+                    `${data.data.Series.title} - ${data.data.title} (${
+                      index * pageAmount
+                    }/${pageCount})`}
                 </div>
                 <div className={styles.tools}>
                   <ButtonGroup>
@@ -292,8 +289,12 @@ const Reader = () => {
                 </div>
               </div>
             </header>
+            {/* <div className={styles.control}>
+              <button className={styles.control__left} type="button"></button>
+              <button className={styles.control__right} type="button"></button>
+            </div> */}
             <Pages render={render} />
-            <FauxPages fauxRender={fauxRender} />
+            {id && <FauxPages fauxRender={fauxRender} />}
             <footer
               className={cc([styles.footer, { [styles.hidden]: !controls }])}
             >
@@ -317,7 +318,7 @@ const Reader = () => {
                   <Button onClick={() => setIndex((index) => _next(index))}>
                     <ArrowRight />
                   </Button>
-                  <Button>
+                  <Button onClick={() => setIndex(pageCount / pageAmount - 1)}>
                     <CornerRightDown />
                   </Button>
                 </ButtonGroup>

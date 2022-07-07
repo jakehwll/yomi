@@ -15,9 +15,8 @@
 
   width: 100%;
 
-  padding: 0rem 0.5rem;
-
   .wrapper {
+    padding: 0rem 0.5rem;
     transition: 1s ease transform;
   }
 
@@ -102,12 +101,14 @@
   justify-content: center;
   min-height: 100vh;
   .page {
-    display: block;
+    height: 100vh;
+    max-width: 50vw;
+    position: relative;
     img {
-      height: 100vh;
       object-fit: contain;
       object-position: center;
       position: relative;
+      height: 100vh;
       max-width: 50vw;
     }
   }
@@ -116,4 +117,39 @@
 .timeline {
   flex: 1 auto;
   padding: 0rem 1rem;
+}
+
+.faux {
+  position: absolute;
+  bottom: 4rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  opacity: 0;
+  pointer-events: none;
+  img {
+    max-width: 100px;
+  }
+}
+
+.control {
+  position: absolute;
+  z-index: 100;
+  width: 100%;
+  height: 100%;
+  &__left,
+  &__right {
+    position: absolute;
+    top: 0;
+    height: 100%;
+    width: 50%;
+    max-width: 12rem;
+    background: transparent;
+  }
+  &__left {
+    left: 0;
+  }
+  &__right {
+    right: 0;
+  }
 }

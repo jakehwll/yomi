@@ -93,9 +93,23 @@ const SeriesHeader: React.FC<SeriesHeaderProps> = ({
           <img src={image} alt="" />
         </div>
         <div className={styles.image}>
-          <div className={styles.wrapper}>
-            <img src={image} alt="" />
-          </div>
+          <Dialog
+            title="Edit Series Thumbnail"
+            open={thumb}
+            onOpenChange={(open) => setThumbnailOpen(open)}
+            content={
+              <SeriesThumbnailSettings
+                id={id}
+                mutate={mutate}
+                modalSetter={setThumbnailOpen}
+                defaultValue={data.data.thumbnail ?? ''}
+              />
+            }
+          >
+            <div className={styles.wrapper}>
+              <img src={image} alt="" />
+            </div>
+          </Dialog>
         </div>
         <div className={styles.content}>
           <h1>{title}</h1>

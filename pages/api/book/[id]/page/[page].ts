@@ -27,7 +27,7 @@ async function get(req: NextApiRequest, res: NextApiResponse) {
   // 404 if we don't have the book on file.
   if (!book || !book.Series) {
     res.status(404).send({
-      error: 'Request object not found',
+      error: 'Request object not found.',
       code: 404,
     })
     return
@@ -51,6 +51,14 @@ async function get(req: NextApiRequest, res: NextApiResponse) {
   ] as PageMetadataProps
   const fileURI = fileMeta?.metadata.path
   let imageBuffer = readFileSync(fileURI ?? '')
+  // cry if we cant find the file.
+  if (!imageBuffer) {
+    res.status(404).send({
+      error: 'Request object not found.',
+      code: 404,
+    })
+    return res.end()
+  }
   // lets see if we have a series to manipulate.
   if (fileMeta.series) {
     // pull the width and height, and divide the width by how many slices we need.
@@ -67,12 +75,13 @@ async function get(req: NextApiRequest, res: NextApiResponse) {
       .toBuffer()
     // we should have our buffer by now, lets serve him!
     res.setHeader('Content-Type', 'image/jpg')
+    res.setHeader('cache-control', 'max-age=120')
     res.status(200).send(newImageBuffer)
     return res.end()
   } else {
     // we should have our buffer by now, lets serve him!
     res.setHeader('Content-Type', 'image/jpg')
-    res.status(200).send(imageBuffer)
+    res.status(200).send(await sharp(imageBuffer).toBuffer())
     return res.end()
   }
 }
