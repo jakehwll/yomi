@@ -1,12 +1,26 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import { getBook, getFilesData, updateBook } from 'util/book'
+import { getSession } from 'next-auth/react'
+import { getFilesData, updateBook } from 'util/book'
 import { getDirectoryFiles } from 'util/fs'
 import prisma from 'util/prisma'
 import { getAuthorisedAdmin } from 'util/users'
 
 async function get(req: NextApiRequest, res: NextApiResponse) {
   const { id } = req.query
-  const response = await getBook(id as string)
+  const session = await getSession({ req })
+  const response = await prisma.book.findFirst({
+    where: {
+      id: {
+        equals: id?.toString(),
+      },
+    },
+    include: {
+      Series: true,
+      ReadProgress: {
+        distinct: ['bookId', 'userId'],
+      },
+    },
+  })
   if (!response || !response.Series)
     return res.status(404).json({ error: 'Resource not found.', code: 404 })
   // TODO. Resolve pagecount to current number.

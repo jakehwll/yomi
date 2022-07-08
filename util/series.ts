@@ -10,6 +10,11 @@ const getAllSeries = async () => {
       _count: {
         select: { books: true },
       },
+      books: {
+        include: {
+          ReadProgress: true,
+        },
+      },
     },
     orderBy: {
       title: 'asc',

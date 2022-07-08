@@ -2,9 +2,9 @@ import Button from 'components/Button'
 import Text from 'components/input/Text'
 import Meta from 'components/Meta'
 import { NextPage } from 'next'
-import { signIn, SignInResponse, useSession } from 'next-auth/react'
+import { signIn, SignInResponse } from 'next-auth/react'
 import { useRouter } from 'next/router'
-import { FormEvent, useState } from 'react'
+import { ChangeEvent, FormEvent, useState } from 'react'
 
 import styles from 'styles/pages/Authentication.module.scss'
 
@@ -15,7 +15,6 @@ const Login: NextPage = () => {
   const [loading, setLoading] = useState(false)
 
   const router = useRouter()
-  const session = useSession()
 
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault()
@@ -29,9 +28,7 @@ const Login: NextPage = () => {
     if (response !== undefined) {
       if ((response as SignInResponse).error)
         setError((response as SignInResponse).error ?? '')
-      else {
-        router.push('/')
-      }
+      else router.push('/')
       setLoading(false)
     }
   }
@@ -47,8 +44,8 @@ const Login: NextPage = () => {
             id={'email'}
             name={'email'}
             value={email}
-            onChange={(event) =>
-              setEmail((event.target as HTMLInputElement).value)
+            onChange={(event: ChangeEvent<HTMLInputElement>) =>
+              setEmail(event.target.value)
             }
             label={'Email'}
           />
@@ -57,8 +54,8 @@ const Login: NextPage = () => {
             name={'password'}
             value={password}
             type={'password'}
-            onChange={(event) =>
-              setPassword((event.target as HTMLInputElement).value)
+            onChange={(event: ChangeEvent<HTMLInputElement>) =>
+              setPassword(event.target.value)
             }
             label={'Password'}
           />

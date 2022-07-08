@@ -1,5 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import { getDirectoryFolders } from 'util/fs'
+import prisma from 'util/prisma'
 import { getSeries } from 'util/series'
 import { getAuthorisedUser } from 'util/users'
 
@@ -10,7 +11,15 @@ async function get(req: NextApiRequest, res: NextApiResponse) {
   // gather the id from the request
   const { id } = req.query
   const series = await getSeries(id as string)
-
+  const seriesDirectoriesList = (
+    await prisma.book.findMany({
+      where: {
+        seriesId: {
+          equals: id as string,
+        },
+      },
+    })
+  ).map((v) => v.folder)
   if (series) {
     const response = (
       await getDirectoryFolders({
@@ -22,7 +31,9 @@ async function get(req: NextApiRequest, res: NextApiResponse) {
     })
     res.status(200).json({
       collection: 'series',
-      data: response,
+      data: response
+        .filter((v) => !seriesDirectoriesList.includes(v))
+        .sort((a, b) => a.localeCompare(b, 'en', { numeric: true })),
     })
   } else {
     res.status(404).json({
