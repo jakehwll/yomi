@@ -24,11 +24,17 @@ import fetcher from 'util/swr'
 const Pages = ({ render }: { render: Array<string> }) => {
   return (
     <section>
-      <div className={styles.canvas}>
+      <div
+        className={cc([
+          styles.canvas,
+          {
+            [styles.dual]: render.length > 1,
+          },
+        ])}
+      >
         {render.map((v: string, i: number) => {
           return (
             <div className={styles.page} key={v}>
-              {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={v} alt="" />
             </div>
           )
@@ -112,7 +118,7 @@ const Reader = () => {
   // ref
   const fullscreenRef = useRef(null)
 
-  // constants
+  // states
   const [index, setIndex] = useState(0)
   const [pageAmount, setPageAmount] = useState(2)
   const [pageCount, setPageCount] = useState(0)
@@ -212,21 +218,46 @@ const Reader = () => {
   // TODO.
   // home - Return to index 0.
   // end - Return to index last.
-  // f - fullscreen.
   // s - settings.
   // / - open keybind menu
 
   useEffect(() => {
     const keyHandler = (event: KeyboardEvent) => {
-      if (event.key === ' ') setControls((controls) => !controls)
+      if (
+        ['INPUT', 'BUTTON'].includes(
+          (document.activeElement && document.activeElement?.tagName) || ''
+        )
+      )
+        return
+      event.key === ' ' && setControls((controls) => !controls)
     }
     document.addEventListener('keydown', keyHandler)
     return () => document.removeEventListener('keydown', keyHandler)
   }, [])
 
   useEffect(() => {
-    // TODO. Add check if in modal or button.
+    if (
+      ['INPUT'].includes(
+        (document.activeElement && document.activeElement?.tagName) || ''
+      )
+    )
+      return
     const keyHandler = (event: KeyboardEvent) => {
+      event.key === 'f' && toggleFullscreen()
+    }
+    document.addEventListener('keydown', keyHandler)
+    return () => document.removeEventListener('keydown', keyHandler)
+  }, [])
+
+  useEffect(() => {
+    const keyHandler = (event: KeyboardEvent) => {
+      if (
+        ['INPUT', 'BUTTON'].includes(
+          (document.activeElement && document.activeElement?.tagName) || ''
+        )
+      )
+        return
+      if (document.activeElement?.getAttribute('role') === 'slider') return
       if (event.key === 'ArrowRight')
         setIndex((pageNum) =>
           invertControls ? _prev(pageNum) : _next(pageNum)
@@ -264,12 +295,17 @@ const Reader = () => {
                 <div className={styles.title}>
                   {data.data &&
                     `${data.data.Series.title} - ${data.data.title} (${
-                      index * pageAmount
+                      index * pageAmount + 1
                     }/${pageCount})`}
                 </div>
                 <div className={styles.tools}>
                   <ButtonGroup>
-                    <Button onClick={toggleFullscreen}>
+                    <Button
+                      onClick={(event) => {
+                        event.currentTarget.blur()
+                        toggleFullscreen()
+                      }}
+                    >
                       {!isFullscreen ? <Maximize2 /> : <Minimize2 />}
                     </Button>
                     <Dialog
@@ -280,7 +316,7 @@ const Reader = () => {
                         open === true && toggleFullscreen(false)
                       }
                     >
-                      <Button>
+                      <Button onClick={(event) => event.currentTarget.blur()}>
                         <Settings />
                       </Button>
                     </Dialog>
@@ -300,10 +336,20 @@ const Reader = () => {
             >
               <div className={styles.wrapper}>
                 <ButtonGroup>
-                  <Button onClick={() => setIndex(0)}>
+                  <Button
+                    onClick={(event) => {
+                      event.currentTarget.blur()
+                      setIndex(0)
+                    }}
+                  >
                     <CornerLeftDown />
                   </Button>
-                  <Button onClick={() => setIndex((index) => _prev(index))}>
+                  <Button
+                    onClick={(event) => {
+                      event.currentTarget.blur()
+                      setIndex((index) => _prev(index))
+                    }}
+                  >
                     <ArrowLeft />
                   </Button>
                 </ButtonGroup>
@@ -311,14 +357,26 @@ const Reader = () => {
                   <Slider
                     value={index + 1}
                     max={pageCount / pageAmount - 1}
-                    onValueChange={(number) => setIndex(number[0])}
+                    onValueChange={(number) => {
+                      setIndex(number[0])
+                    }}
                   />
                 </div>
                 <ButtonGroup>
-                  <Button onClick={() => setIndex((index) => _next(index))}>
+                  <Button
+                    onClick={(event) => {
+                      event.currentTarget.blur()
+                      setIndex((index) => _next(index))
+                    }}
+                  >
                     <ArrowRight />
                   </Button>
-                  <Button onClick={() => setIndex(pageCount / pageAmount - 1)}>
+                  <Button
+                    onClick={(event) => {
+                      event.currentTarget.blur()
+                      setIndex(pageCount / pageAmount - 1)
+                    }}
+                  >
                     <CornerRightDown />
                   </Button>
                 </ButtonGroup>
