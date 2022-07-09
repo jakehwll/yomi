@@ -1,7 +1,8 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import { getSession } from 'next-auth/react'
-import { getFilesData, updateBook } from 'util/book'
+import { updateBook } from 'util/book'
 import { getDirectoryFiles } from 'util/fs'
+import { getFilesData } from 'util/index_builders/FileMultiFolder'
 import prisma from 'util/prisma'
 import { getAuthorisedAdmin } from 'util/users'
 
@@ -27,7 +28,7 @@ async function get(req: NextApiRequest, res: NextApiResponse) {
   const files = await getDirectoryFiles({
     path: `${response.Series.folder}${response.folder}`,
   })
-  let filesData = getFilesData({ files: files })
+  let filesData = await getFilesData({ files: files })
   res.status(200).json({
     collection: 'book',
     data: response,

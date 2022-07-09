@@ -4,7 +4,7 @@ import Button, { ButtonGroup } from 'components/Button'
 import Dialog from 'components/Dialog'
 import SeriesSettings from 'components/settings/series/Meta'
 import { SeriesThumbnailSettings } from 'components/settings/series/Thumbnail'
-import { Edit3, Image as ImageIcon, Trash } from 'lucide-react'
+import { Edit3, Image, Image as ImageIcon, Trash } from 'lucide-react'
 import { useRouter } from 'next/router'
 import { useState } from 'react'
 import styles from 'styles/headings/SeriesHeader.module.scss'
@@ -107,6 +107,9 @@ const SeriesHeader: React.FC<SeriesHeaderProps> = ({
             }
           >
             <div className={styles.wrapper}>
+              <div className={styles.wrapper__edit}>
+                <Image size={48} />
+              </div>
               <img src={image} alt="" />
             </div>
           </Dialog>

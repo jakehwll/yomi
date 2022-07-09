@@ -6,6 +6,7 @@
   padding-bottom: 4rem;
   position: relative;
   h1 {
+    font-size: 2rem;
     margin-bottom: 1rem;
   }
 }
@@ -40,6 +41,25 @@
   .wrapper {
     position: relative;
     padding-top: 150%;
+    &__edit {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 20;
+      background: rgba(black, 0.5);
+      transition: 0.25s ease;
+      border-radius: 0.25rem;
+      opacity: 0;
+      &:hover {
+        opacity: 1;
+        transition: 0.25s ease;
+      }
+    }
   }
   img {
     position: absolute;

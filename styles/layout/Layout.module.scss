@@ -1,3 +1,5 @@
+@import 'styles/variables';
+
 .root {
   display: flex;
   flex-direction: row;
@@ -7,4 +9,25 @@
 
 .padding {
   padding: 2rem;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  height: var(--global-header-height);
+  border-bottom: 1px solid var(--global-color-secondary);
+}
+
+.mobile {
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  width: var(--global-header-height);
+  height: var(--global-header-height);
+  border-right: 1px solid var(--global-color-secondary);
+  @media (min-width: $breakpoint-tablet) {
+    display: none;
+  }
 }

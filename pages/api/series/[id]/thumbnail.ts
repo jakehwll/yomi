@@ -62,14 +62,16 @@ async function getFiles(req: NextApiRequest, res: NextApiResponse) {
         objectMode: true,
       }
     )
-  ).map((v: any) => {
-    // get our path and file.
-    let path = v.path
-    // remove the process and wrapping folder
-    if (!isContainerised) path = path.replaceAll(process.cwd(), '')
-    path = path.replaceAll(data.folder, '')
-    return path
-  })
+  )
+    .map((v: any) => {
+      // get our path and file.
+      let path = v.path
+      // remove the process and wrapping folder
+      if (!isContainerised) path = path.replaceAll(process.cwd(), '')
+      path = path.replaceAll(data.folder, '')
+      return path
+    })
+    .sort((a, b) => a.localeCompare(b, 'en', { numeric: true }))
   res.status(200).json({
     collection: 'series',
     data: files,

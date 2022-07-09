@@ -1,8 +1,9 @@
 import { readFileSync } from 'fs'
 import { NextApiRequest, NextApiResponse } from 'next'
 import sharp from 'sharp'
-import { getBook, getFilesData } from 'util/book'
+import { getBook } from 'util/book'
 import { getDirectoryFiles } from 'util/fs'
+import { getFilesData } from 'util/index_builders/FileMultiFolder'
 import { getAuthorisedUser } from 'util/users'
 
 interface PageMetadataProps {
@@ -42,7 +43,7 @@ async function get(req: NextApiRequest, res: NextApiResponse) {
       code: 500,
     })
   // map all our files and detect their titles.
-  let filesData = getFilesData({ files: files })
+  let filesData = await getFilesData({ files: files })
   // check we have a page.
   if (!page) return
   // alright. now that we have our data, let's create the buffer!
@@ -55,7 +56,7 @@ async function get(req: NextApiRequest, res: NextApiResponse) {
     imageBuffer = readFileSync(fileURI ?? '')
   } catch {
     res.status(404).send({
-      error: 'Request object not found.',
+      error: 'Request file not found.',
       code: 404,
     })
     return res.end()

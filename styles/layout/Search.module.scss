@@ -1,8 +1,11 @@
+@import 'styles/variables';
+
 .root {
   position: relative;
   height: var(--global-header-height);
   margin-left: -1px;
   z-index: 100;
+  flex: 1 auto;
   input.input {
     position: absolute;
     top: 0;
@@ -25,5 +28,12 @@
     &:focus {
       outline-color: transparent;
     }
+    @media (max-width: $breakpoint-tablet) {
+      padding-left: 1.5rem;
+      padding-right: 1.5rem;
+    }
+  }
+  @media (max-width: $breakpoint-tablet) {
+    margin-left: 0px;
   }
 }

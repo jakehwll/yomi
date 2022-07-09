@@ -82,6 +82,8 @@ h6 {
   --global-sidebar-width: 16rem;
   --global-header-height: 4rem;
 
+  --global-tablet-breakpoint: $breakpoint-tablet;
+
   --global-input-background: var(--global-color-dark);
   --global-input-background-rgb: var(--global-color-dark-rgb);
   --global-input-color: var(--global-color-white);
@@ -116,6 +118,10 @@ input:not([type='checkbox']):not([type='radio']) {
   &::placeholder {
     color: rgba(var(--global-input-color-rgb), 0.5);
   }
+  &:disabled {
+    background: var(--global-input-border);
+    cursor: not-allowed;
+  }
 }
 
 select {
@@ -141,5 +147,6 @@ select {
 
   &:disabled {
     background: var(--global-input-border);
+    cursor: not-allowed;
   }
 }
