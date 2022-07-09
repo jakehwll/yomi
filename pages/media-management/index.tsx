@@ -53,6 +53,7 @@ const UnassignedSeries = () => {
             label={'Select Folder'}
             name={'folder'}
             options={data ? data.data : []}
+            disabled={loading}
             required
           />
           <Input label={'Series Title'} name={'title'} required />
@@ -101,7 +102,6 @@ const UnassignedBooks = () => {
           onSubmit={handleSubmit}
           submitText={'Create Book'}
           loading={loading}
-          resetSubmit={true}
         >
           <Select
             label="Series"
@@ -116,6 +116,7 @@ const UnassignedBooks = () => {
             onChange={(event: ChangeEvent<HTMLOptionElement>) =>
               setCurrentSeries(event.target.value)
             }
+            disabled={loading}
           />
           <Select
             label="Folder"
@@ -127,8 +128,9 @@ const UnassignedBooks = () => {
                   })
                 : []
             }
+            disabled={loading}
           />
-          <Input label="Volume Title" name="title" />
+          <Input label="Volume Title" name="title" disabled={loading} />
         </Form>
       </Card>
     )
