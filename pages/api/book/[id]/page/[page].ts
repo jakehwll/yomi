@@ -83,7 +83,13 @@ async function get(req: NextApiRequest, res: NextApiResponse) {
   } else {
     // we should have our buffer by now, lets serve him!
     res.setHeader('Content-Type', 'image/jpg')
-    res.status(200).send(await sharp(imageBuffer).toBuffer())
+    res.status(200).send(
+      await sharp(imageBuffer)
+        .jpeg({
+          quality: 60,
+        })
+        .toBuffer()
+    )
     return res.end()
   }
 }
