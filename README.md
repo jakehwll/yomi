@@ -41,7 +41,7 @@ services:
 
 Prerequisites.
 
-- Yarn ([Can be found here](https://yarnpkg.com/getting-started/install))
+- [Yarn](https://yarnpkg.com/getting-started/install))
 - Postgres
 - Node v16.x
 
