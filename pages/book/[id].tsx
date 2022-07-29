@@ -287,8 +287,8 @@ const Reader = () => {
       controlTimer = setTimeout(() => {
         // dont hide if in header
         if (
-          headerRef.current!.contains(event.target as HTMLElement) ||
-          footerRef.current!.contains(event.target as HTMLElement)
+          headerRef.current?.contains(event.target as HTMLElement) ||
+          footerRef.current?.contains(event.target as HTMLElement)
         )
           return
         setMouseControls(false)
