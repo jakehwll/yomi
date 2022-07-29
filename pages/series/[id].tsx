@@ -58,7 +58,7 @@ export const Series = () => {
             <Meta title={data.data.title} />
             <SeriesHeader
               title={data.data.title}
-              image={`/api/series/${id}/thumbnail`}
+              image={data.data.thumbnail && `/api/series/${id}/thumbnail`}
               volumes={data.data.books.length}
               id={id as string}
               mutate={mutate}

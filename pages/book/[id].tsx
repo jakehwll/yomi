@@ -122,7 +122,10 @@ const Reader = () => {
   const [index, setIndex] = useState(0)
   const [pageAmount, setPageAmount] = useState(2)
   const [pageCount, setPageCount] = useState(0)
-  const [controls, setControls] = useState(true)
+
+  const [hideControls, setHideControls] = useState(true)
+  const [hidingControls, setHidingControls] = useState(true)
+
   const [render, setRender] = useState<Array<string>>([])
   const [fauxRender, setFauxRender] = useState<Array<string>>([])
 
@@ -229,7 +232,7 @@ const Reader = () => {
         )
       )
         return
-      event.key === ' ' && setControls((controls) => !controls)
+      event.key === ' ' && setHideControls((hideControls) => !hideControls)
     }
     document.addEventListener('keydown', keyHandler)
     return () => document.removeEventListener('keydown', keyHandler)
@@ -278,7 +281,10 @@ const Reader = () => {
           <Meta title={`${data.data.Series.title} - ${data.data.title}`} />
           <div className={styles.root} ref={fullscreenRef}>
             <header
-              className={cc([styles.header, { [styles.hidden]: !controls }])}
+              className={cc([
+                styles.header,
+                { [styles.hidden]: !hideControls },
+              ])}
             >
               <div className={styles.wrapper}>
                 <div className={styles.back}>
@@ -332,7 +338,10 @@ const Reader = () => {
             <Pages render={render} />
             {id && <FauxPages fauxRender={fauxRender} />}
             <footer
-              className={cc([styles.footer, { [styles.hidden]: !controls }])}
+              className={cc([
+                styles.footer,
+                { [styles.hidden]: !hideControls },
+              ])}
             >
               <div className={styles.wrapper}>
                 <ButtonGroup>

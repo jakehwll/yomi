@@ -56,7 +56,12 @@ const UnassignedSeries = () => {
             disabled={loading}
             required
           />
-          <Input label={'Series Title'} name={'title'} required />
+          <Input
+            label={'Series Title'}
+            name={'title'}
+            disabled={loading}
+            required
+          />
         </Form>
       </Card>
     )

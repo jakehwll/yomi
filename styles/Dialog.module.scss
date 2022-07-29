@@ -33,11 +33,22 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 90vw;
-  max-width: 450px;
+  width: calc(100% - 4rem);
+  max-width: 30rem;
   max-height: 85vh;
   animation: content 150ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
   padding: 1.5rem;
+  overflow-y: scroll;
+
+  &.no_padding {
+    padding: 0rem;
+    header {
+      padding: 1.5rem;
+    }
+    footer {
+      padding: 1.5rem;
+    }
+  }
 
   h2 {
     font-weight: 600;
@@ -50,9 +61,18 @@
     margin: 0.5rem 0 1rem;
   }
 
+  footer {
+    position: sticky;
+    bottom: 0rem;
+  }
+
   --global-input-background: var(--global-color-white);
   --global-input-color: var(--global-color-black);
   --global-input-border: var(--global-color-gray);
+
+  &.large {
+    max-width: 64rem;
+  }
 }
 
 .close {

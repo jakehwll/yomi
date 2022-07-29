@@ -42,7 +42,7 @@ const SeriesGrid = () => {
 const Home: NextPage = () => {
   return (
     <>
-      <Meta title={'Books'} />
+      <Meta title={'Browse'} />
       <Layout>
         <SeriesGrid />
       </Layout>
