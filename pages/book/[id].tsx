@@ -331,14 +331,16 @@ const Reader = () => {
                 </div>
                 <div className={styles.tools}>
                   <ButtonGroup>
-                    <Button
-                      onClick={(event) => {
-                        event.currentTarget.blur()
-                        toggleFullscreen()
-                      }}
-                    >
-                      {!isFullscreen ? <Maximize2 /> : <Minimize2 />}
-                    </Button>
+                    {document.fullscreenEnabled && (
+                      <Button
+                        onClick={(event) => {
+                          event.currentTarget.blur()
+                          toggleFullscreen()
+                        }}
+                      >
+                        {!isFullscreen ? <Maximize2 /> : <Minimize2 />}
+                      </Button>
+                    )}
                     <Dialog
                       title={'Reader Settings'}
                       content={<ReaderSettings {...readerSettingProps} />}
