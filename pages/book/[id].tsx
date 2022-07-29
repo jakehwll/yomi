@@ -116,7 +116,9 @@ const Reader = () => {
   const { data, error } = useSWR(`/api/book/${id}`, id ? fetcher : () => {})
 
   // ref
-  const fullscreenRef = useRef(null)
+  const rootRef = useRef<HTMLDivElement>(null)
+  const headerRef = useRef<HTMLElement>(null)
+  const footerRef = useRef<HTMLElement>(null)
 
   // states
   const [index, setIndex] = useState(0)
@@ -124,14 +126,14 @@ const Reader = () => {
   const [pageCount, setPageCount] = useState(0)
 
   const [hideControls, setHideControls] = useState(true)
-  const [hidingControls, setHidingControls] = useState(true)
+  const [mouseControls, setMouseControls] = useState(false)
 
   const [render, setRender] = useState<Array<string>>([])
   const [fauxRender, setFauxRender] = useState<Array<string>>([])
 
   // hooks
   const [fullscreen, toggleFullscreen] = useToggle(false)
-  const isFullscreen = useFullscreen(fullscreenRef, fullscreen, {
+  const isFullscreen = useFullscreen(rootRef, fullscreen, {
     onClose: () => toggleFullscreen(false),
   })
 
@@ -274,17 +276,40 @@ const Reader = () => {
     return () => document.removeEventListener('keydown', keyHandler)
   }, [pageCount, invertControls])
 
+  // controls shown state update
+  useEffect(() => {
+    console.log(rootRef)
+    if (!rootRef.current) return
+    let controlTimer: any = undefined
+    const eventHandler = (event: Event) => {
+      setMouseControls(true)
+      clearTimeout(controlTimer && controlTimer)
+      controlTimer = setTimeout(() => {
+        // dont hide if in header
+        if (
+          headerRef.current!.contains(event.target as HTMLElement) ||
+          footerRef.current!.contains(event.target as HTMLElement)
+        )
+          return
+        setMouseControls(false)
+      }, 2000)
+    }
+    rootRef.current.addEventListener('mousemove', eventHandler)
+    return () => rootRef.current?.removeEventListener('mousemove', eventHandler)
+  }, [rootRef])
+
   return (
     <>
-      {data && (
-        <>
-          <Meta title={`${data.data.Series.title} - ${data.data.title}`} />
-          <div className={styles.root} ref={fullscreenRef}>
+      <div className={styles.root} ref={rootRef}>
+        {data && (
+          <>
+            <Meta title={`${data.data.Series.title} - ${data.data.title}`} />
             <header
               className={cc([
                 styles.header,
-                { [styles.hidden]: !hideControls },
+                { [styles.hidden]: !hideControls && !mouseControls },
               ])}
+              ref={headerRef}
             >
               <div className={styles.wrapper}>
                 <div className={styles.back}>
@@ -317,7 +342,7 @@ const Reader = () => {
                     <Dialog
                       title={'Reader Settings'}
                       content={<ReaderSettings {...readerSettingProps} />}
-                      ref={fullscreenRef.current || undefined}
+                      ref={rootRef.current || undefined}
                       onOpenChange={(open) =>
                         open === true && toggleFullscreen(false)
                       }
@@ -340,8 +365,9 @@ const Reader = () => {
             <footer
               className={cc([
                 styles.footer,
-                { [styles.hidden]: !hideControls },
+                { [styles.hidden]: !hideControls && !mouseControls },
               ])}
+              ref={footerRef}
             >
               <div className={styles.wrapper}>
                 <ButtonGroup>
@@ -391,9 +417,9 @@ const Reader = () => {
                 </ButtonGroup>
               </div>
             </footer>
-          </div>
-        </>
-      )}
+          </>
+        )}
+      </div>
     </>
   )
 }
