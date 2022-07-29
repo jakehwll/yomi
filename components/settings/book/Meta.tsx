@@ -54,6 +54,7 @@ const BookSettings: React.FC<BookSettingsProps> = ({
           id={'title'}
           name={'title'}
           value={title}
+          disabled={loading}
           onChange={(event) =>
             setTitle((event.target as HTMLInputElement).value)
           }

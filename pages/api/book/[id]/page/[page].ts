@@ -1,8 +1,9 @@
 import { readFileSync } from 'fs'
 import { NextApiRequest, NextApiResponse } from 'next'
 import sharp from 'sharp'
-import { getBook, getFilesData } from 'util/book'
+import { getBook } from 'util/book'
 import { getDirectoryFiles } from 'util/fs'
+import { getFilesData } from 'util/index_builders/FileMultiFolder'
 import { getAuthorisedUser } from 'util/users'
 
 interface PageMetadataProps {
@@ -23,28 +24,43 @@ async function get(req: NextApiRequest, res: NextApiResponse) {
   // gather the id from the request
   const { id, page } = req.query
   // gather the book data from the request.
-  const book = await getBook(id.toString())
+  const book = await getBook(id ? id.toString() : '')
   // 404 if we don't have the book on file.
   if (!book || !book.Series) {
     res.status(404).send({
-      error: 'Request object not found',
+      error: 'Request object not found.',
       code: 404,
     })
     return
   }
   // gather all files from the book.
   let files = await getDirectoryFiles({
-    path: `${book.Series.folder}${book.folder}`,
+    path: `${book.Series.folder}${book.folder}/**/*.{jpeg,jpg,png}`,
   })
-  if (files.length === 0) throw Error('Directory cannot be empty.')
+  if (files.length === 0)
+    res.status(500).send({
+      error: 'Request directory is empty or not found.',
+      code: 500,
+    })
   // map all our files and detect their titles.
-  let filesData = getFilesData({ files: files })
+  let filesData = await getFilesData({ files: files })
+  // check we have a page.
+  if (!page) return
   // alright. now that we have our data, let's create the buffer!
   const fileMeta = filesData[
     parseInt(page.toString() ?? '')
   ] as PageMetadataProps
   const fileURI = fileMeta?.metadata.path
-  let imageBuffer = readFileSync(fileURI ?? '')
+  let imageBuffer
+  try {
+    imageBuffer = readFileSync(fileURI ?? '')
+  } catch {
+    res.status(404).send({
+      error: 'Request file not found.',
+      code: 404,
+    })
+    return res.end()
+  }
   // lets see if we have a series to manipulate.
   if (fileMeta.series) {
     // pull the width and height, and divide the width by how many slices we need.
@@ -61,12 +77,19 @@ async function get(req: NextApiRequest, res: NextApiResponse) {
       .toBuffer()
     // we should have our buffer by now, lets serve him!
     res.setHeader('Content-Type', 'image/jpg')
+    res.setHeader('cache-control', 'max-age=120')
     res.status(200).send(newImageBuffer)
     return res.end()
   } else {
     // we should have our buffer by now, lets serve him!
     res.setHeader('Content-Type', 'image/jpg')
-    res.status(200).send(imageBuffer)
+    res.status(200).send(
+      await sharp(imageBuffer)
+        .jpeg({
+          quality: 60,
+        })
+        .toBuffer()
+    )
     return res.end()
   }
 }

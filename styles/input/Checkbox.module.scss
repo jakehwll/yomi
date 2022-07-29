@@ -13,23 +13,6 @@
   justify-content: center;
 
   margin-right: 1rem;
-
-  input[type='checkbox'] {
-    appearance: none;
-    width: 1.5rem;
-    height: 1.5rem;
-    border-radius: 0.25rem;
-    border: 1px solid rgba(black, 0.1);
-    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.05);
-    cursor: pointer;
-    &:checked {
-      background-color: var(--global-color-primary);
-      background-image: url('/icons/check.svg');
-      background-repeat: no-repeat;
-      background-position: center;
-      background-size: 1.25rem;
-    }
-  }
 }
 
 .label {

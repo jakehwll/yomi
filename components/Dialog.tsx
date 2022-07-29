@@ -8,18 +8,21 @@ import {
   Title,
   Trigger,
 } from '@radix-ui/react-dialog'
+import cc from 'classcat'
 import { X } from 'lucide-react'
 import styles from 'styles/Dialog.module.scss'
 
 interface DialogProps {
   title: string
   description?: string
-  children: React.ReactNode
+  children?: React.ReactNode
   content: React.ReactNode
   setter?(val: boolean): void
   open?: boolean
   onOpenChange?(open: boolean): void
   ref?: HTMLElement
+  size?: 'small' | 'regular' | 'large'
+  noPadding?: boolean
 }
 
 const Dialog: React.FC<DialogProps> = ({
@@ -30,6 +33,8 @@ const Dialog: React.FC<DialogProps> = ({
   open,
   onOpenChange,
   ref,
+  size = 'regular',
+  noPadding = false,
 }: DialogProps) => {
   return (
     <Root open={open} onOpenChange={onOpenChange}>
@@ -38,12 +43,24 @@ const Dialog: React.FC<DialogProps> = ({
       </Trigger>
       <Portal className={styles.portal} container={ref}>
         <Overlay className={styles.overlay} />
-        <Content className={styles.content}>
-          <Title className={styles.title}>{title}</Title>
-          <Description className={styles.description}>
-            {description && description}
-          </Description>
-          {content}
+        <Content
+          className={cc([
+            styles.content,
+            {
+              [styles.large]: size === 'large',
+              [styles.no_padding]: noPadding === true,
+            },
+          ])}
+        >
+          <header>
+            {title && <Title className={styles.title}>{title}</Title>}
+            {description && (
+              <Description className={styles.description}>
+                {description}
+              </Description>
+            )}
+          </header>
+          <section>{content}</section>
           <Close className={styles.close}>
             <X />
           </Close>

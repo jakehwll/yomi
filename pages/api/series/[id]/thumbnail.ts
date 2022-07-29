@@ -1,6 +1,8 @@
 import { readFileSync } from 'fs'
 import { globby } from 'globby'
 import { NextApiRequest, NextApiResponse } from 'next'
+import sharp from 'sharp'
+import { isContainerised } from 'util/environment'
 import prisma from 'util/prisma'
 import { getSeries } from 'util/series'
 import { getAuthorisedAdmin, getAuthorisedUser } from 'util/users'
@@ -22,9 +24,22 @@ async function getThumbnailFile(req: NextApiRequest, res: NextApiResponse) {
   const data: any = await getSeries(id as string)
   const fileURI = `${data.folder}${data.thumbnail}`
   try {
-    const imageBuffer = readFileSync(`${process.cwd()}${fileURI}`)
+    const imageBuffer = readFileSync(
+      `${!isContainerised ? process.cwd() : ''}${fileURI}`
+    )
     res.setHeader('Content-Type', 'image/jpg')
-    res.status(200).send(imageBuffer)
+    res.status(200).send(
+      await sharp(imageBuffer)
+        .resize({
+          width: 768,
+          height: 1152,
+          fit: 'cover',
+        })
+        .jpeg({
+          quality: 80,
+        })
+        .toBuffer()
+    )
     return res.end()
   } catch {
     res.status(404).send({})
@@ -40,18 +55,25 @@ async function getFiles(req: NextApiRequest, res: NextApiResponse) {
   const { id } = req.query
   const data: any = await getSeries(id as string)
   const files = (
-    await globby(`${process.cwd()}${data.folder}/**/*.jpg`, {
-      onlyFiles: true,
-      objectMode: true,
+    await globby(
+      `${!isContainerised ? process.cwd() : ''}${
+        data.folder
+      }/**/*.{jpeg,jpg,png}`,
+      {
+        onlyFiles: true,
+        objectMode: true,
+      }
+    )
+  )
+    .map((v: any) => {
+      // get our path and file.
+      let path = v.path
+      // remove the process and wrapping folder
+      if (!isContainerised) path = path.replaceAll(process.cwd(), '')
+      path = path.replaceAll(data.folder, '')
+      return path
     })
-  ).map((v: any) => {
-    // get our path and file.
-    let path = v.path
-    // remove the process and wrapping folder
-    path = path.replaceAll(process.cwd(), '')
-    path = path.replaceAll(data.folder, '')
-    return path
-  })
+    .sort((a, b) => a.localeCompare(b, 'en', { numeric: true }))
   res.status(200).json({
     collection: 'series',
     data: files,
@@ -69,7 +91,7 @@ async function patch(req: NextApiRequest, res: NextApiResponse) {
   //
   const response = await prisma.series.update({
     where: {
-      id: id.toString(),
+      id: id ? id.toString() : '',
     },
     data: data,
   })

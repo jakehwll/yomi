@@ -4,7 +4,7 @@ import Button, { ButtonGroup } from 'components/Button'
 import Dialog from 'components/Dialog'
 import SeriesSettings from 'components/settings/series/Meta'
 import { SeriesThumbnailSettings } from 'components/settings/series/Thumbnail'
-import { Edit3, Image as ImageIcon, Trash } from 'lucide-react'
+import { Edit3, Image, Image as ImageIcon, Trash } from 'lucide-react'
 import { useRouter } from 'next/router'
 import { useState } from 'react'
 import styles from 'styles/headings/SeriesHeader.module.scss'
@@ -12,7 +12,7 @@ import styles from 'styles/headings/SeriesHeader.module.scss'
 interface SeriesHeaderProps {
   id: string
   title: string
-  image: string
+  image?: string
   volumes: number
   mutate(): void
   data: {
@@ -29,72 +29,77 @@ const SeriesHeader: React.FC<SeriesHeaderProps> = ({
   data,
 }: SeriesHeaderProps) => {
   const router = useRouter()
-  const [settings, setSettingsOpen] = useState(false)
-  const [thumb, setThumbnailOpen] = useState(false)
+  const [settingsOpen, setSettingsOpen] = useState(false)
+  const [thumbOpen, setThumbnailOpen] = useState(false)
+  const [deleteOpen, setDeleteOpen] = useState(false)
 
   return (
     <>
+      <Dialog
+        title="Edit Series Thumbnail"
+        open={thumbOpen}
+        onOpenChange={(open) => setThumbnailOpen(open)}
+        content={
+          <SeriesThumbnailSettings
+            id={id}
+            mutate={mutate}
+            modalSetter={setThumbnailOpen}
+            defaultValue={data.data.thumbnail ?? ''}
+          />
+        }
+      />
+      <Dialog
+        title="Edit Series"
+        open={settingsOpen}
+        onOpenChange={(open) => setSettingsOpen(open)}
+        content={
+          <SeriesSettings
+            id={id}
+            mutate={mutate}
+            modalSetter={setSettingsOpen}
+          />
+        }
+      />
+      <AlertDialog
+        title={'Delete Series'}
+        description={`Are you sure you want to delete ${title}?`}
+        open={deleteOpen}
+        onOpenChange={(open) => setDeleteOpen(open)}
+        onSuccess={() => {
+          fetch(`/api/series/${id}`, {
+            method: 'DELETE',
+          }).then(() => {
+            router.push('/')
+          })
+        }}
+      />
+
       <header className={styles.root}>
         <div className={styles.edit}>
           <ButtonGroup>
-            <Dialog
-              title="Edit Series"
-              open={settings}
-              onOpenChange={(open) => setSettingsOpen(open)}
-              content={
-                <SeriesSettings
-                  id={id}
-                  mutate={mutate}
-                  modalSetter={setSettingsOpen}
-                />
-              }
-            >
-              <Button onClick={() => setSettingsOpen(true)}>
-                <Edit3 />
-              </Button>
-            </Dialog>
-            <Dialog
-              title="Edit Series Thumbnail"
-              open={thumb}
-              onOpenChange={(open) => setThumbnailOpen(open)}
-              content={
-                <SeriesThumbnailSettings
-                  id={id}
-                  mutate={mutate}
-                  modalSetter={setThumbnailOpen}
-                  defaultValue={data.data.thumbnail ?? ''}
-                />
-              }
-            >
-              <Button onClick={() => setThumbnailOpen(true)}>
-                <ImageIcon />
-              </Button>
-            </Dialog>
-            <AlertDialog
-              title={'Delete Series'}
-              description={`Are you sure you want to delete ${title}?`}
-              onSuccess={() => {
-                fetch(`/api/series/${id}`, {
-                  method: 'DELETE',
-                }).then(() => {
-                  router.push('/')
-                })
-              }}
-            >
-              <div>
-                <Button>
-                  <Trash />
-                </Button>
-              </div>
-            </AlertDialog>
+            <Button onClick={() => setSettingsOpen(true)}>
+              <Edit3 />
+            </Button>
+            <Button onClick={() => setThumbnailOpen(true)}>
+              <ImageIcon />
+            </Button>
+            <Button onClick={() => setDeleteOpen(true)}>
+              <Trash />
+            </Button>
           </ButtonGroup>
         </div>
         <div className={styles.background}>
-          <img src={image} alt="" />
+          <img src={image ? image : '/placeholder.jpg'} alt="" />
         </div>
         <div className={styles.image}>
-          <div className={styles.wrapper}>
-            <img src={image} alt="" />
+          <div
+            className={styles.wrapper}
+            onClick={() => setThumbnailOpen(true)}
+          >
+            <div className={styles.wrapper__edit}>
+              <Image size={48} />
+            </div>
+            <img src={image ? image : '/placeholder.jpg'} alt="" />
           </div>
         </div>
         <div className={styles.content}>

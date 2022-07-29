@@ -2,9 +2,9 @@ import Button from 'components/Button'
 import Text from 'components/input/Text'
 import Meta from 'components/Meta'
 import { NextPage } from 'next'
-import { signIn, SignInResponse, useSession } from 'next-auth/react'
+import { signIn, SignInResponse } from 'next-auth/react'
 import { useRouter } from 'next/router'
-import { FormEvent, useEffect, useState } from 'react'
+import { ChangeEvent, FormEvent, useState } from 'react'
 
 import styles from 'styles/pages/Authentication.module.scss'
 
@@ -15,11 +15,6 @@ const Login: NextPage = () => {
   const [loading, setLoading] = useState(false)
 
   const router = useRouter()
-  const session = useSession()
-
-  useEffect(() => {
-    if (session.data) router.push('/')
-  }, [])
 
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault()
@@ -29,12 +24,11 @@ const Login: NextPage = () => {
       redirect: false,
       email: email,
       password: password,
-      callbackUrl: window.location.origin ? window.location.origin : '/',
     })
     if (response !== undefined) {
-      const _res = response as SignInResponse
-      if (_res.error) setError(_res.error)
-      else router.push(_res.url ?? '/')
+      if ((response as SignInResponse).error)
+        setError((response as SignInResponse).error ?? '')
+      else router.push('/')
       setLoading(false)
     }
   }
@@ -44,13 +38,14 @@ const Login: NextPage = () => {
       <Meta title={'Login'} />
       <div className={styles.root}>
         <h1>yomi</h1>
+        {error && <div className={styles.error}>{error}</div>}
         <form className={styles.form} onSubmit={handleSubmit}>
           <Text
             id={'email'}
             name={'email'}
             value={email}
-            onChange={(event) =>
-              setEmail((event.target as HTMLInputElement).value)
+            onChange={(event: ChangeEvent<HTMLInputElement>) =>
+              setEmail(event.target.value)
             }
             label={'Email'}
           />
@@ -59,8 +54,8 @@ const Login: NextPage = () => {
             name={'password'}
             value={password}
             type={'password'}
-            onChange={(event) =>
-              setPassword((event.target as HTMLInputElement).value)
+            onChange={(event: ChangeEvent<HTMLInputElement>) =>
+              setPassword(event.target.value)
             }
             label={'Password'}
           />

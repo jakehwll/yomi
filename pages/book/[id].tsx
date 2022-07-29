@@ -22,23 +22,40 @@ import useSWR from 'swr'
 import fetcher from 'util/swr'
 
 const Pages = ({ render }: { render: Array<string> }) => {
-  const router = useRouter()
-  const { id } = router.query
-  // const { data, error, mutate } = useSWR(id ? `/api/book/${id}` : '', fetcher)
-
   return (
     <section>
-      <div className={styles.canvas}>
+      <div
+        className={cc([
+          styles.canvas,
+          {
+            [styles.dual]: render.length > 1,
+          },
+        ])}
+      >
         {render.map((v: string, i: number) => {
           return (
-            <div className={styles.page} key={i}>
-              {/* eslint-disable-next-line @next/next/no-img-element */}
+            <div className={styles.page} key={v}>
               <img src={v} alt="" />
             </div>
           )
         })}
       </div>
     </section>
+  )
+}
+
+const FauxPages = ({ fauxRender }: { fauxRender: Array<string> }) => {
+  return (
+    <div className={styles.faux}>
+      {fauxRender.map((v: string, i: number) => {
+        return (
+          <>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={v} alt="" />
+          </>
+        )
+      })}
+    </div>
   )
 }
 
@@ -96,21 +113,27 @@ const ReaderSettings = ({
 const Reader = () => {
   const router = useRouter()
   const { id } = router.query
-  const { data, error } = useSWR(id ? `/api/book/${id}` : '', fetcher)
+  const { data, error } = useSWR(`/api/book/${id}`, id ? fetcher : () => {})
 
   // ref
-  const fullscreenRef = useRef(null)
+  const rootRef = useRef<HTMLDivElement>(null)
+  const headerRef = useRef<HTMLElement>(null)
+  const footerRef = useRef<HTMLElement>(null)
 
-  // constants
+  // states
   const [index, setIndex] = useState(0)
   const [pageAmount, setPageAmount] = useState(2)
   const [pageCount, setPageCount] = useState(0)
-  const [controls, setControls] = useState(true)
+
+  const [hideControls, setHideControls] = useState(true)
+  const [mouseControls, setMouseControls] = useState(false)
+
   const [render, setRender] = useState<Array<string>>([])
+  const [fauxRender, setFauxRender] = useState<Array<string>>([])
 
   // hooks
   const [fullscreen, toggleFullscreen] = useToggle(false)
-  const isFullscreen = useFullscreen(fullscreenRef, fullscreen, {
+  const isFullscreen = useFullscreen(rootRef, fullscreen, {
     onClose: () => toggleFullscreen(false),
   })
 
@@ -145,11 +168,10 @@ const Reader = () => {
 
   useEffect(() => {
     if (id === undefined) return setRender([])
-    // TODO only render the front-cover.
     if (index === 0) return setRender([`/api/book/${id}/page/0`])
     if (index === 1) return setRender([`/api/book/${id}/page/1`])
-    // TODO only render the back-cover.
-    if (index === -1) return setRender([`/api/book/${id}/page/${-1}`])
+    if (index === pageCount)
+      return setRender([`/api/book/${id}/page/${pageCount}`])
     // loop all pages for our pageAmount range and render them
     let pages = range(index * pageAmount, index * pageAmount + pageAmount).map(
       (v: number) => `/api/book/${id}/page/${v}`
@@ -159,6 +181,26 @@ const Reader = () => {
     // update the renderer.
     setRender(pages)
   }, [id, index, invertPages, pageAmount])
+
+  useEffect(() => {
+    if (!id) return
+    if (index * pageAmount - 2 < 1)
+      setFauxRender(
+        range(0, 10).map((v: number) => `/api/book/${id}/page/${v}`)
+      )
+    else if (index * pageAmount + 8 > pageCount)
+      setFauxRender(
+        range(pageCount - 2, pageCount + 8).map(
+          (v: number) => `/api/book/${id}/page/${v}`
+        )
+      )
+    else
+      setFauxRender(
+        range(index * pageAmount - 2, index * pageAmount + 8).map(
+          (v: number) => `/api/book/${id}/page/${v}`
+        )
+      )
+  }, [id, index])
 
   useEffect(() => {
     if (!data) return
@@ -181,21 +223,46 @@ const Reader = () => {
   // TODO.
   // home - Return to index 0.
   // end - Return to index last.
-  // f - fullscreen.
   // s - settings.
   // / - open keybind menu
 
   useEffect(() => {
     const keyHandler = (event: KeyboardEvent) => {
-      if (event.key === ' ') setControls((controls) => !controls)
+      if (
+        ['INPUT', 'BUTTON'].includes(
+          (document.activeElement && document.activeElement?.tagName) || ''
+        )
+      )
+        return
+      event.key === ' ' && setHideControls((hideControls) => !hideControls)
     }
     document.addEventListener('keydown', keyHandler)
     return () => document.removeEventListener('keydown', keyHandler)
   }, [])
 
   useEffect(() => {
-    // TODO. Add check if in modal or button.
+    if (
+      ['INPUT'].includes(
+        (document.activeElement && document.activeElement?.tagName) || ''
+      )
+    )
+      return
     const keyHandler = (event: KeyboardEvent) => {
+      event.key === 'f' && toggleFullscreen()
+    }
+    document.addEventListener('keydown', keyHandler)
+    return () => document.removeEventListener('keydown', keyHandler)
+  }, [])
+
+  useEffect(() => {
+    const keyHandler = (event: KeyboardEvent) => {
+      if (
+        ['INPUT', 'BUTTON'].includes(
+          (document.activeElement && document.activeElement?.tagName) || ''
+        )
+      )
+        return
+      if (document.activeElement?.getAttribute('role') === 'slider') return
       if (event.key === 'ArrowRight')
         setIndex((pageNum) =>
           invertControls ? _prev(pageNum) : _next(pageNum)
@@ -209,14 +276,40 @@ const Reader = () => {
     return () => document.removeEventListener('keydown', keyHandler)
   }, [pageCount, invertControls])
 
+  // controls shown state update
+  useEffect(() => {
+    console.log(rootRef)
+    if (!rootRef.current) return
+    let controlTimer: any = undefined
+    const eventHandler = (event: Event) => {
+      setMouseControls(true)
+      clearTimeout(controlTimer && controlTimer)
+      controlTimer = setTimeout(() => {
+        // dont hide if in header
+        if (
+          headerRef.current?.contains(event.target as HTMLElement) ||
+          footerRef.current?.contains(event.target as HTMLElement)
+        )
+          return
+        setMouseControls(false)
+      }, 2000)
+    }
+    rootRef.current.addEventListener('mousemove', eventHandler)
+    return () => rootRef.current?.removeEventListener('mousemove', eventHandler)
+  }, [rootRef])
+
   return (
     <>
-      {data && (
-        <>
-          <Meta title={`${data.data.Series.title} - ${data.data.title}`} />
-          <div className={styles.root} ref={fullscreenRef}>
+      <div className={styles.root} ref={rootRef}>
+        {data && (
+          <>
+            <Meta title={`${data.data.Series.title} - ${data.data.title}`} />
             <header
-              className={cc([styles.header, { [styles.hidden]: !controls }])}
+              className={cc([
+                styles.header,
+                { [styles.hidden]: !hideControls && !mouseControls },
+              ])}
+              ref={headerRef}
             >
               <div className={styles.wrapper}>
                 <div className={styles.back}>
@@ -232,24 +325,31 @@ const Reader = () => {
                 </div>
                 <div className={styles.title}>
                   {data.data &&
-                    `${data.data.Series.title} - ${data.data.title} (${index}/${
-                      pageCount / pageAmount - 1
-                    })`}
+                    `${data.data.Series.title} - ${data.data.title} (${
+                      index * pageAmount + 1
+                    }/${pageCount})`}
                 </div>
                 <div className={styles.tools}>
                   <ButtonGroup>
-                    <Button onClick={toggleFullscreen}>
-                      {!isFullscreen ? <Maximize2 /> : <Minimize2 />}
-                    </Button>
+                    {document.fullscreenEnabled && (
+                      <Button
+                        onClick={(event) => {
+                          event.currentTarget.blur()
+                          toggleFullscreen()
+                        }}
+                      >
+                        {!isFullscreen ? <Maximize2 /> : <Minimize2 />}
+                      </Button>
+                    )}
                     <Dialog
                       title={'Reader Settings'}
                       content={<ReaderSettings {...readerSettingProps} />}
-                      ref={fullscreenRef.current || undefined}
+                      ref={rootRef.current || undefined}
                       onOpenChange={(open) =>
                         open === true && toggleFullscreen(false)
                       }
                     >
-                      <Button>
+                      <Button onClick={(event) => event.currentTarget.blur()}>
                         <Settings />
                       </Button>
                     </Dialog>
@@ -258,16 +358,35 @@ const Reader = () => {
                 </div>
               </div>
             </header>
+            {/* <div className={styles.control}>
+              <button className={styles.control__left} type="button"></button>
+              <button className={styles.control__right} type="button"></button>
+            </div> */}
             <Pages render={render} />
+            {id && <FauxPages fauxRender={fauxRender} />}
             <footer
-              className={cc([styles.footer, { [styles.hidden]: !controls }])}
+              className={cc([
+                styles.footer,
+                { [styles.hidden]: !hideControls && !mouseControls },
+              ])}
+              ref={footerRef}
             >
               <div className={styles.wrapper}>
                 <ButtonGroup>
-                  <Button onClick={() => setIndex(0)}>
+                  <Button
+                    onClick={(event) => {
+                      event.currentTarget.blur()
+                      setIndex(0)
+                    }}
+                  >
                     <CornerLeftDown />
                   </Button>
-                  <Button onClick={() => setIndex((index) => _prev(index))}>
+                  <Button
+                    onClick={(event) => {
+                      event.currentTarget.blur()
+                      setIndex((index) => _prev(index))
+                    }}
+                  >
                     <ArrowLeft />
                   </Button>
                 </ButtonGroup>
@@ -275,22 +394,34 @@ const Reader = () => {
                   <Slider
                     value={index + 1}
                     max={pageCount / pageAmount - 1}
-                    onValueChange={(number) => setIndex(number[0])}
+                    onValueChange={(number) => {
+                      setIndex(number[0])
+                    }}
                   />
                 </div>
                 <ButtonGroup>
-                  <Button onClick={() => setIndex((index) => _next(index))}>
+                  <Button
+                    onClick={(event) => {
+                      event.currentTarget.blur()
+                      setIndex((index) => _next(index))
+                    }}
+                  >
                     <ArrowRight />
                   </Button>
-                  <Button>
+                  <Button
+                    onClick={(event) => {
+                      event.currentTarget.blur()
+                      setIndex(pageCount / pageAmount - 1)
+                    }}
+                  >
                     <CornerRightDown />
                   </Button>
                 </ButtonGroup>
               </div>
             </footer>
-          </div>
-        </>
-      )}
+          </>
+        )}
+      </div>
     </>
   )
 }

@@ -1,6 +1,8 @@
 import { readFileSync } from 'fs'
 import { NextApiRequest, NextApiResponse } from 'next'
+import sharp from 'sharp'
 import { getBook } from 'util/book'
+import { isContainerised } from 'util/environment'
 import { getDirectoryFiles } from 'util/fs'
 import prisma from 'util/prisma'
 import { getAuthorisedAdmin, getAuthorisedUser } from 'util/users'
@@ -22,12 +24,27 @@ async function getThumbnailFile(req: NextApiRequest, res: NextApiResponse) {
   const data: any = await getBook(id as string)
   const fileURI = `${data.Series.folder}${data.folder}/${data.thumbnail}`
   try {
-    const imageBuffer = readFileSync(`${process.cwd()}${fileURI}`)
+    const imageBuffer = readFileSync(
+      `${!isContainerised ? process.cwd() : ''}${fileURI}`
+    )
     res.setHeader('Content-Type', 'image/jpg')
-    res.status(200).send(imageBuffer)
+    res.status(200).send(
+      await sharp(imageBuffer)
+        .resize({
+          width: 384,
+          height: 576,
+          fit: 'cover',
+        })
+        .jpeg({
+          quality: 80,
+        })
+        .toBuffer()
+    )
     return res.end()
-  } catch {
-    res.status(404).send({})
+  } catch (error) {
+    res.status(404).json({
+      error: 'File not found',
+    })
     return res.end()
   }
 }
@@ -40,12 +57,14 @@ async function getFiles(req: NextApiRequest, res: NextApiResponse) {
   const { id } = req.query
   const data: any = await getBook(id as string)
   const files = (
-    await getDirectoryFiles({ path: `${data.Series.folder}${data.folder}` })
+    await getDirectoryFiles({
+      path: `${data.Series.folder}${data.folder}/**/*.{jpeg,jpg,png}`,
+    })
   ).map((v: any) => {
     // get our path and file.
     let path = v.path
     // remove the process and wrapping folder
-    path = path.replaceAll(process.cwd(), '')
+    if (!isContainerised) path = path.replaceAll(process.cwd(), '')
     path = path.replace(data.folder, '')
     path = path.replaceAll(data.Series.folder, '')
     return path
@@ -67,7 +86,7 @@ async function patch(req: NextApiRequest, res: NextApiResponse) {
   //
   const response = await prisma.book.update({
     where: {
-      id: id.toString(),
+      id: id && id.toString(),
     },
     data: data,
   })

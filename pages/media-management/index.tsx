@@ -12,10 +12,12 @@ import fetcher from 'util/swr'
 
 const UnassignedSeries = () => {
   const { data } = useSWR('/api/series/unassigned', fetcher)
-
   const router = useRouter()
 
+  const [loading, setLoading] = useState(false)
+
   const handleSubmit = (data: any) => {
+    setLoading(true)
     fetch('/api/series', {
       method: 'POST',
       headers: {
@@ -27,6 +29,7 @@ const UnassignedSeries = () => {
       }),
     })
       .then((response) => {
+        setLoading(false)
         if (response.ok) return response.json()
       })
       .then((response) => {
@@ -41,14 +44,24 @@ const UnassignedSeries = () => {
     return (
       <Card>
         <h2>Unassigned Series</h2>
-        <Form onSubmit={handleSubmit} submitText={'Create Series'}>
+        <Form
+          onSubmit={handleSubmit}
+          submitText={'Create Series'}
+          loading={loading}
+        >
           <Select
             label={'Select Folder'}
             name={'folder'}
             options={data ? data.data : []}
+            disabled={loading}
             required
           />
-          <Input label={'Series Title'} name={'title'} required />
+          <Input
+            label={'Series Title'}
+            name={'title'}
+            disabled={loading}
+            required
+          />
         </Form>
       </Card>
     )
@@ -66,7 +79,10 @@ const UnassignedBooks = () => {
     currentSeries ? fetcher : null
   )
 
+  const [loading, setLoading] = useState(false)
+
   const handleSubmit = (data: any) => {
+    setLoading(true)
     fetch('/api/book', {
       method: 'POST',
       headers: {
@@ -78,8 +94,8 @@ const UnassignedBooks = () => {
         folder: data.folder,
       }),
     }).then(() => {
+      setLoading(false)
       seriesMutate()
-      // volumesMutate()
     })
   }
 
@@ -87,7 +103,11 @@ const UnassignedBooks = () => {
     return (
       <Card>
         <h2>Unassigned Books</h2>
-        <Form onSubmit={handleSubmit} submitText={'Create Book'}>
+        <Form
+          onSubmit={handleSubmit}
+          submitText={'Create Book'}
+          loading={loading}
+        >
           <Select
             label="Series"
             name={'series'}
@@ -101,6 +121,7 @@ const UnassignedBooks = () => {
             onChange={(event: ChangeEvent<HTMLOptionElement>) =>
               setCurrentSeries(event.target.value)
             }
+            disabled={loading}
           />
           <Select
             label="Folder"
@@ -112,8 +133,9 @@ const UnassignedBooks = () => {
                   })
                 : []
             }
+            disabled={loading}
           />
-          <Input label="Volume Title" name="title" />
+          <Input label="Volume Title" name="title" disabled={loading} />
         </Form>
       </Card>
     )

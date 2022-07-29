@@ -71,6 +71,7 @@ export function Select({
         })}
         {...rest}
       >
+        <option selected disabled></option>
         {options.map((value) =>
           Array.isArray(value) ? (
             <option key={value[0]} value={value[0]}>

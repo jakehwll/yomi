@@ -10,6 +10,7 @@ interface TextInputProps {
   type?: 'text' | 'password'
   autoComplete?: string
   onChange: ChangeEventHandler
+  disabled?: boolean
 }
 
 const Text: React.FC<TextInputProps> = ({
@@ -20,6 +21,7 @@ const Text: React.FC<TextInputProps> = ({
   type = 'text',
   autoComplete,
   onChange,
+  disabled,
 }: TextInputProps) => {
   return (
     <div className={styles.root}>
@@ -36,6 +38,7 @@ const Text: React.FC<TextInputProps> = ({
           type={type}
           autoComplete={autoComplete}
           onChange={onChange}
+          disabled={disabled}
         />
       </div>
     </div>

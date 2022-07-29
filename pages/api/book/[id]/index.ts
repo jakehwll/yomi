@@ -1,19 +1,34 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import { getBook, getFilesData, updateBook } from 'util/book'
+import { getSession } from 'next-auth/react'
+import { updateBook } from 'util/book'
 import { getDirectoryFiles } from 'util/fs'
+import { getFilesData } from 'util/index_builders/FileMultiFolder'
 import prisma from 'util/prisma'
 import { getAuthorisedAdmin } from 'util/users'
 
 async function get(req: NextApiRequest, res: NextApiResponse) {
   const { id } = req.query
-  const response = await getBook(id as string)
+  const session = await getSession({ req })
+  const response = await prisma.book.findFirst({
+    where: {
+      id: {
+        equals: id?.toString(),
+      },
+    },
+    include: {
+      Series: true,
+      ReadProgress: {
+        distinct: ['bookId', 'userId'],
+      },
+    },
+  })
   if (!response || !response.Series)
     return res.status(404).json({ error: 'Resource not found.', code: 404 })
   // TODO. Resolve pagecount to current number.
   const files = await getDirectoryFiles({
-    path: `${response.Series.folder}${response.folder}`,
+    path: `${response.Series.folder}${response.folder}/**/*.{jpeg,jpg,png}`,
   })
-  let filesData = getFilesData({ files: files })
+  let filesData = await getFilesData({ files: files })
   res.status(200).json({
     collection: 'book',
     data: response,

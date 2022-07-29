@@ -1,4 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next'
+import { isContainerised } from 'util/environment'
 import { getDirectoryFolders } from 'util/fs'
 import { getAllSeries } from 'util/series'
 import { getAuthorisedUser } from 'util/users'
@@ -7,22 +8,19 @@ async function get(req: NextApiRequest, res: NextApiResponse) {
   // check we have an authorised user.
   if (!(await getAuthorisedUser(req)))
     return res.status(403).json({ error: 'Unauthorised. Nice try.', code: 403 })
-  const directoriesList = await (
-    await getDirectoryFolders({ path: `/data`, depth: 1 })
+  const directoriesList = (
+    await getDirectoryFolders({ path: `/data/library`, depth: 1 })
   ).map((v) => {
-    return v.path.replaceAll(process.cwd(), '')
+    if (!isContainerised) return v.path.replaceAll(process.cwd(), '')
+    else return v.path
   })
-  const seriesDirectoriesList = await (
-    await getAllSeries()
-  ).map((v) => {
-    return v.folder
-  })
+  const seriesDirectoriesList = (await getAllSeries()).map((v) => v.folder)
 
   res.status(200).json({
     collection: 'series',
-    data: directoriesList.filter((v) => {
-      return !seriesDirectoriesList.includes(v)
-    }),
+    data: directoriesList
+      .filter((v) => !seriesDirectoriesList.includes(v))
+      .sort((a, b) => a.localeCompare(b, 'en', { numeric: true })),
   })
 }
 

@@ -1,5 +1,6 @@
 import { Dirent } from 'fs'
 import { globby } from 'globby'
+import { isContainerised } from './environment'
 
 export interface getDirectoryFilesProps {
   name: string
@@ -20,7 +21,7 @@ const getDirectoryFiles = async ({
   path: string
   depth?: number
 }) => {
-  return globby(`${process.cwd()}${path}`, {
+  return globby(`${!isContainerised ? process.cwd() : ''}${path}`, {
     objectMode: true,
     onlyFiles: true,
     deep: depth,
@@ -40,7 +41,7 @@ const getDirectoryFolders = async ({
   path: string
   depth?: number
 }) => {
-  return globby(`${process.cwd()}${path}`, {
+  return globby(`${!isContainerised ? process.cwd() : ''}${path}`, {
     objectMode: true,
     onlyDirectories: true,
     deep: depth,

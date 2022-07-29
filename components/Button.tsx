@@ -38,7 +38,10 @@ const Button: React.FC<ButtonProps> = ({
           [styles.loading]: loading,
         },
       ])}
-      onClick={onClick}
+      onClick={(event: React.MouseEvent<HTMLButtonElement>) => {
+        if (loading) return
+        onClick && onClick(event)
+      }}
     >
       {loading && <Loader2 />}
       {children}

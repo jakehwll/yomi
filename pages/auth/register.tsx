@@ -34,8 +34,8 @@ const Login: NextPage = () => {
         else console.log(response)
       })
       .then((json: any) => {
-        if (!json.ok) router.push('/auth/login')
-        else setError(json.statusText)
+        if (json && json.error) router.push('/auth/login')
+        else setError(json ? json.statusText : 'Unknown error.')
       })
   }
 

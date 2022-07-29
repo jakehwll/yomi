@@ -15,9 +15,8 @@
 
   width: 100%;
 
-  padding: 0rem 0.5rem;
-
   .wrapper {
+    padding: 0rem 0.5rem;
     transition: 1s ease transform;
   }
 
@@ -27,7 +26,7 @@
     }
   }
 
-  &:hover {
+  &.manual {
     > .wrapper {
       transform: translateY(0%) !important;
     }
@@ -49,15 +48,11 @@
   .wrapper {
     background: linear-gradient(rgba(black, 0.8), rgba(black, 0));
   }
-
-  &.hidden {
-    .wrapper {
-      transform: translateY(-100%);
-    }
-  }
-
   .title {
     text-shadow: 0px 2px 0.5rem rgba(black, 0.2);
+  }
+  &.hidden .wrapper {
+    transform: translateY(-100%);
   }
 }
 
@@ -69,11 +64,8 @@
   .wrapper {
     background: linear-gradient(rgba(black, 0), rgba(black, 0.8));
   }
-
-  &.hidden {
-    .wrapper {
-      transform: translateY(100%);
-    }
+  &.hidden .wrapper {
+    transform: translateY(100%);
   }
 }
 
@@ -101,14 +93,22 @@
   align-items: center;
   justify-content: center;
   min-height: 100vh;
+  &.dual {
+    .page {
+      max-width: 50vw;
+      img {
+        max-width: 50vw;
+      }
+    }
+  }
   .page {
-    display: block;
+    height: 100vh;
+    position: relative;
     img {
-      height: 100vh;
       object-fit: contain;
       object-position: center;
       position: relative;
-      max-width: 50vw;
+      height: 100vh;
     }
   }
 }
@@ -116,4 +116,39 @@
 .timeline {
   flex: 1 auto;
   padding: 0rem 1rem;
+}
+
+.faux {
+  position: absolute;
+  bottom: 4rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  opacity: 0;
+  pointer-events: none;
+  img {
+    max-width: 100px;
+  }
+}
+
+.control {
+  position: absolute;
+  z-index: 100;
+  width: 100%;
+  height: 100%;
+  &__left,
+  &__right {
+    position: absolute;
+    top: 0;
+    height: 100%;
+    width: 50%;
+    max-width: 12rem;
+    background: transparent;
+  }
+  &__left {
+    left: 0;
+  }
+  &__right {
+    right: 0;
+  }
 }

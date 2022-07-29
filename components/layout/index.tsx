@@ -1,4 +1,5 @@
 import cc from 'classcat'
+import { Menu } from 'lucide-react'
 import styles from 'styles/layout/Layout.module.scss'
 import Content from './Content'
 import Footer from './Footer'
@@ -10,6 +11,22 @@ interface LayoutProps {
   padding?: boolean
 }
 
+interface HeaderProps {
+  children: React.ReactNode
+}
+
+const Header: React.FC<HeaderProps> = ({ children }: HeaderProps) => {
+  return <header>{children}</header>
+}
+
+const MobileMenu = () => {
+  return (
+    <button type="button" className={styles.mobile}>
+      <Menu size={32} />
+    </button>
+  )
+}
+
 const Layout: React.FC<LayoutProps> = ({
   children,
   padding = true,
@@ -18,8 +35,11 @@ const Layout: React.FC<LayoutProps> = ({
     <div className={styles.root}>
       <Sidebar />
       <Content>
-        <div>
-          <Search />
+        <section>
+          <header className={styles.header}>
+            <MobileMenu />
+            <Search />
+          </header>
           <div
             className={cc({
               [styles.padding]: padding,
@@ -27,7 +47,7 @@ const Layout: React.FC<LayoutProps> = ({
           >
             {children}
           </div>
-        </div>
+        </section>
         <Footer />
       </Content>
     </div>
