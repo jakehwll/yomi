@@ -35,7 +35,7 @@ async function get(req: NextApiRequest, res: NextApiResponse) {
   }
   // gather all files from the book.
   let files = await getDirectoryFiles({
-    path: `${book.Series.folder}${book.folder}`,
+    path: `${book.Series.folder}${book.folder}/**/*.{jpeg,jpg,png}`,
   })
   if (files.length === 0)
     res.status(500).send({

@@ -26,7 +26,7 @@ async function get(req: NextApiRequest, res: NextApiResponse) {
     return res.status(404).json({ error: 'Resource not found.', code: 404 })
   // TODO. Resolve pagecount to current number.
   const files = await getDirectoryFiles({
-    path: `${response.Series.folder}${response.folder}`,
+    path: `${response.Series.folder}${response.folder}/**/*.{jpeg,jpg,png}`,
   })
   let filesData = await getFilesData({ files: files })
   res.status(200).json({
