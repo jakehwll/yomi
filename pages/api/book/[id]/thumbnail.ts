@@ -57,7 +57,9 @@ async function getFiles(req: NextApiRequest, res: NextApiResponse) {
   const { id } = req.query
   const data: any = await getBook(id as string)
   const files = (
-    await getDirectoryFiles({ path: `${data.Series.folder}${data.folder}` })
+    await getDirectoryFiles({
+      path: `${data.Series.folder}${data.folder}/**/*.{jpeg,jpg,png}`,
+    })
   ).map((v: any) => {
     // get our path and file.
     let path = v.path

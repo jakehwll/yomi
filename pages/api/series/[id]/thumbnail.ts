@@ -56,7 +56,9 @@ async function getFiles(req: NextApiRequest, res: NextApiResponse) {
   const data: any = await getSeries(id as string)
   const files = (
     await globby(
-      `${!isContainerised ? process.cwd() : ''}${data.folder}/**/*`,
+      `${!isContainerised ? process.cwd() : ''}${
+        data.folder
+      }/**/*.{jpeg,jpg,png}`,
       {
         onlyFiles: true,
         objectMode: true,
