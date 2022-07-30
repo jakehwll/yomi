@@ -5,6 +5,7 @@ import { Input } from 'components/form/Input'
 import Layout from 'components/layout'
 import Meta from 'components/Meta'
 import { NextPage } from 'next'
+import { signOut } from 'next-auth/react'
 
 const ChangeEmail = () => {
   const handleSubmit = (data: any) => console.log(data)
@@ -52,7 +53,7 @@ const UserProfile: NextPage = () => {
         <ChangePassword />
         <Card>
           <h2>Danger Zone</h2>
-          <Button style={'danger'} wide={true}>
+          <Button style={'danger'} wide={true} onClick={() => signOut()}>
             Sign Out
           </Button>
         </Card>
