@@ -44,7 +44,9 @@ const Sidebar: React.FC = () => {
     <aside className={styles.root}>
       <nav className={styles.header}>
         <Link href="/" passHref>
-          <a className={styles.brand}>yomi</a>
+          <a className={styles.brand}>
+            <img src="/logo.svg" alt="" />
+          </a>
         </Link>
         <ul className={styles.navigation}>
           {_navigation.map(
