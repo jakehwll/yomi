@@ -27,6 +27,10 @@
   &[data-orientation='horizontal'] {
     height: 2px;
   }
+  position: absolute;
+  background-color: white;
+  border-radius: 9999px;
+  height: 100%;
 }
 
 .thumb {
