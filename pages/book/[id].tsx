@@ -6,10 +6,12 @@ import Slider from 'components/input/Slider'
 import Meta from 'components/Meta'
 import { range } from 'lodash'
 import {
+  AlertCircle,
   ArrowLeft,
   ArrowRight,
   CornerLeftDown,
   CornerRightDown,
+  Loader2,
   Maximize2,
   Minimize2,
   Settings,
@@ -335,6 +337,14 @@ const Reader = () => {
     return () => rootRef.current?.removeEventListener('mousemove', eventHandler)
   }, [rootRef])
 
+  if (error) {
+    return (
+      <div className={styles.error}>
+        <AlertCircle size={64} />
+      </div>
+    )
+  }
+
   return (
     <>
       <div className={styles.root} ref={rootRef}>
@@ -342,6 +352,11 @@ const Reader = () => {
           <Meta title={`${data.data.Series.title} - ${data.data.title}`} />
         ) : (
           <Meta title={''} />
+        )}
+        {!data && (
+          <div className={styles.loader}>
+            <Loader2 size={64} />
+          </div>
         )}
         {data && (
           <>

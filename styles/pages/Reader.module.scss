@@ -179,3 +179,32 @@
   text-align: center;
   font-weight: 600;
 }
+
+.error,
+.loader {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: -webkit-fill-available;
+  height: -moz-available;
+  height: stretch;
+  max-height: 100vh;
+}
+
+.loader {
+  svg {
+    animation-name: spin;
+    animation-duration: 1.5s;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+  }
+}
+
+@keyframes spin {
+  0% {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+  100% {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}
