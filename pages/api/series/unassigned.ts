@@ -15,7 +15,6 @@ async function get(req: NextApiRequest, res: NextApiResponse) {
     else return v.path
   })
   const seriesDirectoriesList = (await getAllSeries()).map((v) => v.folder)
-
   res.status(200).json({
     collection: 'series',
     data: directoriesList

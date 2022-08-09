@@ -31,7 +31,6 @@ const Login: NextPage = () => {
     })
       .then((response) => {
         if (response.ok) return response.json()
-        else console.log(response)
       })
       .then((json: any) => {
         if (json && json.error) router.push('/auth/login')

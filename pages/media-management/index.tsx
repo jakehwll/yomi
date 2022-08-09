@@ -35,9 +35,6 @@ const UnassignedSeries = () => {
       .then((response) => {
         router.push(`/series/${response.data.id}`)
       })
-      .catch((error) => {
-        console.log(error)
-      })
   }
 
   if (data)
