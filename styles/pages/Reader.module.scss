@@ -114,6 +114,9 @@
       position: relative;
       height: 100vh;
     }
+    &.hidden {
+      display: none;
+    }
   }
 }
 
@@ -128,7 +131,7 @@
   left: 50%;
   transform: translateX(-50%);
   display: flex;
-  opacity: 0;
+  opacity: 1;
   pointer-events: none;
   img {
     max-width: 100px;

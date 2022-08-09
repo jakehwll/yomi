@@ -22,6 +22,7 @@ const Slider: React.FC<SliderProps> = ({
       aria-label="Volume"
       className={styles.root}
       onValueChange={onValueChange}
+      onFocus={(event) => event.target.blur()}
     >
       <Track className={styles.track}>
         <Range className={styles.range} />
