@@ -160,12 +160,13 @@
   }
 }
 
+.prevVolume,
 .nextVolume {
   margin: 1rem;
   padding: 1rem;
   max-width: 24rem;
 
-  background: rgba(var(--global-color-dark-gray-rgb), 0.5);
+  background: rgba(0, 0, 0, 0.5);
 
   position: absolute;
   top: 50%;

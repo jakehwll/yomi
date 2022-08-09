@@ -74,9 +74,43 @@ const nextVolume = async (id: string) => {
     })
   const bookIndex = books.indexOf(id ? id.toString() : '')
   const nextVolumeIndex = bookIndex !== undefined ? bookIndex + 1 : undefined
-  if (!nextVolumeIndex) return undefined
+  if (nextVolumeIndex === undefined) return undefined
   if (books && nextVolumeIndex > books?.length - 1) return undefined
   return books[nextVolumeIndex]
 }
 
-export { getBook, updateBook, nextVolume }
+/**
+ *
+ */
+const prevVolume = async (id: string) => {
+  const book = await prisma.book.findFirst({
+    where: {
+      id: id ? id.toString() : '',
+    },
+    include: {
+      Series: true,
+    },
+  })
+  if (!book) return undefined
+  const series = await prisma.series.findFirst({
+    where: {
+      id: book?.Series?.id,
+    },
+    include: {
+      books: true,
+    },
+  })
+  if (!series || !series.books) return undefined
+  const books = series.books
+    .sort((a, b) => a.title.localeCompare(b.title, 'en', { numeric: true }))
+    .map((v: Book) => {
+      return v.id
+    })
+  const bookIndex = books.indexOf(id ? id.toString() : '')
+  const prevVolumeIndex = bookIndex !== undefined ? bookIndex - 1 : undefined
+  if (prevVolumeIndex === undefined) return undefined
+  if (books && prevVolumeIndex < 0) return undefined
+  return books[prevVolumeIndex]
+}
+
+export { getBook, updateBook, nextVolume, prevVolume }

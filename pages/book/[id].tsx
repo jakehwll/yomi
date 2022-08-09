@@ -145,7 +145,21 @@ const Reader = () => {
 
   const [fauxRender, setFauxRender] = useState<Array<number>>([])
 
+  const [prevChapter, setPrevChapter] = useState(0)
   const [nextChapter, setNextChapter] = useState(0)
+
+  // prev chapter
+  useEffect(() => {
+    if (!data) return
+    if (!('prev' in data)) return setPrevChapter(0)
+    if (prevChapter === 1) setTimeout(() => setPrevChapter(0), 3000)
+    if (prevChapter === 2) {
+      router.push(`/book/${data.prev}`, undefined, {
+        shallow: false,
+      })
+      setFauxRender([])
+    }
+  }, [prevChapter])
 
   // next chapter
   useEffect(() => {
@@ -190,8 +204,11 @@ const Reader = () => {
   }
 
   const _prev = (pageNum: number) => {
-    // dont allow to page out of bounds.
-    if (pageNum - 1 < 0) return 0
+    // jump to the previous book
+    if (pageNum - 1 < 0) {
+      setPrevChapter((prevChapter) => prevChapter + 1)
+      return 0
+    }
     // add one to our page number to decrement.
     return pageNum - 1
   }
@@ -330,6 +347,11 @@ const Reader = () => {
         )}
         {data && (
           <>
+            {prevChapter === 1 && (
+              <section className={styles.prevVolume}>
+                Press back page again to move to the previous Volume!
+              </section>
+            )}
             {nextChapter === 1 && (
               <section className={styles.nextVolume}>
                 Press next page again to move to the next Volume!
