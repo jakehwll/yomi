@@ -2,7 +2,7 @@ import { Series } from '@prisma/client'
 import { orderBy } from 'lodash'
 import { NextApiRequest, NextApiResponse } from 'next'
 import prisma from 'util/prisma'
-import { getAllSeries } from 'util/series'
+import { getAllSeries, guessSeriesThumbnail } from 'util/series'
 import { getAuthorisedAdmin, getAuthorisedUser } from 'util/users'
 
 export interface SeriesResponse extends Series {
@@ -35,7 +35,12 @@ async function post(req: NextApiRequest, res: NextApiResponse) {
       .status(400)
       .json({ error: 'Malformed or empty body. Is it JSON?', code: 400 })
   const response = await prisma.series.create({
-    data: req.body,
+    data: {
+      ...req.body,
+      thumbnail: await guessSeriesThumbnail({
+        folder: req.body.folder,
+      }),
+    },
   })
   res.status(201).json({
     collection: 'series',

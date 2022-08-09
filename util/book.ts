@@ -1,4 +1,7 @@
 import { Book } from '@prisma/client'
+import { globby } from 'globby'
+import { isContainerised } from './environment'
+import { getDirectoryFilesProps } from './fs'
 import prisma from './prisma'
 
 export interface pageMetaData {
@@ -109,6 +112,49 @@ const prevVolume = async (id: string) => {
   return books[prevVolumeIndex]
 }
 
-const guessThumbnail = ({ folder }: { folder: string }) => {}
+/**
+ *
+ */
+const guessBookThumbnail = async ({
+  seriesId,
+  folder,
+}: {
+  seriesId: string
+  folder: string
+}) => {
+  const series = await prisma.series.findFirst({
+    where: {
+      id: seriesId,
+    },
+  })
+  const filePath =
+    `${!isContainerised ? process.cwd() : ''}` +
+    `${series?.folder}${folder}/**/*.{jpg,jpeg,png}`
+  const files = await globby(filePath, {
+    onlyFiles: true,
+    objectMode: true,
+  })
+  if (!series) return undefined
+  const filesPaths = files.map((v: getDirectoryFilesProps) =>
+    v.path
+      .replaceAll(process.cwd(), '')
+      .replaceAll(series?.folder, '')
+      .replaceAll(folder, '')
+  )
+  const filesSelect = {
+    cover: filesPaths.filter((v: string) => v.includes('[Cover]'))[0],
+    p000: filesPaths.filter((v: string) => v.includes('p000'))[0],
+    p001: filesPaths.filter((v: string) => v.includes('p001'))[0],
+    _000: filesPaths.filter((v: string) => v.includes('_000'))[0],
+    _001: filesPaths.filter((v: string) => v.includes('_001'))[0],
+    first: filesPaths.filter((v: string) => v)[0],
+  }
+  if (filesSelect.cover) return filesSelect.cover
+  else if (filesSelect.p000) return filesSelect.p000
+  else if (filesSelect.p001) return filesSelect.p001
+  else if (filesSelect._000) return filesSelect._000
+  else if (filesSelect._001) return filesSelect._001
+  else return filesSelect.first
+}
 
-export { getBook, updateBook, nextVolume, prevVolume, guessThumbnail }
+export { getBook, updateBook, nextVolume, prevVolume, guessBookThumbnail }
