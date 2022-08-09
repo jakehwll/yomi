@@ -1,3 +1,4 @@
+import { Book } from '@prisma/client'
 import prisma from './prisma'
 
 export interface pageMetaData {
@@ -44,4 +45,38 @@ const updateBook = async (bookId: string, data: Object) => {
   })
 }
 
-export { getBook, updateBook }
+/**
+ *
+ */
+const nextVolume = async (id: string) => {
+  const book = await prisma.book.findFirst({
+    where: {
+      id: id ? id.toString() : '',
+    },
+    include: {
+      Series: true,
+    },
+  })
+  if (!book) return undefined
+  const series = await prisma.series.findFirst({
+    where: {
+      id: book?.Series?.id,
+    },
+    include: {
+      books: true,
+    },
+  })
+  if (!series || !series.books) return undefined
+  const books = series.books
+    .sort((a, b) => a.title.localeCompare(b.title, 'en', { numeric: true }))
+    .map((v: Book) => {
+      return v.id
+    })
+  const bookIndex = books.indexOf(id ? id.toString() : '')
+  const nextVolumeIndex = bookIndex !== undefined ? bookIndex + 1 : undefined
+  if (!nextVolumeIndex) return undefined
+  if (books && nextVolumeIndex > books?.length - 1) return undefined
+  return books[nextVolumeIndex]
+}
+
+export { getBook, updateBook, nextVolume }

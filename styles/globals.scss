@@ -48,14 +48,18 @@ p {
 
 #__next {
   isolation: isolate;
-  min-height: 100vh;
+  height: -webkit-fill-available;
+  height: -moz-available;
+  height: stretch;
 }
 
 body,
 html {
   font-family: 'Inter', sans-serif;
   background: var(--global-color-dark);
-  min-height: 100vh;
+  height: -webkit-fill-available;
+  height: -moz-available;
+  height: stretch;
 }
 
 h1,

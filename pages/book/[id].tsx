@@ -131,6 +131,25 @@ const Reader = () => {
   const [render, setRender] = useState<Array<string>>([])
   const [fauxRender, setFauxRender] = useState<Array<string>>([])
 
+  const [nextChapter, setNextChapter] = useState(0)
+
+  // next chapter
+  useEffect(() => {
+    console.log(data)
+    if (!data) return
+    if (!('next' in data)) return setNextChapter(0)
+    if (nextChapter === 1) setTimeout(() => setNextChapter(0), 3000)
+    if (nextChapter === 2) {
+      router.push(`/book/${data.next}`)
+    }
+  }, [nextChapter])
+
+  // resume progress
+  useEffect(() => {
+    if (!data) return
+    setIndex(data.data.ReadProgress.progress ?? 0)
+  }, [data])
+
   // hooks
   const [fullscreen, toggleFullscreen] = useToggle(false)
   const isFullscreen = useFullscreen(rootRef, fullscreen, {
@@ -159,9 +178,11 @@ const Reader = () => {
     return pageNum - 1
   }
   const _next = (pageNum: number) => {
-    // TODO dont allow to page out of bounds.
-    if (pageNum + 1 > pageCount / pageAmount - 1)
+    // jump to the next book
+    if (pageNum + 1 > pageCount / pageAmount - 1) {
+      setNextChapter((nextChapter) => nextChapter + 1)
       return pageCount / pageAmount - 1
+    }
     // add one to our page number to increment.
     return pageNum + 1
   }
@@ -215,7 +236,7 @@ const Reader = () => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          progress: index * pageAmount,
+          progress: Math.floor(index),
         }),
       })
   }, [index])
@@ -278,7 +299,6 @@ const Reader = () => {
 
   // controls shown state update
   useEffect(() => {
-    console.log(rootRef)
     if (!rootRef.current) return
     let controlTimer: any = undefined
     const eventHandler = (event: Event) => {
@@ -301,9 +321,18 @@ const Reader = () => {
   return (
     <>
       <div className={styles.root} ref={rootRef}>
+        {data ? (
+          <Meta title={`${data.data.Series.title} - ${data.data.title}`} />
+        ) : (
+          <Meta title={''} />
+        )}
         {data && (
           <>
-            <Meta title={`${data.data.Series.title} - ${data.data.title}`} />
+            {nextChapter === 1 && (
+              <section className={styles.nextVolume}>
+                Press next page again to move to the next Volume!
+              </section>
+            )}
             <header
               className={cc([
                 styles.header,
@@ -394,9 +423,7 @@ const Reader = () => {
                   <Slider
                     value={index + 1}
                     max={pageCount / pageAmount - 1}
-                    onValueChange={(number) => {
-                      setIndex(number[0])
-                    }}
+                    onValueChange={(number) => setIndex(number[0])}
                   />
                 </div>
                 <ButtonGroup>
