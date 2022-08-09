@@ -42,8 +42,9 @@ services:
 
 Prerequisites.
 
-- Yarn
+- [Yarn](https://yarnpkg.com/getting-started/install)
 - Postgres
+- Node v16.x
 
 Preferably, these would be spun up in Docker.
 
