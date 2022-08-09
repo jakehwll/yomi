@@ -209,10 +209,8 @@ const Reader = () => {
     if (!id) return
     let newFauxRender = fauxRender
     if (index - 4 < 1) newFauxRender.push(...range(0, 10))
-    else if (index + 8 > pageCount)
-      newFauxRender.push(
-        ...range(pageCount / pageAmount - 8, pageCount / pageAmount)
-      )
+    else if (index + 8 > Math.ceil(pageCount / pageAmount))
+      newFauxRender.push(...range(pageCount - 8, pageCount))
     else
       newFauxRender.push(
         ...range(index * pageAmount - 8, index * pageAmount + 8)
