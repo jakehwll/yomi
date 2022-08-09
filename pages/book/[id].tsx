@@ -147,7 +147,7 @@ const Reader = () => {
   // resume progress
   useEffect(() => {
     if (!data) return
-    setIndex(data.data.ReadProgress.progress ?? 0)
+    setIndex(data.data.ReadProgress ? data.data.ReadProgress.progress : 0)
   }, [data])
 
   // hooks
