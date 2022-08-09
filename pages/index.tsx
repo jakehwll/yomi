@@ -16,9 +16,9 @@ const SeriesGrid = () => {
   if (!data)
     return (
       <GridWrapper>
-        {range(0, 12).map((v: number) => {
-          return <GridItemGhost key={v} />
-        })}
+        {range(0, 12).map((v: number) => (
+          <GridItemGhost key={v} />
+        ))}
       </GridWrapper>
     )
   if (data) if (!data.data) return <h1>No series found.</h1>

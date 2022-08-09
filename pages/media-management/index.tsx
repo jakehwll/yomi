@@ -110,9 +110,7 @@ const UnassignedBooks = () => {
             name={'series'}
             options={
               seriesData
-                ? seriesData.data.map((v: Series) => {
-                    return [v.id, v.title]
-                  })
+                ? seriesData.data.map((v: Series) => [v.id, v.title])
                 : []
             }
             onChange={(event: ChangeEvent<HTMLOptionElement>) =>
@@ -123,13 +121,7 @@ const UnassignedBooks = () => {
           <Select
             label="Folder"
             name={'folder'}
-            options={
-              booksData
-                ? booksData.data.map((v: any) => {
-                    return [v, v]
-                  })
-                : []
-            }
+            options={booksData ? booksData.data.map((v: any) => [v, v]) : []}
             disabled={loading}
           />
           <Input label="Volume Title" name="title" disabled={loading} />

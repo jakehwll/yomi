@@ -42,28 +42,26 @@ const Pages = ({
           },
         ])}
       >
-        {render.map((v: number, i: number) => {
-          return (
-            <div
-              className={cc([
-                styles.page,
-                {
-                  [styles.hidden]:
-                    index > 1
-                      ? !range(
-                          index * pageAmount - 2,
-                          index * pageAmount + pageAmount - 2
-                        ).includes(v)
-                      : v !== index,
-                },
-              ])}
-              data-page={`${v.toString()}`}
-              key={v}
-            >
-              <img src={`/api/book/${id}/page/${v}`} alt="" />
-            </div>
-          )
-        })}
+        {render.map((v: number, i: number) => (
+          <div
+            className={cc([
+              styles.page,
+              {
+                [styles.hidden]:
+                  index > 1
+                    ? !range(
+                        index * pageAmount - 2,
+                        index * pageAmount + pageAmount - 2
+                      ).includes(v)
+                    : v !== index,
+              },
+            ])}
+            data-page={`${v.toString()}`}
+            key={v}
+          >
+            <img src={`/api/book/${id}/page/${v}`} alt="" />
+          </div>
+        ))}
       </div>
     </section>
   )

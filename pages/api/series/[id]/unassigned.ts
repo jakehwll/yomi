@@ -26,9 +26,7 @@ async function get(req: NextApiRequest, res: NextApiResponse) {
         path: `${series.folder}`,
         depth: 1,
       })
-    ).map((v) => {
-      return `/${v.name}`
-    })
+    ).map((v) => `/${v.name}`)
     res.status(200).json({
       collection: 'series',
       data: response

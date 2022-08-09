@@ -69,9 +69,7 @@ const nextVolume = async (id: string) => {
   if (!series || !series.books) return undefined
   const books = series.books
     .sort((a, b) => a.title.localeCompare(b.title, 'en', { numeric: true }))
-    .map((v: Book) => {
-      return v.id
-    })
+    .map((v: Book) => v.id)
   const bookIndex = books.indexOf(id ? id.toString() : '')
   const nextVolumeIndex = bookIndex !== undefined ? bookIndex + 1 : undefined
   if (nextVolumeIndex === undefined) return undefined
@@ -103,9 +101,7 @@ const prevVolume = async (id: string) => {
   if (!series || !series.books) return undefined
   const books = series.books
     .sort((a, b) => a.title.localeCompare(b.title, 'en', { numeric: true }))
-    .map((v: Book) => {
-      return v.id
-    })
+    .map((v: Book) => v.id)
   const bookIndex = books.indexOf(id ? id.toString() : '')
   const prevVolumeIndex = bookIndex !== undefined ? bookIndex - 1 : undefined
   if (prevVolumeIndex === undefined) return undefined
@@ -113,4 +109,6 @@ const prevVolume = async (id: string) => {
   return books[prevVolumeIndex]
 }
 
-export { getBook, updateBook, nextVolume, prevVolume }
+const guessThumbnail = ({ folder }: { folder: string }) => {}
+
+export { getBook, updateBook, nextVolume, prevVolume, guessThumbnail }

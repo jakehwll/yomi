@@ -60,13 +60,11 @@ const SeriesThumbnailSettings: React.FC<SeriesThumbnailSettingsProps> = ({
           >
             <option value={'undefined'}>Select File</option>
             {data &&
-              data.data.map((v: any) => {
-                return (
-                  <option key={v} value={v} selected={v === defaultValue}>
-                    {v}
-                  </option>
-                )
-              })}
+              data.data.map((v: any) => (
+                <option key={v} value={v} selected={v === defaultValue}>
+                  {v}
+                </option>
+              ))}
           </select>
         </div>
         <Button style={'success'} wide={true} loading={loading} type="submit">
