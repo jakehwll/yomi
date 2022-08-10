@@ -17,6 +17,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
   scroll-behavior: smooth;
+  touch-action: none;
 }
 
 canvas,

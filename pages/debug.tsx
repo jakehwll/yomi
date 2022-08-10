@@ -3,6 +3,7 @@ import Card from 'components/Card'
 import Dialog from 'components/Dialog'
 import Layout from 'components/layout'
 import Meta from 'components/Meta'
+import { range } from 'lodash'
 import { NextPage } from 'next'
 import { useState } from 'react'
 
@@ -16,128 +17,26 @@ const ModalContent: React.FC = () => {
               <th style={{ width: '3rem' }}>
                 <input type="checkbox" />
               </th>
-              <th>Relative Path</th>
+              <th>Name</th>
+              <th>Path</th>
               <th>Title</th>
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td style={{ width: '3rem', textAlign: 'center' }}>
-                <input type="checkbox" />
-              </td>
-              <td>/data/library/My Dress-Up Darling/Volume 1</td>
-              <td>
-                <input type="text" />
-              </td>
-            </tr>
-            <tr>
-              <td style={{ width: '3rem', textAlign: 'center' }}>
-                <input type="checkbox" />
-              </td>
-              <td>/data/library/My Dress-Up Darling/Volume 1</td>
-              <td>
-                <input type="text" />
-              </td>
-            </tr>
-            <tr>
-              <td style={{ width: '3rem', textAlign: 'center' }}>
-                <input type="checkbox" />
-              </td>
-              <td>/data/library/My Dress-Up Darling/Volume 1</td>
-              <td>
-                <input type="text" />
-              </td>
-            </tr>
-            <tr>
-              <td style={{ width: '3rem', textAlign: 'center' }}>
-                <input type="checkbox" />
-              </td>
-              <td>/data/library/My Dress-Up Darling/Volume 1</td>
-              <td>
-                <input type="text" />
-              </td>
-            </tr>
-            <tr>
-              <td style={{ width: '3rem', textAlign: 'center' }}>
-                <input type="checkbox" />
-              </td>
-              <td>/data/library/My Dress-Up Darling/Volume 1</td>
-              <td>
-                <input type="text" />
-              </td>
-            </tr>
-            <tr>
-              <td style={{ width: '3rem', textAlign: 'center' }}>
-                <input type="checkbox" />
-              </td>
-              <td>/data/library/My Dress-Up Darling/Volume 1</td>
-              <td>
-                <input type="text" />
-              </td>
-            </tr>
-            <tr>
-              <td style={{ width: '3rem', textAlign: 'center' }}>
-                <input type="checkbox" />
-              </td>
-              <td>/data/library/My Dress-Up Darling/Volume 1</td>
-              <td>
-                <input type="text" />
-              </td>
-            </tr>
-            <tr>
-              <td style={{ width: '3rem', textAlign: 'center' }}>
-                <input type="checkbox" />
-              </td>
-              <td>/data/library/My Dress-Up Darling/Volume 1</td>
-              <td>
-                <input type="text" />
-              </td>
-            </tr>
-            <tr>
-              <td style={{ width: '3rem', textAlign: 'center' }}>
-                <input type="checkbox" />
-              </td>
-              <td>/data/library/My Dress-Up Darling/Volume 1</td>
-              <td>
-                <input type="text" />
-              </td>
-            </tr>
-            <tr>
-              <td style={{ width: '3rem', textAlign: 'center' }}>
-                <input type="checkbox" />
-              </td>
-              <td>/data/library/My Dress-Up Darling/Volume 1</td>
-              <td>
-                <input type="text" />
-              </td>
-            </tr>
-            <tr>
-              <td style={{ width: '3rem', textAlign: 'center' }}>
-                <input type="checkbox" />
-              </td>
-              <td>/data/library/My Dress-Up Darling/Volume 1</td>
-              <td>
-                <input type="text" />
-              </td>
-            </tr>
-            <tr>
-              <td style={{ width: '3rem', textAlign: 'center' }}>
-                <input type="checkbox" />
-              </td>
-              <td>/data/library/My Dress-Up Darling/Volume 1</td>
-              <td>
-                <input type="text" />
-              </td>
-            </tr>
-            <tr>
-              <td style={{ width: '3rem', textAlign: 'center' }}>
-                <input type="checkbox" />
-              </td>
-              <td>/data/library/My Dress-Up Darling/Volume 1</td>
-              <td>
-                <input type="text" />
-              </td>
-            </tr>
+            {range(1, 24).map((v: number) => {
+              return (
+                <tr key={v}>
+                  <td style={{ width: '3rem', textAlign: 'center' }}>
+                    <input type="checkbox" />
+                  </td>
+                  <td>Volume {v}</td>
+                  <td>/data/library/My Dress-Up Darling/Volume {v}</td>
+                  <td>
+                    <input type="text" />
+                  </td>
+                </tr>
+              )
+            })}
           </tbody>
         </table>
       </div>

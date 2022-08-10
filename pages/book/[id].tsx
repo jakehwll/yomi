@@ -18,6 +18,7 @@ import {
 } from 'lucide-react'
 import { useRouter } from 'next/router'
 import { useEffect, useRef, useState } from 'react'
+import { useSwipeable } from 'react-swipeable'
 import { useFullscreen, useToggle } from 'react-use'
 import styles from 'styles/pages/Reader.module.scss'
 import useSWR from 'swr'
@@ -35,37 +36,35 @@ const Pages = ({
   pageAmount: number
 }) => {
   return (
-    <section>
-      <div
-        className={cc([
-          styles.canvas,
-          {
-            [styles.dual]: render.length > 1,
-          },
-        ])}
-      >
-        {render.map((v: number, i: number) => (
-          <div
-            className={cc([
-              styles.page,
-              {
-                [styles.hidden]:
-                  index > 1
-                    ? !range(
-                        index * pageAmount - 2,
-                        index * pageAmount + pageAmount - 2
-                      ).includes(v)
-                    : v !== index,
-              },
-            ])}
-            data-page={`${v.toString()}`}
-            key={v}
-          >
-            <img src={`/api/book/${id}/page/${v}`} alt="" />
-          </div>
-        ))}
-      </div>
-    </section>
+    <article
+      className={cc([
+        styles.canvas,
+        {
+          [styles.dual]: render.length === 2,
+        },
+      ])}
+    >
+      {render.map((v: number, i: number) => (
+        <div
+          className={cc([
+            styles.page,
+            {
+              [styles.hidden]:
+                index > 1
+                  ? !range(
+                      index * pageAmount - 2,
+                      index * pageAmount + pageAmount - 2
+                    ).includes(v)
+                  : v !== index,
+            },
+          ])}
+          data-page={`${v.toString()}`}
+          key={v}
+        >
+          <img src={`/api/book/${id}/page/${v}`} alt="" />
+        </div>
+      ))}
+    </article>
   )
 }
 
@@ -260,6 +259,16 @@ const Reader = () => {
       })
   }, [index])
 
+  // swipe
+  const handlers = useSwipeable({
+    // when user swipes →
+    onSwipedLeft: () =>
+      setIndex((pageNum) => (invertControls ? _prev(pageNum) : _next(pageNum))),
+    // when user swipes ←
+    onSwipedRight: () =>
+      setIndex((pageNum) => (invertControls ? _next(pageNum) : _prev(pageNum))),
+  })
+
   // TODO.
   // home - Return to index 0.
   // end - Return to index last.
@@ -427,12 +436,14 @@ const Reader = () => {
               <button className={styles.control__left} type="button"></button>
               <button className={styles.control__right} type="button"></button>
             </div> */}
-            <Pages
-              id={id?.toString() ?? ''}
-              render={fauxRender}
-              index={index}
-              pageAmount={pageAmount}
-            />
+            <section {...handlers}>
+              <Pages
+                id={id?.toString() ?? ''}
+                render={fauxRender}
+                index={index}
+                pageAmount={pageAmount}
+              />
+            </section>
             <footer
               className={cc([
                 styles.footer,

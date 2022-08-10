@@ -47,6 +47,7 @@
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.33.0",
     "react-ssr-prepass": "^1.5.0",
+    "react-swipeable": "^7.0.0",
     "react-use": "^17.4.0",
     "sass": "^1.52.3",
     "scheduler": "^0.23.0",
