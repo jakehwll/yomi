@@ -267,7 +267,18 @@ const Reader = () => {
     // when user swipes ←
     onSwipedRight: () =>
       setIndex((pageNum) => (invertControls ? _next(pageNum) : _prev(pageNum))),
+    // variables
+    onSwipeStart: () => setSwiping(true),
+    onSwiped: () => setSwiping(false),
+    onSwiping: (event) => setSwipingOffset(event.deltaX * 0.1),
+    // hide controls
+    onTap: () => setHideControls(!hideControls),
   })
+
+  const [swiping, setSwiping] = useState(false)
+  const [swipingOffset, setSwipingOffset] = useState(0)
+
+  useEffect(() => (!swiping ? setSwipingOffset(0) : () => {}), [swiping])
 
   // TODO.
   // home - Return to index 0.
@@ -436,7 +447,13 @@ const Reader = () => {
               <button className={styles.control__left} type="button"></button>
               <button className={styles.control__right} type="button"></button>
             </div> */}
-            <section {...handlers}>
+            <section
+              className={styles.content}
+              style={{
+                '--component-offset': `${swipingOffset}px`,
+              }}
+              {...handlers}
+            >
               <Pages
                 id={id?.toString() ?? ''}
                 render={fauxRender}

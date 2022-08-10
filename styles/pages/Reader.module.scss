@@ -17,12 +17,17 @@
 
   width: 100%;
 
+  opacity: 1;
+  transition: 1s ease opacity;
+
   .wrapper {
     padding: 0rem 0.5rem;
     transition: 1s ease transform;
   }
 
   &.hidden {
+    opacity: 1;
+    transition: 1s ease opacity;
     .wrapper {
       transition: 1s ease transform;
     }
@@ -198,6 +203,10 @@
     animation-iteration-count: infinite;
     animation-timing-function: linear;
   }
+}
+
+.content {
+  transform: translateX(var(--component-offset));
 }
 
 @keyframes spin {
