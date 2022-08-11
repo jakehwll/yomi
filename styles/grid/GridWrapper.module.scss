@@ -1,3 +1,5 @@
+@import 'styles/variables';
+
 .root {
   margin-bottom: 2rem;
   position: relative;
@@ -5,8 +7,14 @@
   grid-gap: 1rem;
   grid-auto-flow: row;
   grid-template-columns: repeat(auto-fill, minmax(12rem, auto));
+  @media (max-width: $breakpoint-mobile) {
+    grid-template-columns: repeat(auto-fill, minmax(8rem, auto));
+  }
 }
 
 .padding {
   padding: 2rem;
+  @media (max-width: $breakpoint-mobile) {
+    padding: 1rem;
+  }
 }

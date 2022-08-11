@@ -29,11 +29,13 @@ const Pages = ({
   id,
   index,
   pageAmount,
+  invertPages,
 }: {
   render: Array<number>
   id: string
   index: number
   pageAmount: number
+  invertPages: boolean
 }) => {
   return (
     <article
@@ -41,6 +43,7 @@ const Pages = ({
         styles.canvas,
         {
           [styles.dual]: render.length === 2,
+          [styles.reverse]: invertPages,
         },
       ])}
     >
@@ -90,20 +93,6 @@ const ReaderSettings = ({
   return (
     <div>
       <Checkbox
-        label="Invert Controls"
-        name={'invert-controls'}
-        id={'invert-controls'}
-        value={invertControls}
-        onChange={() => setInvertControls(!invertControls)}
-      />
-      <Checkbox
-        label="Invert Pages"
-        name={'invert-pages'}
-        id={'invert-pages'}
-        value={invertPages}
-        onChange={() => setInvertPages(!invertPages)}
-      />
-      <Checkbox
         label="Dual Pages"
         name={'dual-pages'}
         id={'dual-pages'}
@@ -114,6 +103,22 @@ const ReaderSettings = ({
             (event.target as HTMLInputElement).checked ? index / 2 : index * 2
           )
         }}
+      />
+      {pageAmount > 1 && (
+        <Checkbox
+          label="Invert Pages"
+          name={'invert-pages'}
+          id={'invert-pages'}
+          value={invertPages}
+          onChange={() => setInvertPages(!invertPages)}
+        />
+      )}
+      <Checkbox
+        label="Invert Controls"
+        name={'invert-controls'}
+        id={'invert-controls'}
+        value={invertControls}
+        onChange={() => setInvertControls(!invertControls)}
       />
     </div>
   )
@@ -236,7 +241,6 @@ const Reader = () => {
       .sort((a, b) =>
         a.toString().localeCompare(b.toString(), 'en', { numeric: true })
       )
-    if (invertPages) newFauxRender = newFauxRender.reverse()
     setFauxRender(newFauxRender)
     return () => setFauxRender([])
   }, [id, index])
@@ -459,6 +463,7 @@ const Reader = () => {
                 render={fauxRender}
                 index={index}
                 pageAmount={pageAmount}
+                invertPages={invertPages}
               />
             </section>
             <footer

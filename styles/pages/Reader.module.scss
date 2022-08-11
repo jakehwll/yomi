@@ -110,6 +110,9 @@
       }
     }
   }
+  &.reverse {
+    flex-direction: row-reverse;
+  }
   .page {
     height: 100vh;
     position: relative;
