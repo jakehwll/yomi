@@ -1,3 +1,5 @@
+@import 'styles/variables';
+
 .root {
   display: flex;
   align-items: center;
@@ -5,6 +7,12 @@
   margin-bottom: 0rem;
   padding-bottom: 4rem;
   position: relative;
+  @media (max-width: $breakpoint-mobile) {
+    flex-direction: column;
+    margin-bottom: 2rem;
+    padding-bottom: 2rem;
+    padding: 0rem;
+  }
   h1 {
     font-size: 2rem;
     margin-bottom: 1rem;
@@ -20,6 +28,9 @@
   opacity: 0.2;
   border-radius: 0.25rem;
   background: rgba(white, 0.2);
+  @media (max-width: $breakpoint-mobile) {
+    display: none;
+  }
   img {
     position: absolute;
     top: 0;
@@ -37,6 +48,12 @@
   margin-right: 2rem;
   border-radius: 0.25rem;
   background: rgba(white, 0.2);
+  @media (max-width: $breakpoint-mobile) {
+    max-width: 100%;
+    margin-right: 0rem;
+    margin-top: 1rem;
+    margin-bottom: 2rem;
+  }
   cursor: pointer;
   .wrapper {
     position: relative;
@@ -82,4 +99,7 @@
   position: absolute;
   top: 2rem;
   right: 2rem;
+  @media (max-width: $breakpoint-mobile) {
+    position: initial;
+  }
 }
