@@ -1,14 +1,11 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
+generator client {
+  provider   = "prisma-client-js"
+  engineType = "binary"
+}
 
 datasource db {
   provider = "sqlite"
   url      = env("DATABASE_URL")
-}
-
-generator client {
-  provider = "prisma-client-js"
-  engineType = "binary"
 }
 
 model Series {
@@ -16,8 +13,8 @@ model Series {
   title      String
   folder     String
   thumbnail  String?
-  updated_at DateTime?      @updatedAt
-  created_at DateTime?      @default(now())
+  updated_at DateTime? @updatedAt
+  created_at DateTime? @default(now())
   books      Book[]
 }
 
@@ -29,7 +26,7 @@ model Book {
   updated_at   DateTime?      @updatedAt
   created_at   DateTime?      @default(now())
   seriesId     String?
-  Series     Series?   @relation(fields: [seriesId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  Series       Series?        @relation(fields: [seriesId], references: [id], onDelete: Cascade)
   ReadProgress ReadProgress[]
 }
 
@@ -41,7 +38,7 @@ model Account {
   isAdmin       Boolean
   id_token      String?
   session_state String?
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user          User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model User {
@@ -52,11 +49,12 @@ model User {
 }
 
 model ReadProgress {
-  id        String @unique @default(cuid())
-  progress  Int
-  User      User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-  Book      Book   @relation(fields: [bookId], references: [id], onDelete: Cascade)
-  userId    String
-  bookId    String
+  id       String @unique @default(cuid())
+  progress Int
+  userId   String
+  bookId   String
+  User     User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  Book     Book   @relation(fields: [bookId], references: [id], onDelete: Cascade)
+
   @@id([userId, bookId])
 }
