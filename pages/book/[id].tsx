@@ -447,10 +447,28 @@ const Reader = () => {
                 </div>
               </div>
             </header>
-            {/* <div className={styles.control}>
-              <button className={styles.control__left} type="button"></button>
-              <button className={styles.control__right} type="button"></button>
-            </div> */}
+            <div className={styles.control}>
+              <button
+                className={styles.control__left}
+                type="button"
+                onFocus={(event) => event.target.blur()}
+                onClick={() =>
+                  setIndex((pageNum) =>
+                    invertControls ? _next(pageNum) : _prev(pageNum)
+                  )
+                }
+              />
+              <button
+                className={styles.control__right}
+                type="button"
+                onFocus={(event) => event.target.blur()}
+                onClick={() =>
+                  setIndex((pageNum) =>
+                    invertControls ? _prev(pageNum) : _next(pageNum)
+                  )
+                }
+              />
+            </div>
             <section
               className={styles.content}
               style={{
