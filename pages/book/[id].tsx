@@ -216,6 +216,7 @@ const Reader = () => {
     // add one to our page number to decrement.
     return pageNum - 1
   }
+
   const _next = (pageNum: number) => {
     // jump to the next book
     if (pageNum + 1 > Math.ceil(pageCount / pageAmount)) {
@@ -443,14 +444,13 @@ const Reader = () => {
                       </Button>
                     </Dialog>
                   </ButtonGroup>
-                  {/* TODO Download Page */}
                 </div>
               </div>
             </header>
             <div className={styles.control}>
               <button
-                className={styles.control__left}
                 type="button"
+                className={styles.control__left}
                 onFocus={(event) => event.target.blur()}
                 onClick={() =>
                   setIndex((pageNum) =>
@@ -459,8 +459,8 @@ const Reader = () => {
                 }
               />
               <button
-                className={styles.control__right}
                 type="button"
+                className={styles.control__right}
                 onFocus={(event) => event.target.blur()}
                 onClick={() =>
                   setIndex((pageNum) =>
