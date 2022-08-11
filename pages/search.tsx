@@ -54,11 +54,19 @@ const Search: NextPage = () => {
     fetchPost
   )
 
+  const [mobileNavigation, setMobileNavigation] = useState(false)
+
   return (
     <>
       <Meta title="Search" />
       <Layout padding={false} header={false}>
-        <Header Search={SearchComponent} search={query} setSearch={setQuery} />
+        <Header
+          Search={SearchComponent}
+          search={query}
+          setSearch={setQuery}
+          mobileNavigation={mobileNavigation}
+          setMobileNavigation={setMobileNavigation}
+        />
         {data && (
           <GridWrapper padding={true}>
             {data.data &&

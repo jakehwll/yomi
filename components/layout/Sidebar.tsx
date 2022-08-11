@@ -1,3 +1,4 @@
+import cc from 'classcat'
 import { BookOpen, Home, User } from 'lucide-react'
 import { Session } from 'next-auth'
 import { useSession } from 'next-auth/react'
@@ -37,39 +38,57 @@ const UserAccount: React.FC<UserAccountProps> = ({
   )
 }
 
-const Sidebar: React.FC = () => {
+interface SidebarProps {
+  mobileNavigation: boolean
+  setMobileNavigation(val: boolean): void
+}
+
+const Sidebar: React.FC<SidebarProps> = ({
+  mobileNavigation,
+  setMobileNavigation,
+}: SidebarProps) => {
   const { data: session } = useSession()
 
   return (
-    <aside className={styles.root}>
-      <nav className={styles.header}>
-        <Link href="/" passHref>
-          <a className={styles.brand}>
-            <img src="/logo.svg" alt="" />
-          </a>
-        </Link>
-        <ul className={styles.navigation}>
-          {_navigation.map(
-            (v: {
-              icon: React.ReactNode
-              id: string
-              href: string
-              title: string
-            }) => (
-              <li key={v.id}>
-                <Link href={v.href}>
-                  <a>
-                    {v.icon}
-                    <span>{v.title}</span>
-                  </a>
-                </Link>
-              </li>
-            )
-          )}
-        </ul>
-      </nav>
-      {session && <UserAccount session={session} />}
-    </aside>
+    <>
+      {mobileNavigation && (
+        <div
+          className={styles.overlay}
+          onClick={() => setMobileNavigation(false)}
+        ></div>
+      )}
+      <aside
+        className={cc([styles.root, { [styles.mobile]: mobileNavigation }])}
+      >
+        <nav className={styles.header}>
+          <Link href="/" passHref>
+            <a className={styles.brand}>
+              <img src="/logo.svg" alt="" />
+            </a>
+          </Link>
+          <ul className={styles.navigation}>
+            {_navigation.map(
+              (v: {
+                icon: React.ReactNode
+                id: string
+                href: string
+                title: string
+              }) => (
+                <li key={v.id}>
+                  <Link href={v.href}>
+                    <a>
+                      {v.icon}
+                      <span>{v.title}</span>
+                    </a>
+                  </Link>
+                </li>
+              )
+            )}
+          </ul>
+        </nav>
+        {session && <UserAccount session={session} />}
+      </aside>
+    </>
   )
 }
 
