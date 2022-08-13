@@ -15,11 +15,6 @@ Yomi is a Manga/Comic reader hosted on a server so you can read from anywhere.
 
 ### Production
 
-Prerequisites.
-
-- Docker
-- Docker Compose
-
 **Docker Compose**
 
 ```yaml
@@ -33,17 +28,27 @@ services:
     environment:
       - NEXTAUTH_URL=http://CHANGE_ME
       - NEXTAUTH_SECRET=CHANGE_ME
+      - DOCKER_ENV=development
     volumes:
       - /path/to/manga:/data/library
       - /path/to/config:/data/config
 ```
 
+**Docker**
+
+```sh
+docker run \
+  -e NEXTAUTH_URL=http://CHANGE_ME \
+  -e NEXTAUTH_SECRET=CHANGE_ME \
+  -e DOCKER_ENV=development \
+  -e DATABASE_URL=file:./prod.db \
+  -v /path/to/manga:/data/library \
+  -v /path/to/config:/data/config \
+  -p 3000:3000 \
+  ghcr.io/jakehwll/yomi
+```
+
 ### Development
-
-Prerequisites.
-
-- Yarn
-- Postgres
 
 Preferably, these would be spun up in Docker.
 
@@ -53,10 +58,6 @@ Preferably, these would be spun up in Docker.
 4. `yarn prisma generate` to generate the development SQL.
 5. `yarn prisma db push` to push the SQL database.
 6. `yarn dev` to spin up yomi in Development Mode!
-
-## Community
-
-TODO.
 
 ## Contributing
 
