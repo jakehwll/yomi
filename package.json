@@ -39,7 +39,6 @@
     "lucide-react": "^0.84.0",
     "next": "^12.2.0",
     "next-auth": "^4.5.0",
-    "next-plugin-preact": "^3.0.6",
     "postcss": "^8.4.4",
     "prop-types": "^15.8.1",
     "react": "^18.2.0",
