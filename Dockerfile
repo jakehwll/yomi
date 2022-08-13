@@ -1,8 +1,9 @@
+ARG PLATFORM='linux/amd64'
 
 # ┌──────────────────────────────┐
 # │ DEPENDENCIES --------------- │
 # └──────────────────────────────┘
-FROM --platform=linux/amd64 node:16-alpine AS deps
+FROM --platform=${PLATFORM} node:16-alpine AS deps
 
 # Install build/python dependencies for `sharp`.
 RUN apk --no-cache add --virtual builds-deps build-base python3
@@ -18,7 +19,7 @@ RUN apk del builds-deps build-base python3
 # ┌──────────────────────────────┐
 # │ BUILDER -------------------- │
 # └──────────────────────────────┘
-FROM --platform=linux/amd64 node:16-alpine AS builder
+FROM --platform=${PLATFORM} node:16-alpine AS builder
 WORKDIR /app
 
 # Copy installed `node_modules` and app source.
@@ -32,7 +33,7 @@ RUN yarn build
 # ┌──────────────────────────────┐
 # │ RUNNER --------------------- │
 # └──────────────────────────────┘
-FROM --platform=linux/amd64 node:16-alpine AS runner
+FROM --platform=${PLATFORM} node:16-alpine AS runner
 WORKDIR /app
 
 # Add libc6-compat so we can run `.bin` code.
@@ -40,6 +41,8 @@ RUN apk add libc6-compat
 
 # Don't use source-maps or non-minified code.
 ENV NODE_ENV production
+ENV DOCKER_ENV production
+ENV DATABASE_URL "file:./prod.db"
 
 # Add a group and user for permission management.
 RUN addgroup --system --gid 1001 nodejs
