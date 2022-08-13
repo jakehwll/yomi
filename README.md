@@ -4,9 +4,14 @@
 
 [Issues](https://github.com/jakehwll/yomi/issues)</a> · [Getting Started](#getting-started)
 
-## Introduction
+Yomi is a manga and comic-book reader solution that puts you in charge of your library. Use almost any device with a web browser to consume and sync from your own server.
 
-Yomi is a Manga/Comic reader hosted on a server so you can read from anywhere.
+**Features**
+
+- Sync progress between devices.
+- No central-server collecting or tracking your data.
+- ~~Library~~, Series, Book/Chapter management.
+- Mobile/tablet support with swiping controls.
 
 ## Getting Started
 
@@ -14,11 +19,6 @@ Yomi is a Manga/Comic reader hosted on a server so you can read from anywhere.
 > Yomi is currently in a minimum viable product state. Features and Database schema are likely to change, please do not use in production. [Report issues here](https://github.com/jakehwll/yomi/issues/new).
 
 ### Production
-
-Prerequisites.
-
-- Docker
-- Docker Compose
 
 **Docker Compose**
 
@@ -33,18 +33,27 @@ services:
     environment:
       - NEXTAUTH_URL=http://CHANGE_ME
       - NEXTAUTH_SECRET=CHANGE_ME
+      - DOCKER_ENV=development
     volumes:
       - /path/to/manga:/data/library
       - /path/to/config:/data/config
 ```
 
+**Docker**
+
+```sh
+docker run \
+  -e NEXTAUTH_URL=http://CHANGE_ME \
+  -e NEXTAUTH_SECRET=CHANGE_ME \
+  -e DOCKER_ENV=development \
+  -e DATABASE_URL=file:./prod.db \
+  -v /path/to/manga:/data/library \
+  -v /path/to/config:/data/config \
+  -p 3000:3000 \
+  ghcr.io/jakehwll/yomi
+```
+
 ### Development
-
-Prerequisites.
-
-- [Yarn](https://yarnpkg.com/getting-started/install)
-- Postgres
-- Node v16.x
 
 Preferably, these would be spun up in Docker.
 
@@ -54,10 +63,6 @@ Preferably, these would be spun up in Docker.
 4. `yarn prisma generate` to generate the development SQL.
 5. `yarn prisma db push` to push the SQL database.
 6. `yarn dev` to spin up yomi in Development Mode!
-
-## Community
-
-TODO.
 
 ## Contributing
 

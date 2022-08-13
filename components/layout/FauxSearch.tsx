@@ -1,23 +1,10 @@
 import { useRouter } from 'next/router'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef } from 'react'
 import styles from 'styles/layout/Search.module.scss'
 
 const SearchInput: React.FC = () => {
   const router = useRouter()
   const input = useRef<HTMLInputElement>(null)
-  const [query, setQuery] = useState(router.query.query ?? '')
-
-  useEffect(() => {
-    if (!query) return
-    router.push(
-      {
-        pathname: '/search',
-        query: { query: query },
-      },
-      undefined,
-      { shallow: false }
-    )
-  }, [query])
 
   useEffect(() => {
     if (!input.current) return
@@ -30,10 +17,8 @@ const SearchInput: React.FC = () => {
         type="text"
         className={styles.input}
         placeholder="Search"
-        value={query}
         ref={input}
         onFocus={() => router.push({ pathname: '/search' })}
-        onChange={(event) => setQuery(event.target.value)}
       />
     </div>
   )

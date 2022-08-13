@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import { getSession } from 'next-auth/react'
-import { updateBook } from 'util/book'
+import { nextVolume, prevVolume, updateBook } from 'util/book'
 import { getDirectoryFiles } from 'util/fs'
 import { getFilesData } from 'util/index_builders/FileMultiFolder'
 import prisma from 'util/prisma'
@@ -31,7 +31,12 @@ async function get(req: NextApiRequest, res: NextApiResponse) {
   let filesData = await getFilesData({ files: files })
   res.status(200).json({
     collection: 'book',
-    data: response,
+    data: {
+      ...response,
+      ReadProgress: response.ReadProgress[0],
+    },
+    prev: await prevVolume(id?.toString() ?? ''),
+    next: await nextVolume(id?.toString() ?? ''),
     pages: Object.keys(filesData).length ?? 0,
   })
 }

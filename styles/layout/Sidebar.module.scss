@@ -16,14 +16,15 @@
   max-height: 100vh;
 
   @media (max-width: $breakpoint-tablet) {
-    display: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    transform: translateX(-100%);
+    transition: 0.25s ease all;
   }
 }
 
 .brand {
-  font-size: 1.4rem;
-  font-weight: 600;
-
   height: var(--global-header-height);
 
   display: flex;
@@ -31,10 +32,14 @@
 
   padding-left: 1rem;
 
-  border-bottom: 1px solid var(--global-color-secondary);
+  border-bottom: 1px solid transparent;
 
   color: inherit;
   text-decoration: none;
+
+  img {
+    height: 3rem;
+  }
 }
 
 .header {
@@ -46,10 +51,9 @@
 .navigation {
   list-style: none;
   margin: 0;
-  padding: 0.5rem 0;
+  padding: 0 0;
 
   li {
-    padding: 0.75rem 1rem;
     font-size: 1rem;
     font-weight: 600;
     position: relative;
@@ -58,6 +62,7 @@
   }
 
   a {
+    padding: 0.75rem 1rem;
     text-decoration: none;
     color: inherit;
     display: flex;
@@ -95,4 +100,26 @@
     width: 100%;
     height: 100%;
   }
+}
+
+.mobile {
+  display: flex;
+  z-index: 1000;
+  background: var(--global-color-dark);
+  height: 100%;
+  width: 100vw;
+  max-width: var(--global-sidebar-width);
+  border-right: 1px solid var(--global-color-dark-gray);
+  transform: translateX(0px);
+  transition: 0.25s ease all;
+}
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 999;
+  background: rgba(var(--global-color-dark-rgb), 0.5);
+  transition: 0.25s ease opacity;
 }

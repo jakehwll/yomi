@@ -1,11 +1,18 @@
 import { NextApiRequest, NextApiResponse } from 'next'
+import { guessBookThumbnail } from 'util/book'
 import prisma from 'util/prisma'
 
 async function post(req: NextApiRequest, res: NextApiResponse) {
   if (!req.body) return
   const data = req.body
   const response = await prisma.book.create({
-    data: data,
+    data: {
+      ...data,
+      thumbnail: await guessBookThumbnail({
+        seriesId: data.seriesId,
+        folder: data.folder,
+      }),
+    },
   })
   res.status(200).json({
     collection: 'book',

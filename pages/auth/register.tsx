@@ -31,7 +31,6 @@ const Login: NextPage = () => {
     })
       .then((response) => {
         if (response.ok) return response.json()
-        else console.log(response)
       })
       .then((json: any) => {
         if (json && json.error) router.push('/auth/login')
@@ -43,7 +42,7 @@ const Login: NextPage = () => {
     <>
       <Meta title={'Register'} />
       <div className={styles.root}>
-        <h1>yomi</h1>
+        <img src="/logo.svg" alt="" />
         {error && <div className={styles.error}>{error}</div>}
         <form className={styles.form} onSubmit={handleSubmit}>
           <Text

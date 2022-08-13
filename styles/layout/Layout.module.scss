@@ -4,11 +4,16 @@
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  min-height: 100vh;
+  min-height: -webkit-fill-available;
+  min-height: -moz-available;
+  min-height: stretch;
 }
 
 .padding {
   padding: 2rem;
+  @media (max-width: $breakpoint-mobile) {
+    padding: 1rem;
+  }
 }
 
 .header {
@@ -27,6 +32,7 @@
   width: var(--global-header-height);
   height: var(--global-header-height);
   border-right: 1px solid var(--global-color-secondary);
+  color: white;
   @media (min-width: $breakpoint-tablet) {
     display: none;
   }

@@ -6,56 +6,68 @@ import Slider from 'components/input/Slider'
 import Meta from 'components/Meta'
 import { range } from 'lodash'
 import {
+  AlertCircle,
   ArrowLeft,
   ArrowRight,
   CornerLeftDown,
   CornerRightDown,
+  Loader2,
   Maximize2,
   Minimize2,
   Settings,
 } from 'lucide-react'
 import { useRouter } from 'next/router'
 import { useEffect, useRef, useState } from 'react'
+import { useSwipeable } from 'react-swipeable'
 import { useFullscreen, useToggle } from 'react-use'
 import styles from 'styles/pages/Reader.module.scss'
 import useSWR from 'swr'
 import fetcher from 'util/swr'
 
-const Pages = ({ render }: { render: Array<string> }) => {
+const Pages = ({
+  render,
+  id,
+  index,
+  pageAmount,
+  invertPages,
+}: {
+  render: Array<number>
+  id: string
+  index: number
+  pageAmount: number
+  invertPages: boolean
+}) => {
   return (
-    <section>
-      <div
-        className={cc([
-          styles.canvas,
-          {
-            [styles.dual]: render.length > 1,
-          },
-        ])}
-      >
-        {render.map((v: string, i: number) => {
-          return (
-            <div className={styles.page} key={v}>
-              <img src={v} alt="" />
-            </div>
-          )
-        })}
-      </div>
-    </section>
-  )
-}
-
-const FauxPages = ({ fauxRender }: { fauxRender: Array<string> }) => {
-  return (
-    <div className={styles.faux}>
-      {fauxRender.map((v: string, i: number) => {
-        return (
-          <>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={v} alt="" />
-          </>
-        )
-      })}
-    </div>
+    <article
+      className={cc([
+        styles.canvas,
+        {
+          [styles.dual]: render.length === 2,
+          [styles.reverse]: invertPages,
+        },
+      ])}
+    >
+      {render.map((v: number, i: number) => (
+        <div
+          className={cc([
+            styles.page,
+            {
+              [styles.hidden]:
+                index > 1
+                  ? !range(
+                      index * pageAmount - 2,
+                      index * pageAmount + pageAmount - 2
+                    ).includes(v)
+                  : v !== index,
+            },
+          ])}
+          data-page={`${v.toString()}`}
+          key={v}
+        >
+          <img src={`/api/book/${id}/page/${v}`} alt="" />
+        </div>
+      ))}
+    </article>
   )
 }
 
@@ -81,20 +93,6 @@ const ReaderSettings = ({
   return (
     <div>
       <Checkbox
-        label="Invert Controls"
-        name={'invert-controls'}
-        id={'invert-controls'}
-        value={invertControls}
-        onChange={() => setInvertControls(!invertControls)}
-      />
-      <Checkbox
-        label="Invert Pages"
-        name={'invert-pages'}
-        id={'invert-pages'}
-        value={invertPages}
-        onChange={() => setInvertPages(!invertPages)}
-      />
-      <Checkbox
         label="Dual Pages"
         name={'dual-pages'}
         id={'dual-pages'}
@@ -106,8 +104,29 @@ const ReaderSettings = ({
           )
         }}
       />
+      {pageAmount > 1 && (
+        <Checkbox
+          label="Invert Pages"
+          name={'invert-pages'}
+          id={'invert-pages'}
+          value={invertPages}
+          onChange={() => setInvertPages(!invertPages)}
+        />
+      )}
+      <Checkbox
+        label="Invert Controls"
+        name={'invert-controls'}
+        id={'invert-controls'}
+        value={invertControls}
+        onChange={() => setInvertControls(!invertControls)}
+      />
     </div>
   )
+}
+
+const getPageNumber = (val: number, pageAmount: number) => {
+  if (val < 2) return val + 1
+  else return val * pageAmount - 1
 }
 
 const Reader = () => {
@@ -128,8 +147,44 @@ const Reader = () => {
   const [hideControls, setHideControls] = useState(true)
   const [mouseControls, setMouseControls] = useState(false)
 
-  const [render, setRender] = useState<Array<string>>([])
-  const [fauxRender, setFauxRender] = useState<Array<string>>([])
+  const [fauxRender, setFauxRender] = useState<Array<number>>([])
+
+  const [prevChapter, setPrevChapter] = useState(0)
+  const [nextChapter, setNextChapter] = useState(0)
+
+  // prev chapter
+  useEffect(() => {
+    if (!data) return
+    if (!('prev' in data)) return setPrevChapter(0)
+    if (prevChapter === 1) setTimeout(() => setPrevChapter(0), 3000)
+    if (prevChapter === 2) {
+      router.push(`/book/${data.prev}`, undefined, {
+        shallow: false,
+      })
+      setFauxRender([])
+    }
+  }, [prevChapter])
+
+  // next chapter
+  useEffect(() => {
+    if (!data) return
+    if (!('next' in data)) return setNextChapter(0)
+    if (nextChapter === 1) setTimeout(() => setNextChapter(0), 3000)
+    if (nextChapter === 2) {
+      router.push(`/book/${data.next}`, undefined, {
+        shallow: false,
+      })
+      setFauxRender([])
+    }
+  }, [nextChapter])
+
+  // resume progress
+  useEffect(() => {
+    if (!data) return
+    setIndex(
+      data.data.ReadProgress ? data.data.ReadProgress.progress / pageAmount : 0
+    )
+  }, [data])
 
   // hooks
   const [fullscreen, toggleFullscreen] = useToggle(false)
@@ -153,53 +208,42 @@ const Reader = () => {
   }
 
   const _prev = (pageNum: number) => {
-    // dont allow to page out of bounds.
-    if (pageNum - 1 < 0) return 0
+    // jump to the previous book
+    if (pageNum - 1 < 0) {
+      setPrevChapter((prevChapter) => prevChapter + 1)
+      return 0
+    }
     // add one to our page number to decrement.
     return pageNum - 1
   }
+
   const _next = (pageNum: number) => {
-    // TODO dont allow to page out of bounds.
-    if (pageNum + 1 > pageCount / pageAmount - 1)
-      return pageCount / pageAmount - 1
+    // jump to the next book
+    if (pageNum + 1 > Math.ceil(pageCount / pageAmount)) {
+      setNextChapter((nextChapter) => nextChapter + 1)
+      return Math.ceil(pageCount / pageAmount)
+    }
     // add one to our page number to increment.
     return pageNum + 1
   }
 
   useEffect(() => {
-    if (id === undefined) return setRender([])
-    if (index === 0) return setRender([`/api/book/${id}/page/0`])
-    if (index === 1) return setRender([`/api/book/${id}/page/1`])
-    if (index === pageCount)
-      return setRender([`/api/book/${id}/page/${pageCount}`])
-    // loop all pages for our pageAmount range and render them
-    let pages = range(index * pageAmount, index * pageAmount + pageAmount).map(
-      (v: number) => `/api/book/${id}/page/${v}`
-    )
-    // reverse if inverted layout (manga).
-    if (invertPages) pages = pages.reverse()
-    // update the renderer.
-    setRender(pages)
-  }, [id, index, invertPages, pageAmount])
-
-  useEffect(() => {
     if (!id) return
-    if (index * pageAmount - 2 < 1)
-      setFauxRender(
-        range(0, 10).map((v: number) => `/api/book/${id}/page/${v}`)
-      )
-    else if (index * pageAmount + 8 > pageCount)
-      setFauxRender(
-        range(pageCount - 2, pageCount + 8).map(
-          (v: number) => `/api/book/${id}/page/${v}`
-        )
-      )
+    let newFauxRender = fauxRender
+    if (index - 4 < 1) newFauxRender.push(...range(0, 10))
+    else if (index + 8 > Math.ceil(pageCount / pageAmount))
+      newFauxRender.push(...range(pageCount - 8, pageCount))
     else
-      setFauxRender(
-        range(index * pageAmount - 2, index * pageAmount + 8).map(
-          (v: number) => `/api/book/${id}/page/${v}`
-        )
+      newFauxRender.push(
+        ...range(index * pageAmount - 8, index * pageAmount + 8)
       )
+    newFauxRender = newFauxRender
+      .filter((item, pos) => fauxRender.indexOf(item) === pos)
+      .sort((a, b) =>
+        a.toString().localeCompare(b.toString(), 'en', { numeric: true })
+      )
+    setFauxRender(newFauxRender)
+    return () => setFauxRender([])
   }, [id, index])
 
   useEffect(() => {
@@ -215,10 +259,31 @@ const Reader = () => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          progress: index * pageAmount,
+          progress: Math.floor(index * pageAmount),
         }),
       })
   }, [index])
+
+  // swipe
+  const handlers = useSwipeable({
+    // when user swipes →
+    onSwipedLeft: () =>
+      setIndex((pageNum) => (invertControls ? _prev(pageNum) : _next(pageNum))),
+    // when user swipes ←
+    onSwipedRight: () =>
+      setIndex((pageNum) => (invertControls ? _next(pageNum) : _prev(pageNum))),
+    // variables
+    onSwipeStart: () => setSwiping(true),
+    onSwiped: () => setSwiping(false),
+    onSwiping: (event) => setSwipingOffset(event.deltaX * 0.1),
+    // hide controls
+    onTap: () => setHideControls(!hideControls),
+  })
+
+  const [swiping, setSwiping] = useState(false)
+  const [swipingOffset, setSwipingOffset] = useState(0)
+
+  useEffect(() => (!swiping ? setSwipingOffset(0) : () => {}), [swiping])
 
   // TODO.
   // home - Return to index 0.
@@ -278,7 +343,6 @@ const Reader = () => {
 
   // controls shown state update
   useEffect(() => {
-    console.log(rootRef)
     if (!rootRef.current) return
     let controlTimer: any = undefined
     const eventHandler = (event: Event) => {
@@ -298,12 +362,39 @@ const Reader = () => {
     return () => rootRef.current?.removeEventListener('mousemove', eventHandler)
   }, [rootRef])
 
+  if (error) {
+    return (
+      <div className={styles.error}>
+        <AlertCircle size={64} />
+      </div>
+    )
+  }
+
   return (
     <>
       <div className={styles.root} ref={rootRef}>
+        {data ? (
+          <Meta title={`${data.data.Series.title} - ${data.data.title}`} />
+        ) : (
+          <Meta title={''} />
+        )}
+        {!data && (
+          <div className={styles.loader}>
+            <Loader2 size={64} />
+          </div>
+        )}
         {data && (
           <>
-            <Meta title={`${data.data.Series.title} - ${data.data.title}`} />
+            {prevChapter === 1 && (
+              <section className={styles.prevVolume}>
+                Press back page again to move to the previous Volume!
+              </section>
+            )}
+            {nextChapter === 1 && (
+              <section className={styles.nextVolume}>
+                Press next page again to move to the next Volume!
+              </section>
+            )}
             <header
               className={cc([
                 styles.header,
@@ -325,9 +416,8 @@ const Reader = () => {
                 </div>
                 <div className={styles.title}>
                   {data.data &&
-                    `${data.data.Series.title} - ${data.data.title} (${
-                      index * pageAmount + 1
-                    }/${pageCount})`}
+                    `${data.data.Series.title} - ${data.data.title}`}
+                  {` (${getPageNumber(index, pageAmount)}/${pageCount})`}
                 </div>
                 <div className={styles.tools}>
                   <ButtonGroup>
@@ -354,16 +444,46 @@ const Reader = () => {
                       </Button>
                     </Dialog>
                   </ButtonGroup>
-                  {/* TODO Download Page */}
                 </div>
               </div>
             </header>
-            {/* <div className={styles.control}>
-              <button className={styles.control__left} type="button"></button>
-              <button className={styles.control__right} type="button"></button>
-            </div> */}
-            <Pages render={render} />
-            {id && <FauxPages fauxRender={fauxRender} />}
+            <div className={styles.control}>
+              <button
+                type="button"
+                className={styles.control__left}
+                onFocus={(event) => event.target.blur()}
+                onClick={() =>
+                  setIndex((pageNum) =>
+                    invertControls ? _next(pageNum) : _prev(pageNum)
+                  )
+                }
+              />
+              <button
+                type="button"
+                className={styles.control__right}
+                onFocus={(event) => event.target.blur()}
+                onClick={() =>
+                  setIndex((pageNum) =>
+                    invertControls ? _prev(pageNum) : _next(pageNum)
+                  )
+                }
+              />
+            </div>
+            <section
+              className={styles.content}
+              style={{
+                '--component-offset': `${swipingOffset}px`,
+              }}
+              {...handlers}
+            >
+              <Pages
+                id={id?.toString() ?? ''}
+                render={fauxRender}
+                index={index}
+                pageAmount={pageAmount}
+                invertPages={invertPages}
+              />
+            </section>
             <footer
               className={cc([
                 styles.footer,
@@ -393,10 +513,8 @@ const Reader = () => {
                 <div className={styles.timeline}>
                   <Slider
                     value={index + 1}
-                    max={pageCount / pageAmount - 1}
-                    onValueChange={(number) => {
-                      setIndex(number[0])
-                    }}
+                    max={Math.ceil(pageCount / pageAmount)}
+                    onValueChange={(number) => setIndex(number[0])}
                   />
                 </div>
                 <ButtonGroup>

@@ -1,6 +1,8 @@
 .root {
   background: black;
-  height: 100vh;
+  height: -webkit-fill-available;
+  height: -moz-available;
+  height: stretch;
   overflow: hidden;
   position: relative;
 }
@@ -11,9 +13,12 @@
   left: 0;
   right: 0;
 
-  z-index: 100;
+  z-index: 500;
 
   width: 100%;
+
+  opacity: 1;
+  transition: 1s ease opacity;
 
   .wrapper {
     padding: 0rem 0.5rem;
@@ -21,6 +26,8 @@
   }
 
   &.hidden {
+    opacity: 1;
+    transition: 1s ease opacity;
     .wrapper {
       transition: 1s ease transform;
     }
@@ -92,7 +99,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 100vh;
+  height: -webkit-fill-available;
+  height: -moz-available;
+  height: stretch;
   &.dual {
     .page {
       max-width: 50vw;
@@ -100,6 +109,9 @@
         max-width: 50vw;
       }
     }
+  }
+  &.reverse {
+    flex-direction: row-reverse;
   }
   .page {
     height: 100vh;
@@ -109,6 +121,9 @@
       object-position: center;
       position: relative;
       height: 100vh;
+    }
+    &.hidden {
+      display: none;
     }
   }
 }
@@ -124,7 +139,7 @@
   left: 50%;
   transform: translateX(-50%);
   display: flex;
-  opacity: 0;
+  opacity: 1;
   pointer-events: none;
   img {
     max-width: 100px;
@@ -141,14 +156,68 @@
     position: absolute;
     top: 0;
     height: 100%;
-    width: 50%;
-    max-width: 12rem;
+    width: 25%;
     background: transparent;
+    z-index: 400;
+    cursor: pointer;
   }
   &__left {
     left: 0;
   }
   &__right {
     right: 0;
+  }
+}
+
+.prevVolume,
+.nextVolume {
+  margin: 1rem;
+  padding: 1rem;
+  max-width: 24rem;
+
+  background: rgba(0, 0, 0, 0.5);
+
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  z-index: 100;
+
+  font-size: 1.4rem;
+  text-align: center;
+  font-weight: 600;
+}
+
+.error,
+.loader {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: -webkit-fill-available;
+  height: -moz-available;
+  height: stretch;
+  max-height: 100vh;
+}
+
+.loader {
+  svg {
+    animation-name: spin;
+    animation-duration: 1.5s;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+  }
+}
+
+.content {
+  transform: translateX(var(--component-offset));
+}
+
+@keyframes spin {
+  0% {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+  100% {
+    transform: translate(-50%, -50%) rotate(360deg);
   }
 }

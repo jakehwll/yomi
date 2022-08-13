@@ -61,13 +61,11 @@ const BookThumbnailSettings: React.FC<BookThumbnailSettings> = ({
           >
             <option value={'undefined'}>Select File</option>
             {data &&
-              data.data.map((v: any) => {
-                return (
-                  <option key={v} value={v}>
-                    {v}
-                  </option>
-                )
-              })}
+              data.data.map((v: any) => (
+                <option key={v} value={v}>
+                  {v}
+                </option>
+              ))}
           </select>
         </div>
         <Button style={'success'} wide={true} loading={loading} type="submit">
