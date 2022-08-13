@@ -9,6 +9,8 @@ COPY yarn.lock .
 
 RUN yarn install --production && yarn cache clean
 
+RUN apk del builds-deps build-base python3
+
 COPY . .
 
 RUN npx prisma generate
