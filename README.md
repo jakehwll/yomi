@@ -4,9 +4,14 @@
 
 [Issues](https://github.com/jakehwll/yomi/issues)</a> · [Getting Started](#getting-started)
 
-## Introduction
+Yomi is a manga and comic-book reader solution that puts you in charge of your library. Use almost any device with a web browser to consume and sync from your own server.
 
-Yomi is a Manga/Comic reader hosted on a server so you can read from anywhere.
+**Features**
+
+- Sync progress between devices.
+- No central-server collecting or tracking your data.
+- ~~Library~~, Series, Book/Chapter management.
+- Mobile/tablet support with swiping controls.
 
 ## Getting Started
 
