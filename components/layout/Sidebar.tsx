@@ -1,5 +1,5 @@
 import cc from 'classcat'
-import { BookOpen, Home, User } from 'lucide-react'
+import { Home, Library, Settings, User } from 'lucide-react'
 import { Session } from 'next-auth'
 import { useSession } from 'next-auth/react'
 import Link from 'next/link'
@@ -17,10 +17,37 @@ const _navigation = [
     id: 'home',
   },
   {
-    icon: <BookOpen />,
-    href: '/media-management',
-    title: 'Media Management',
-    id: 'media-mangement',
+    icon: <Library />,
+    href: '/',
+    title: 'Libraries',
+    id: 'libraries',
+    children: [
+      {
+        title: 'Manga (English)',
+        id: 'manga',
+      },
+      {
+        title: 'Manga (Japanese)',
+        id: 'manga-jp',
+      },
+      {
+        title: 'Light Novels',
+        id: 'light-novels',
+      },
+      {
+        title: 'Comics',
+        id: 'comics',
+      },
+    ],
+  },
+]
+
+const _subnavigation = [
+  {
+    icon: <Settings />,
+    href: '/server-management',
+    title: 'Settings',
+    id: 'server-management',
   },
 ]
 
@@ -73,6 +100,7 @@ const Sidebar: React.FC<SidebarProps> = ({
                 id: string
                 href: string
                 title: string
+                children?: any
               }) => (
                 <li key={v.id}>
                   <Link href={v.href}>
@@ -81,12 +109,62 @@ const Sidebar: React.FC<SidebarProps> = ({
                       <span>{v.title}</span>
                     </a>
                   </Link>
+                  {v.children && (
+                    <ul className={styles.children}>
+                      {v.children.map((b: any) => {
+                        return (
+                          <li key={b.id}>
+                            <Link href={`${v.href}/${b.id}`}>
+                              <a>{b.title}</a>
+                            </Link>
+                          </li>
+                        )
+                      })}
+                    </ul>
+                  )}
                 </li>
               )
             )}
           </ul>
         </nav>
-        {session && <UserAccount session={session} />}
+        {session && (
+          <div>
+            <ul className={styles.navigation}>
+              {_subnavigation.map(
+                (v: {
+                  icon: React.ReactNode
+                  id: string
+                  href: string
+                  title: string
+                  children?: any
+                }) => (
+                  <li key={v.id}>
+                    <Link href={v.href}>
+                      <a>
+                        {v.icon}
+                        <span>{v.title}</span>
+                      </a>
+                    </Link>
+                    {v.children && (
+                      <ul className={styles.children}>
+                        {v.children.map((b: any) => {
+                          return (
+                            <li key={b.id}>
+                              <Link href={`${v.href}/${b.id}`}>
+                                <a>{b.title}</a>
+                              </Link>
+                            </li>
+                          )
+                        })}
+                      </ul>
+                    )}
+                  </li>
+                )
+              )}
+            </ul>
+            <UserAccount session={session} />
+          </div>
+        )}
       </aside>
     </>
   )

@@ -102,6 +102,20 @@
   }
 }
 
+.children {
+  margin-top: -0.25rem;
+  margin-left: 1.5rem;
+  margin-bottom: 0.5rem;
+  padding-left: 0rem;
+  li {
+    padding: 0rem 1rem;
+    font-weight: 400;
+  }
+  a {
+    padding: 1rem;
+  }
+}
+
 .mobile {
   display: flex;
   z-index: 1000;
