@@ -82,3 +82,8 @@
     }
   }
 }
+
+.disabled {
+  cursor: not-allowed;
+  background: rgba(var(--global-color-dark-gray-rgb), 0.9);
+}

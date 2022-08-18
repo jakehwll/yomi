@@ -10,6 +10,9 @@
 .form {
   max-width: 20rem;
   width: 100%;
+  button {
+    margin-top: 0.75rem;
+  }
 }
 
 .divider {
@@ -23,8 +26,7 @@
 
 .error {
   background: var(--global-color-danger);
+  padding: 0.75rem 1rem;
   border-radius: 0.25rem;
-  color: white;
-  padding: 0.5rem 1rem;
-  margin-top: 1rem;
+  font-weight: 600;
 }
