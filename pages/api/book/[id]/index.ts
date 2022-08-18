@@ -2,7 +2,7 @@ import { NextApiRequest, NextApiResponse } from 'next'
 import { getSession } from 'next-auth/react'
 import { nextVolume, prevVolume, updateBook } from 'util/book'
 import { getDirectoryFiles } from 'util/fs'
-import { getFilesData } from 'util/index_builders/FileMultiFolder'
+import { getFilesData } from 'util/indexBuilders/FileMultiFolder'
 import prisma from 'util/prisma'
 import { getAuthorisedAdmin } from 'util/users'
 

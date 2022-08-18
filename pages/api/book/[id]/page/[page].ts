@@ -3,7 +3,7 @@ import { NextApiRequest, NextApiResponse } from 'next'
 import sharp from 'sharp'
 import { getBook } from 'util/book'
 import { getDirectoryFiles } from 'util/fs'
-import { getFilesData } from 'util/index_builders/FileMultiFolder'
+import { getFilesData } from 'util/indexBuilders/FileMultiFolder'
 import { getAuthorisedUser } from 'util/users'
 
 interface PageMetadataProps {
