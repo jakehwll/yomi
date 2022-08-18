@@ -17,6 +17,7 @@ interface ButtonProps {
   wide?: boolean
   type?: 'button' | 'submit' | 'reset'
   loading?: boolean
+  disabled?: boolean
 }
 
 const Button: React.FC<ButtonProps> = ({
@@ -26,6 +27,7 @@ const Button: React.FC<ButtonProps> = ({
   wide,
   type,
   loading,
+  disabled,
 }: ButtonProps) => {
   return (
     <button
@@ -36,6 +38,7 @@ const Button: React.FC<ButtonProps> = ({
           [`${styles[style]}`]: style,
           [styles.wide]: wide,
           [styles.loading]: loading,
+          [styles.disabled]: disabled,
         },
       ])}
       onClick={(event: React.MouseEvent<HTMLButtonElement>) => {

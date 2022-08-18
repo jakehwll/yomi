@@ -1,42 +1,53 @@
-import Button from 'components/Button'
-import Text from 'components/input/Text'
+import Form from 'components/form/Form'
+import { Input } from 'components/form/Input'
 import Meta from 'components/Meta'
 import { NextPage } from 'next'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import { FormEvent, useState } from 'react'
+import { useState } from 'react'
 import styles from 'styles/pages/Authentication.module.scss'
+import getErrorMessage from 'util/errors'
+import * as yup from 'yup'
 
 const Login: NextPage = () => {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [confirmPassword, setConfirmPassword] = useState('')
   const [error, setError] = useState('')
+  const [loading, setLoading] = useState(false)
 
   const router = useRouter()
 
-  const handleSubmit = (event: FormEvent) => {
-    event.preventDefault()
-    if (!email || !password) return setError('Missing error')
-    if (password !== confirmPassword) return setError("Passwords don't match.")
+  const handleSubmit = (data: any) => {
+    setLoading(true)
     fetch('/api/auth/register', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        email: email,
-        password: password,
+        email: data.email,
+        password: data.password,
       }),
     })
       .then((response) => {
-        if (response.ok) return response.json()
+        setLoading(false)
+        return response.json()
       })
       .then((json: any) => {
-        if (json && json.error) router.push('/auth/login')
-        else setError(json ? json.statusText : 'Unknown error.')
+        if (json && !json.error) router.push('/auth/login')
+        setError(getErrorMessage(json.statusCode) || json.code)
       })
   }
+
+  const schema = yup
+    .object()
+    .shape({
+      email: yup.string().email().required(),
+      password: yup.string().required(),
+      confirmPassword: yup
+        .string()
+        .oneOf([yup.ref('password'), null], 'Passwords must match')
+        .required(),
+    })
+    .required()
 
   return (
     <>
@@ -44,46 +55,32 @@ const Login: NextPage = () => {
       <div className={styles.root}>
         <img src="/logo.svg" alt="" />
         {error && <div className={styles.error}>{error}</div>}
-        <form className={styles.form} onSubmit={handleSubmit}>
-          <Text
-            id={'email'}
-            name={'email'}
-            value={email}
-            onChange={(event) =>
-              setEmail((event.target as HTMLInputElement).value)
-            }
-            label={'Email'}
+        <Form
+          className={styles.form}
+          onSubmit={handleSubmit}
+          loading={loading}
+          schema={schema}
+        >
+          <Input label="Email" title="Email" name="email" />
+          <Input
+            label="Password"
+            title="Password"
+            name="password"
+            type="password"
           />
-          <Text
-            id={'password'}
-            name={'password'}
-            value={password}
-            type={'password'}
-            onChange={(event) =>
-              setPassword((event.target as HTMLInputElement).value)
-            }
-            label={'Password'}
+          <Input
+            label="Confirm Password"
+            title="Confirm Password"
+            name="confirmPassword"
+            type="password"
           />
-          <Text
-            id={'confirm-password'}
-            name={'confirm-password'}
-            value={confirmPassword}
-            type={'password'}
-            onChange={(event) =>
-              setConfirmPassword((event.target as HTMLInputElement).value)
-            }
-            label={'Confirm Password'}
-          />
-          <Button style={'primary'} wide={true} type="submit">
-            Submit
-          </Button>
-          <p className={styles.divider}>
-            Already got an account?{' '}
-            <Link href="/auth/login" passHref>
-              <a>Login</a>
-            </Link>
-          </p>
-        </form>
+        </Form>
+        <p className={styles.divider}>
+          Already got an account?{' '}
+          <Link href="/auth/login" passHref>
+            <a>Login</a>
+          </Link>
+        </p>
       </div>
     </>
   )

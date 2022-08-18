@@ -16,4 +16,8 @@
   input {
     width: 100%;
   }
+  &.error,
+  &.error:focus {
+    --global-input-border: var(--global-color-danger);
+  }
 }

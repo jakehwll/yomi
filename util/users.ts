@@ -8,7 +8,7 @@ import prisma from './prisma'
  * @returns Array<User> object.
  */
 export const getUsers = async () => {
-  return await prisma.user.count
+  return prisma.user.findMany()
 }
 
 /**
