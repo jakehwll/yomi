@@ -380,7 +380,7 @@ const Reader = () => {
         )}
         {!data && (
           <div className={styles.loader}>
-            <Loader2 size={64} />
+            <Loader2 size={48} />
           </div>
         )}
         {data && (
