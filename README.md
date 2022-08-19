@@ -33,7 +33,7 @@ services:
     environment:
       - INSTANCE_URL=http://CHANGE_ME
       - INSTANCE_SECRET=CHANGE_ME
-      - DOCKER_ENV=development
+      - DATABASE_URL="file:./prod.db"
     volumes:
       - /path/to/manga:/data/library
       - /path/to/config:/data/config
