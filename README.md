@@ -27,9 +27,7 @@ version: '3'
 services:
   app:
     image: ghcr.io/jakehwll/yomi
-    restart: unless-stopped
-    ports:
-      - 3000:3000
+    container_name: yomi
     environment:
       - INSTANCE_URL=http://CHANGE_ME
       - INSTANCE_SECRET=CHANGE_ME
@@ -37,6 +35,9 @@ services:
     volumes:
       - /path/to/manga:/data/library
       - /path/to/config:/data/config
+    ports:
+      - 3000:3000
+    restart: unless-stopped
 ```
 
 **Docker**
