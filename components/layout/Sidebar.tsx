@@ -2,6 +2,7 @@ import cc from 'classcat'
 import { BookOpen, Home, User } from 'lucide-react'
 import { Session } from 'next-auth'
 import { useSession } from 'next-auth/react'
+import Image from 'next/future/image'
 import Link from 'next/link'
 import styles from 'styles/layout/Sidebar.module.scss'
 
@@ -63,7 +64,7 @@ const Sidebar: React.FC<SidebarProps> = ({
         <nav className={styles.header}>
           <Link href="/" passHref>
             <a className={styles.brand}>
-              <img src="/logo.svg" alt="" />
+              <Image src="/logo.svg" alt="" />
             </a>
           </Link>
           <ul className={styles.navigation}>

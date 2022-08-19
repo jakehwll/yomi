@@ -1,4 +1,5 @@
 import cc from 'classcat'
+import Image from 'next/future/image'
 import Link from 'next/link'
 import styles from 'styles/grid/GridItem.module.scss'
 
@@ -21,8 +22,7 @@ const GridItem: React.FC<GridItemProps> = ({
         <a className={styles.link}></a>
       </Link>
       <div className={styles.cover}>
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={image ? image : '/placeholder.jpg'} />
+        <Image src={image ? image : '/placeholder.jpg'} alt="" />
       </div>
       <div className={styles.meta}>
         <div className={styles.headline}>{headline}</div>

@@ -16,6 +16,7 @@ import {
   Minimize2,
   Settings,
 } from 'lucide-react'
+import Image from 'next/future/image'
 import { useRouter } from 'next/router'
 import { useEffect, useRef, useState } from 'react'
 import { useSwipeable } from 'react-swipeable'
@@ -64,7 +65,7 @@ const Pages = ({
           data-page={`${v.toString()}`}
           key={v}
         >
-          <img src={`/api/book/${id}/page/${v}`} alt="" />
+          <Image src={`/api/book/${id}/page/${v}`} alt="" />
         </div>
       ))}
     </article>

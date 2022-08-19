@@ -4,6 +4,7 @@ import { Input } from 'components/form/Input'
 import Meta from 'components/Meta'
 import { NextPage } from 'next'
 import { signIn, SignInResponse } from 'next-auth/react'
+import Image from 'next/future/image'
 import { useRouter } from 'next/router'
 import { useState } from 'react'
 import styles from 'styles/pages/Authentication.module.scss'
@@ -45,7 +46,7 @@ const Login: NextPage = () => {
     <>
       <Meta title={'Login'} />
       <div className={styles.root}>
-        <img src="/logo.svg" alt="" />
+        <Image src="/logo.svg" alt="" />
         {error && <div className={styles.error}>{error}</div>}
         <div className={styles.form}>
           <Form
