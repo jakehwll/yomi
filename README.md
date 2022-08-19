@@ -31,8 +31,8 @@ services:
     ports:
       - 3000:3000
     environment:
-      - NEXTAUTH_URL=http://CHANGE_ME
-      - NEXTAUTH_SECRET=CHANGE_ME
+      - INSTANCE_URL=http://CHANGE_ME
+      - INSTANCE_SECRET=CHANGE_ME
       - DOCKER_ENV=development
     volumes:
       - /path/to/manga:/data/library
@@ -43,8 +43,8 @@ services:
 
 ```sh
 docker run \
-  -e NEXTAUTH_URL=http://CHANGE_ME \
-  -e NEXTAUTH_SECRET=CHANGE_ME \
+  -e INSTANCE_URL=http://CHANGE_ME \
+  -e INSTANCE_SECRET=CHANGE_ME \
   -e DOCKER_ENV=development \
   -e DATABASE_URL=file:./prod.db \
   -v /path/to/manga:/data/library \
