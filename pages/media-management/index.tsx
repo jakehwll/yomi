@@ -9,6 +9,7 @@ import { useRouter } from 'next/router'
 import { ChangeEvent, useState } from 'react'
 import useSWR from 'swr'
 import fetcher from 'util/swr'
+import * as yup from 'yup'
 
 const UnassignedSeries = () => {
   const { data } = useSWR('/api/series/unassigned', fetcher)
@@ -37,6 +38,14 @@ const UnassignedSeries = () => {
       })
   }
 
+  const schema = yup
+    .object()
+    .shape({
+      folder: yup.string().required(),
+      title: yup.string().required(),
+    })
+    .required()
+
   if (data)
     return (
       <Card>
@@ -45,6 +54,7 @@ const UnassignedSeries = () => {
           onSubmit={handleSubmit}
           submitText={'Create Series'}
           loading={loading}
+          schema={schema}
         >
           <Select
             label={'Select Folder'}
@@ -96,6 +106,15 @@ const UnassignedBooks = () => {
     })
   }
 
+  const schema = yup
+    .object()
+    .shape({
+      series: yup.string().required(),
+      folder: yup.string().required(),
+      title: yup.string().required(),
+    })
+    .required()
+
   if (seriesData)
     return (
       <Card>
@@ -104,6 +123,7 @@ const UnassignedBooks = () => {
           onSubmit={handleSubmit}
           submitText={'Create Book'}
           loading={loading}
+          schema={schema}
         >
           <Select
             label="Series"
