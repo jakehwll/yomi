@@ -35,13 +35,8 @@ RUN yarn build
 # └──────────────────────────────┘
 FROM --platform=${PLATFORM} node:16-alpine AS runner
 
-# Add a group and user for permission management.
-RUN addgroup --system --gid 1001 yomi
-RUN adduser --system --uid 1001 yomi
-
 # Create a directory to run our app inside of.
 WORKDIR /app
-RUN chown yomi:yomi /app
 
 # Add libc6-compat so we can run `.bin` code.
 RUN apk add libc6-compat
@@ -57,22 +52,21 @@ COPY --from=builder /app/public ./public
 COPY --from=builder /app/package.json ./package.json
 
 # Copy build-time generated code to application.
-COPY --from=builder --chown=yomi:yomi /app/.next/standalone ./
-COPY --from=builder --chown=yomi:yomi /app/.next/static ./public
-COPY --from=builder --chown=yomi:yomi /app/.next/static ./.next/static
+COPY --from=builder /app/.next/standalone ./
+COPY --from=builder /app/.next/static ./public
+COPY --from=builder /app/.next/static ./.next/static
 
 # Copy prisma modules and configuration to the app as next wont export these.
-COPY --from=builder --chown=yomi:yomi /app/node_modules/.bin ./node_modules/.bin
-COPY --from=builder --chown=yomi:yomi /app/node_modules/@prisma ./node_modules/@prisma
-COPY --from=builder --chown=yomi:yomi /app/node_modules/prisma ./node_modules/prisma
-COPY --from=builder --chown=yomi:yomi /app/prisma ./prisma
+COPY --from=builder /app/node_modules/.bin ./node_modules/.bin
+COPY --from=builder /app/node_modules/@prisma ./node_modules/@prisma
+COPY --from=builder /app/node_modules/prisma ./node_modules/prisma
+COPY --from=builder /app/prisma ./prisma
 
 # Copy our startup script.
 COPY ./docker-entrypoint.sh ./
 RUN chmod +x ./docker-entrypoint.sh
 
 # Expose our application to be ran by docker.
-USER yomi
 ENV LOCAL_PORT 3000
 EXPOSE $LOCAL_PORT
 
