@@ -65,7 +65,7 @@ const Pages = ({
           data-page={`${v.toString()}`}
           key={v}
         >
-          <Image src={`/api/book/${id}/page/${v}`} alt="" />
+          <Image src={`/api/book/${id}/page/${v}`} alt="" priority />
         </div>
       ))}
     </article>
