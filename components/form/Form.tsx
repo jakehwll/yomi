@@ -7,7 +7,7 @@ interface FormProps {
   defaultValues?: {
     [val: string]: string
   }
-  children: React.ReactElement | Array<React.ReactElement>
+  children?: React.ReactElement | Array<React.ReactElement>
   onSubmit(event: any): void
   submitText?: string
   loading?: boolean

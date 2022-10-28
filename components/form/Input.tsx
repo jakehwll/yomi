@@ -42,13 +42,16 @@ export function Input({
         </label>
       )}
       <input
-        className={cc([styles.input, { [styles.error]: errors[name] }])}
+        className={cc([
+          styles.input,
+          { [styles.error]: errors && errors[name] },
+        ])}
         id={name}
         {...register(name, {
           require: required,
           onChange: (event: ChangeEvent) => onChange && onChange(event),
         })}
-        aria-invalid={errors[name] ? 'true' : 'false'}
+        aria-invalid={errors && (errors[name] ? 'true' : 'false')}
         {...rest}
       />
     </div>
@@ -72,7 +75,10 @@ export function Select({
         </label>
       )}
       <select
-        className={cc([styles.select, { [styles.error]: errors[name] }])}
+        className={cc([
+          styles.select,
+          { [styles.error]: errors && errors[name] },
+        ])}
         {...register(name, {
           onChange: (event: ChangeEvent) => onChange && onChange(event),
         })}
