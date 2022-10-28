@@ -1,8 +1,9 @@
+ARG PLATFORM='linux/amd64'
 
 # ┌──────────────────────────────┐
 # │ DEPENDENCIES --------------- │
 # └──────────────────────────────┘
-FROM --platform=linux/amd64 node:16-alpine AS deps
+FROM --platform=${PLATFORM} node:16-alpine AS deps
 
 # Install build/python dependencies for `sharp`.
 RUN apk --no-cache add --virtual builds-deps build-base python3
@@ -18,7 +19,7 @@ RUN apk del builds-deps build-base python3
 # ┌──────────────────────────────┐
 # │ BUILDER -------------------- │
 # └──────────────────────────────┘
-FROM --platform=linux/amd64 node:16-alpine AS builder
+FROM --platform=${PLATFORM} node:16-alpine AS builder
 WORKDIR /app
 
 # Copy installed `node_modules` and app source.
@@ -32,7 +33,9 @@ RUN yarn build
 # ┌──────────────────────────────┐
 # │ RUNNER --------------------- │
 # └──────────────────────────────┘
-FROM --platform=linux/amd64 node:16-alpine AS runner
+FROM --platform=${PLATFORM} node:16-alpine AS runner
+
+# Create a directory to run our app inside of.
 WORKDIR /app
 
 # Add libc6-compat so we can run `.bin` code.
@@ -40,10 +43,8 @@ RUN apk add libc6-compat
 
 # Don't use source-maps or non-minified code.
 ENV NODE_ENV production
-
-# Add a group and user for permission management.
-RUN addgroup --system --gid 1001 nodejs
-RUN adduser --system --uid 1001 yomi
+ENV DOCKER_ENV production
+ENV DATABASE_URL "file:./prod.db"
 
 # Copy configuration and static-files and dependencies list to app.
 COPY --from=builder /app/next.config.js ./
@@ -51,20 +52,22 @@ COPY --from=builder /app/public ./public
 COPY --from=builder /app/package.json ./package.json
 
 # Copy build-time generated code to application.
-COPY --from=builder --chown=yomi:nodejs /app/.next/standalone ./
-COPY --from=builder --chown=yomi:nodejs /app/.next/static ./public
-COPY --from=builder --chown=yomi:nodejs /app/.next/static ./.next/static
+COPY --from=builder /app/.next/standalone ./
+COPY --from=builder /app/.next/static ./public
+COPY --from=builder /app/.next/static ./.next/static
 
 # Copy prisma modules and configuration to the app as next wont export these.
-COPY --from=builder --chown=yomi:nodejs /app/node_modules/.bin ./node_modules/.bin
-COPY --from=builder --chown=yomi:nodejs /app/node_modules/@prisma ./node_modules/@prisma
-COPY --from=builder --chown=yomi:nodejs /app/node_modules/prisma ./node_modules/prisma
-COPY --from=builder --chown=yomi:nodejs /app/prisma ./prisma
+COPY --from=builder /app/node_modules/.bin ./node_modules/.bin
+COPY --from=builder /app/node_modules/@prisma ./node_modules/@prisma
+COPY --from=builder /app/node_modules/prisma ./node_modules/prisma
+COPY --from=builder /app/prisma ./prisma
+
+# Copy our startup script.
+COPY ./docker-entrypoint.sh ./
+RUN chmod +x ./docker-entrypoint.sh
 
 # Expose our application to be ran by docker.
-USER yomi
-EXPOSE 3000
-ENV PORT 3000
+ENV LOCAL_PORT 3000
+EXPOSE $LOCAL_PORT
 
-# ENTRYPOINT ["node", "server.js"]
-ENTRYPOINT ["yarn", "start:server"]
+CMD "./docker-entrypoint.sh"

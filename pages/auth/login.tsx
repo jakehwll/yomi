@@ -1,67 +1,68 @@
 import Button from 'components/Button'
-import Text from 'components/input/Text'
+import Form from 'components/form/Form'
+import { Input } from 'components/form/Input'
 import Meta from 'components/Meta'
 import { NextPage } from 'next'
 import { signIn, SignInResponse } from 'next-auth/react'
+import Image from 'next/future/image'
 import { useRouter } from 'next/router'
-import { ChangeEvent, FormEvent, useState } from 'react'
-
+import { useState } from 'react'
 import styles from 'styles/pages/Authentication.module.scss'
+import getErrorMessage from 'util/errors'
+import * as yup from 'yup'
 
 const Login: NextPage = () => {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
 
   const router = useRouter()
 
-  const handleSubmit = async (event: FormEvent) => {
-    event.preventDefault()
-    if (!email || !password) return
+  const handleSubmit = async (data: any) => {
     setLoading(true)
     const response = await signIn('credentials', {
       redirect: false,
-      email: email,
-      password: password,
+      ...data,
     })
     if (response !== undefined) {
       if ((response as SignInResponse).error)
-        setError((response as SignInResponse).error ?? '')
+        setError(
+          getErrorMessage((response as SignInResponse).error ?? '') ??
+            'Unknown error'
+        )
       else router.push('/')
       setLoading(false)
     }
   }
 
+  const schema = yup
+    .object()
+    .shape({
+      email: yup.string().email().required(),
+      password: yup.string().required(),
+    })
+    .required()
+
   return (
     <>
       <Meta title={'Login'} />
       <div className={styles.root}>
-        <img src="/logo.svg" alt="" />
+        <Image src="/logo.svg" alt="" />
         {error && <div className={styles.error}>{error}</div>}
-        <form className={styles.form} onSubmit={handleSubmit}>
-          <Text
-            id={'email'}
-            name={'email'}
-            value={email}
-            onChange={(event: ChangeEvent<HTMLInputElement>) =>
-              setEmail(event.target.value)
-            }
-            label={'Email'}
-          />
-          <Text
-            id={'password'}
-            name={'password'}
-            value={password}
-            type={'password'}
-            onChange={(event: ChangeEvent<HTMLInputElement>) =>
-              setPassword(event.target.value)
-            }
-            label={'Password'}
-          />
-          <Button style={'primary'} wide={true} type="submit" loading={loading}>
-            Login
-          </Button>
+        <div className={styles.form}>
+          <Form
+            onSubmit={handleSubmit}
+            submitText={'Login'}
+            loading={loading}
+            schema={schema}
+          >
+            <Input label="Email" title="Email" name="email" />
+            <Input
+              label="Password"
+              title="Password"
+              name="password"
+              type="password"
+            />
+          </Form>
           <p className={styles.divider}>&mdash;</p>
           <Button
             onClick={() => router.push('/auth/register')}
@@ -71,7 +72,7 @@ const Login: NextPage = () => {
           >
             Register
           </Button>
-        </form>
+        </div>
       </div>
     </>
   )

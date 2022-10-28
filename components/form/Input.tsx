@@ -1,3 +1,4 @@
+import cc from 'classcat'
 import { ChangeEvent } from 'react'
 import styles from 'styles/input/Input.module.scss'
 
@@ -8,6 +9,7 @@ interface InputProps
   label?: string
   onChange?(event: ChangeEvent): void
   required?: boolean
+  errors?: any
 }
 
 interface SelectProps
@@ -20,6 +22,7 @@ interface SelectProps
   label?: string
   onChange?(event: ChangeEvent): void
   required?: boolean
+  errors?: any
 }
 
 export function Input({
@@ -28,6 +31,7 @@ export function Input({
   label,
   required,
   onChange,
+  errors,
   ...rest
 }: InputProps) {
   return (
@@ -38,12 +42,16 @@ export function Input({
         </label>
       )}
       <input
-        className={styles.input}
+        className={cc([
+          styles.input,
+          { [styles.error]: errors && errors[name] },
+        ])}
         id={name}
         {...register(name, {
           require: required,
           onChange: (event: ChangeEvent) => onChange && onChange(event),
         })}
+        aria-invalid={errors && (errors[name] ? 'true' : 'false')}
         {...rest}
       />
     </div>
@@ -56,6 +64,7 @@ export function Select({
   label,
   name,
   onChange,
+  errors,
   ...rest
 }: SelectProps) {
   return (
@@ -66,6 +75,10 @@ export function Select({
         </label>
       )}
       <select
+        className={cc([
+          styles.select,
+          { [styles.error]: errors && errors[name] },
+        ])}
         {...register(name, {
           onChange: (event: ChangeEvent) => onChange && onChange(event),
         })}

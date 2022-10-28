@@ -8,4 +8,5 @@ module.exports = {
   unstable_includeFiles: unstableIncludeFiles.map(
     (d) => `node_modules/${d}/**/*`
   ),
+  experimental: { images: { allowFutureImage: true } },
 }

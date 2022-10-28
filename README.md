@@ -27,24 +27,25 @@ version: '3'
 services:
   app:
     image: ghcr.io/jakehwll/yomi
-    restart: unless-stopped
-    ports:
-      - 3000:3000
+    container_name: yomi
     environment:
-      - NEXTAUTH_URL=http://CHANGE_ME
-      - NEXTAUTH_SECRET=CHANGE_ME
-      - DOCKER_ENV=development
+      - INSTANCE_URL=http://CHANGE_ME
+      - INSTANCE_SECRET=CHANGE_ME
+      - DATABASE_URL="file:./prod.db"
     volumes:
       - /path/to/manga:/data/library
       - /path/to/config:/data/config
+    ports:
+      - 3000:3000
+    restart: unless-stopped
 ```
 
 **Docker**
 
 ```sh
 docker run \
-  -e NEXTAUTH_URL=http://CHANGE_ME \
-  -e NEXTAUTH_SECRET=CHANGE_ME \
+  -e INSTANCE_URL=http://CHANGE_ME \
+  -e INSTANCE_SECRET=CHANGE_ME \
   -e DOCKER_ENV=development \
   -e DATABASE_URL=file:./prod.db \
   -v /path/to/manga:/data/library \

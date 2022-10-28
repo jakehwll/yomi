@@ -6,6 +6,7 @@ import Dialog from 'components/Dialog'
 import BookSettings from 'components/settings/book/Meta'
 import { BookThumbnailSettings } from 'components/settings/book/Thumbnail'
 import { Edit3, Image as ImageIcon, Trash } from 'lucide-react'
+import Image from 'next/future/image'
 import Link from 'next/link'
 import { useState } from 'react'
 import styles from 'styles/grid/GridItem.module.scss'
@@ -88,8 +89,7 @@ const GridItemBook: React.FC<GridItemBookProps> = ({
         <a className={styles.link}></a>
       </Link>
       <div className={styles.cover}>
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={image ? image : '/placeholder.jpg'} />
+        <Image src={image ? image : '/placeholder.jpg'} />
       </div>
       <div className={styles.meta}>
         <div className={styles.headline}>{headline}</div>

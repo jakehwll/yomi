@@ -1,0 +1,28 @@
+name: Test Code
+
+on:
+  push:
+    branches: [main, development]
+  workflow_dispatch:
+
+jobs:
+  tests:
+    name: Run Tests
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push'
+
+    steps:
+      - name: 🛒 Checkout
+        uses: actions/checkout@v2
+
+      - name: 🚀 Dependencies
+        run: yarn install
+
+      - name: 🧹 Lint
+        run: yarn lint
+
+      - name: ✅ Typecheck
+        run: yarn typecheck
+
+      - name: 📋 Tests
+        run: yarn test:ci
